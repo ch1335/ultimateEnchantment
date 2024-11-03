@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "com.chen1335.ultimateEnchantment.mixins.minecraft",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "EnchantmentHelperMixin",
+    "EnchantmentMixin",
+    "ItemEnchantmentsMixin",
+    "ItemStackMixin",
+    "LivingEntityMixin"
+  ],
+  "client": [
+  ],
+  "minVersion": "0.8"
+}

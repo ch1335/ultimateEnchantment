@@ -1,0 +1,40 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ultimate_enchantment"
+    }
+  ],
+  "anvil_cost": 1,
+  "description": {
+    "translate": "enchantment.ultimate_enchantment.pierce_through"
+  },
+  "effects": {
+    "minecraft:attributes": [
+      {
+        "amount": {
+          "type": "minecraft:linear",
+          "base": 2.0,
+          "per_level_above_first": 2.0
+        },
+        "attribute": "apothic_attributes:armor_pierce",
+        "id": "ultimate_enchantment:enchantmentcritical_damage",
+        "operation": "add_value"
+      }
+    ]
+  },
+  "max_cost": {
+    "base": 80,
+    "per_level_above_first": 10
+  },
+  "max_level": 5,
+  "min_cost": {
+    "base": 40,
+    "per_level_above_first": 10
+  },
+  "slots": [
+    "hand"
+  ],
+  "supported_items": "#ultimate_enchantment:weapon_tools",
+  "weight": 3
+}

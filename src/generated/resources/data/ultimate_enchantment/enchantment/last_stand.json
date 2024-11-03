@@ -1,0 +1,53 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ultimate_enchantment"
+    }
+  ],
+  "anvil_cost": 1,
+  "description": {
+    "translate": "enchantment.ultimate_enchantment.last_stand"
+  },
+  "effects": {
+    "ultimate_enchantment:last_stand": [
+      {
+        "effect": {
+          "type": "ultimate_enchantment:last_stand",
+          "armorPercentagePerLevel": {
+            "base": 0.05,
+            "per_level_above_first": 0.05
+          },
+          "attribute": "minecraft:generic.armor",
+          "maxHealthPercentage": 0.334
+        }
+      },
+      {
+        "effect": {
+          "type": "ultimate_enchantment:last_stand",
+          "armorPercentagePerLevel": {
+            "base": 0.05,
+            "per_level_above_first": 0.05
+          },
+          "attribute": "minecraft:generic.armor_toughness",
+          "maxHealthPercentage": 0.334
+        }
+      }
+    ]
+  },
+  "exclusive_set": "#ultimate_enchantment:ultimate_enchantment",
+  "max_cost": {
+    "base": 999,
+    "per_level_above_first": 0
+  },
+  "max_level": 5,
+  "min_cost": {
+    "base": 999,
+    "per_level_above_first": 0
+  },
+  "slots": [
+    "armor"
+  ],
+  "supported_items": "#minecraft:enchantable/armor",
+  "weight": 1
+}

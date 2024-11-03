@@ -1,0 +1,12 @@
+{
+  "required": false,
+  "package": "com.chen1335.ultimateEnchantment.mixins.apothicEnchanting",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "ItemStackMixin$Mixin",
+    "TooltipUtilMixin"
+  ],
+  "client": [
+  ],
+  "minVersion": "0.8"
+}

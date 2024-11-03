@@ -1,0 +1,31 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ultimate_enchantment"
+    }
+  ],
+  "anvil_cost": 1,
+  "description": {
+    "translate": "enchantment.ultimate_enchantment.ultimate"
+  },
+  "effects": {
+    "ultimate_enchantment:ultimate": {}
+  },
+  "exclusive_set": "#ultimate_enchantment:ultimate_enchantment",
+  "max_cost": {
+    "base": 999,
+    "per_level_above_first": 0
+  },
+  "max_level": 5,
+  "min_cost": {
+    "base": 999,
+    "per_level_above_first": 0
+  },
+  "primary_items": "#c:enchantables",
+  "slots": [
+    "any"
+  ],
+  "supported_items": "#c:enchantables",
+  "weight": 2
+}

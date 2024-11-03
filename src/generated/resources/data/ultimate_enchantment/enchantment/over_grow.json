@@ -1,0 +1,40 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ultimate_enchantment"
+    }
+  ],
+  "anvil_cost": 1,
+  "description": {
+    "translate": "enchantment.ultimate_enchantment.over_grow"
+  },
+  "effects": {
+    "minecraft:attributes": [
+      {
+        "amount": {
+          "type": "minecraft:linear",
+          "base": 0.02,
+          "per_level_above_first": 0.02
+        },
+        "attribute": "minecraft:generic.max_health",
+        "id": "ultimate_enchantment:enchantmentover_grow",
+        "operation": "add_multiplied_base"
+      }
+    ]
+  },
+  "max_cost": {
+    "base": 80,
+    "per_level_above_first": 10
+  },
+  "max_level": 5,
+  "min_cost": {
+    "base": 45,
+    "per_level_above_first": 5
+  },
+  "slots": [
+    "armor"
+  ],
+  "supported_items": "#minecraft:enchantable/armor",
+  "weight": 2
+}

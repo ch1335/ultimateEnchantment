@@ -1,0 +1,29 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ultimate_enchantment"
+    }
+  ],
+  "anvil_cost": 1,
+  "description": {
+    "translate": "enchantment.ultimate_enchantment.quick_latch"
+  },
+  "effects": {
+    "ultimate_enchantment:quick_latch": {}
+  },
+  "max_cost": {
+    "base": 60,
+    "per_level_above_first": 0
+  },
+  "max_level": 1,
+  "min_cost": {
+    "base": 20,
+    "per_level_above_first": 0
+  },
+  "slots": [
+    "hand"
+  ],
+  "supported_items": "#minecraft:enchantable/bow",
+  "weight": 3
+}
