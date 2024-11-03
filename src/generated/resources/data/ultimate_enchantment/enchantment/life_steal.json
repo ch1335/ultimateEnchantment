@@ -17,7 +17,7 @@
           "base": 0.025,
           "per_level_above_first": 0.025
         },
-        "attribute": "apothic_attributes:life_steal",
+        "attribute": "simple_rpg_core:life_steal",
         "id": "ultimate_enchantment:enchantmentlife_steal",
         "operation": "add_value"
       }

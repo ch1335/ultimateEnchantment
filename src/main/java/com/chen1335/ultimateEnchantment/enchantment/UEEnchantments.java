@@ -59,7 +59,7 @@ public class UEEnchantments {
                                         itemHolderGetter.getOrThrow(ItemTags.WEAPON_ENCHANTABLE),
                                         3,
                                         5,
-                                        Enchantment.dynamicCost(40, 10),
+                                        Enchantment.dynamicCost(30, 10),
                                         Enchantment.dynamicCost(80, 10),
                                         1,
                                         EquipmentSlotGroup.HAND
@@ -78,7 +78,7 @@ public class UEEnchantments {
                                         itemHolderGetter.getOrThrow(UEItemTags.WEAPON_TOOLS),
                                         3,
                                         5,
-                                        Enchantment.dynamicCost(40, 10),
+                                        Enchantment.dynamicCost(30, 10),
                                         Enchantment.dynamicCost(80, 10),
                                         1,
                                         EquipmentSlotGroup.HAND
@@ -220,7 +220,7 @@ public class UEEnchantments {
                                         itemHolderGetter.getOrThrow(ItemTags.ARMOR_ENCHANTABLE),
                                         2,
                                         5,
-                                        Enchantment.dynamicCost(45, 5),
+                                        Enchantment.dynamicCost(30, 5),
                                         Enchantment.dynamicCost(80, 10),
                                         1,
                                         EquipmentSlotGroup.ARMOR

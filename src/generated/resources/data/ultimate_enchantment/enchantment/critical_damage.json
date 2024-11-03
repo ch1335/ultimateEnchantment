@@ -17,7 +17,7 @@
           "base": 0.1,
           "per_level_above_first": 0.1
         },
-        "attribute": "apothic_attributes:crit_damage",
+        "attribute": "simple_rpg_core:critical_damage",
         "id": "ultimate_enchantment:enchantmentcritical_damage",
         "operation": "add_value"
       }

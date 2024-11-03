@@ -5,7 +5,6 @@ import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnc
 import com.chen1335.ultimateEnchantment.enchantment.effects.UltimateEnchantment.UEEnchantmentEffects;
 import com.chen1335.ultimateEnchantment.tags.UEEnchantmentTags;
 import com.mojang.logging.LogUtils;
-import dev.shadowsoffire.apothic_attributes.impl.AttributeEvents;
 import dev.shadowsoffire.placebo.registry.DeferredHelper;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
@@ -80,7 +79,6 @@ public class UltimateEnchantment {
         UEEnchantmentEffects.ENCHANTMENT_ENTITY_EFFECT.register(modEventBus);
         UEEnchantmentEffects.ENCHANTMENT_LOCATION_BASED_EFFECT.register(modEventBus);
         UEEnchantmentEffectComponents.TYPES.register(modEventBus);
-        NeoForge.EVENT_BUS.addListener(new AttributeEvents()::lifeStealOverheal);
 
         UEConfig.addConfigs();
         UEConfig.load();
