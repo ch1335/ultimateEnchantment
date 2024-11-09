@@ -7,6 +7,7 @@ import net.minecraft.util.Unit;
 import net.minecraft.world.item.enchantment.ConditionalEffect;
 import net.minecraft.world.item.enchantment.LevelBasedValue;
 import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
+import net.minecraft.world.item.enchantment.effects.EnchantmentValueEffect;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -29,5 +30,7 @@ public class UEEnchantmentEffectComponents {
     public static DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> SMELTING = TYPES.register("smelting", () -> DataComponentType.<Unit>builder().persistent(Unit.CODEC).build());
 
     public static DeferredHolder<DataComponentType<?>, DataComponentType<LevelBasedValue>> CUT_DOWN = TYPES.register("cut_down", () -> DataComponentType.<LevelBasedValue>builder().persistent(LevelBasedValue.CODEC).build());
+
+    public static DeferredHolder<DataComponentType<?>, DataComponentType<List<ConditionalEffect<EnchantmentValueEffect>>>> EXTRA_SHOOT_COUNT = TYPES.register("extra_shoot_count", () -> DataComponentType.<List<ConditionalEffect<EnchantmentValueEffect>>>builder().persistent(ConditionalEffect.codec(EnchantmentValueEffect.CODEC, LootContextParamSets.ENCHANTED_ENTITY).listOf()).build());
 
 }

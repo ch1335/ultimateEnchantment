@@ -2,6 +2,10 @@
   "values": [
     "ultimate_enchantment:ultimate",
     "ultimate_enchantment:legend",
-    "ultimate_enchantment:last_stand"
+    "ultimate_enchantment:last_stand",
+    {
+      "id": "ultimate_enchantment:terminator",
+      "required": false
+    }
   ]
 }

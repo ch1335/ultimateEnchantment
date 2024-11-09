@@ -1,5 +1,5 @@
-// 1.21.1	2024-11-01T19:08:31.7265272	Global Loot Modifiers : ultimate_enchantment
+// 1.21.1	2024-11-06T23:32:21.0532782	Global Loot Modifiers : ultimate_enchantment
 2bbd11f1c069b4a900bb920a768eaa95fb328dee data/neoforge/loot_modifiers/global_loot_modifiers.json
-06ff8fa79a5c0f495f1191acf7a44de84ef9851f data/ultimate_enchantment/loot_modifiers/ender_dragon_loot_modifier.json
-ba017e80260e71784f9d00fcc7678e6e8fbb8fac data/ultimate_enchantment/loot_modifiers/warden_loot_modifier.json
-97249a092ea28fd2698be44205c73514297a75da data/ultimate_enchantment/loot_modifiers/wither_loot_modifier.json
+f5e954d82a834267d2460c64e0f3df9a2ca2f025 data/ultimate_enchantment/loot_modifiers/ender_dragon_loot_modifier.json
+6f6c557090a0552ce35880c09a91c4e6a80ff450 data/ultimate_enchantment/loot_modifiers/warden_loot_modifier.json
+4063a99bc723888ba1f12ae91846f59b3ade8c66 data/ultimate_enchantment/loot_modifiers/wither_loot_modifier.json

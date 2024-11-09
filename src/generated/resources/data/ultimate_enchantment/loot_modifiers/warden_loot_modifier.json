@@ -2,11 +2,8 @@
   "type": "neoforge:add_table",
   "conditions": [
     {
-      "condition": "minecraft:entity_properties",
-      "entity": "this",
-      "predicate": {
-        "type": "minecraft:warden"
-      }
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "minecraft:entities/warden"
     }
   ],
   "table": "ultimate_enchantment:modifier/warden_loot_addition"

@@ -93,11 +93,18 @@ public class UEEnchantmentTagsProvider extends EnchantmentTagsProvider {
     }
 
     private void addApothicEnchantingAdditionTag(HolderLookup.@NotNull Provider pProvider) {
+        tag(EnchantmentTags.IN_ENCHANTING_TABLE)
+                .addOptional(ApothicEnchantingEnchantments.TERMINATOR.location());
+
+        tag(UEEnchantmentTags.ULTIMATE_ENCHANTMENT)
+                .addOptional(ApothicEnchantingEnchantments.TERMINATOR.location());
+
         tag(UEEnchantmentTags.TRADEABLE_LEGENDARY_ENCHANTMENT)
                 .addOptional(ApothicEnchantingEnchantments.SCABBING.location())
                 .addOptional(ApothicEnchantingEnchantments.QUICK_SHOOTING.location());
 
         tag(UEEnchantmentTags.UE_APOTHIC_ENCHANTING_ADDITION)
+                .addOptional(ApothicEnchantingEnchantments.TERMINATOR.location())
                 .addOptional(ApothicEnchantingEnchantments.SCABBING.location())
                 .addOptional(ApothicEnchantingEnchantments.QUICK_SHOOTING.location());
     }

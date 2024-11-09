@@ -1,6 +1,10 @@
 {
   "values": [
     {
+      "id": "ultimate_enchantment:terminator",
+      "required": false
+    },
+    {
       "id": "ultimate_enchantment:scabbing",
       "required": false
     },

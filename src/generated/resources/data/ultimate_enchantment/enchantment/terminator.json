@@ -1,0 +1,85 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "apothic_enchanting"
+    }
+  ],
+  "anvil_cost": 1,
+  "description": {
+    "translate": "enchantment.ultimate_enchantment.terminator"
+  },
+  "effects": {
+    "minecraft:attributes": [
+      {
+        "amount": 0.5,
+        "attribute": "apothic_attributes:draw_speed",
+        "id": "ultimate_enchantment:enchantment.terminator",
+        "operation": "add_value"
+      },
+      {
+        "amount": -0.75,
+        "attribute": "apothic_attributes:crit_chance",
+        "id": "ultimate_enchantment:enchantment.terminator",
+        "operation": "add_multiplied_total"
+      },
+      {
+        "amount": -0.5,
+        "attribute": "apothic_attributes:crit_damage",
+        "id": "ultimate_enchantment:enchantment.terminator",
+        "operation": "add_multiplied_total"
+      }
+    ],
+    "minecraft:projectile_count": [
+      {
+        "effect": {
+          "type": "minecraft:add",
+          "value": {
+            "type": "minecraft:linear",
+            "base": 2.0,
+            "per_level_above_first": 2.0
+          }
+        }
+      }
+    ],
+    "minecraft:projectile_spread": [
+      {
+        "effect": {
+          "type": "minecraft:add",
+          "value": {
+            "type": "minecraft:linear",
+            "base": 10.0,
+            "per_level_above_first": 10.0
+          }
+        }
+      }
+    ],
+    "ultimate_enchantment:extra_shoot_count": [
+      {
+        "effect": {
+          "type": "minecraft:add",
+          "value": {
+            "type": "minecraft:linear",
+            "base": 1.0,
+            "per_level_above_first": 1.0
+          }
+        }
+      }
+    ]
+  },
+  "exclusive_set": "#ultimate_enchantment:ultimate_enchantment",
+  "max_cost": {
+    "base": 150,
+    "per_level_above_first": 0
+  },
+  "max_level": 1,
+  "min_cost": {
+    "base": 80,
+    "per_level_above_first": 0
+  },
+  "slots": [
+    "hand"
+  ],
+  "supported_items": "#minecraft:enchantable/bow",
+  "weight": 1
+}

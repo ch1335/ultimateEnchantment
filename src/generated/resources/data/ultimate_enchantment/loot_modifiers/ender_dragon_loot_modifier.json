@@ -2,11 +2,8 @@
   "type": "neoforge:add_table",
   "conditions": [
     {
-      "condition": "minecraft:entity_properties",
-      "entity": "this",
-      "predicate": {
-        "type": "minecraft:ender_dragon"
-      }
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "minecraft:entities/ender_dragon"
     }
   ],
   "table": "ultimate_enchantment:modifier/ender_dragon_loot_addition"

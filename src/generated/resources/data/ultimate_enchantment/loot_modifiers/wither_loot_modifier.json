@@ -2,11 +2,8 @@
   "type": "neoforge:add_table",
   "conditions": [
     {
-      "condition": "minecraft:entity_properties",
-      "entity": "this",
-      "predicate": {
-        "type": "minecraft:wither"
-      }
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "minecraft:entities/wither"
     }
   ],
   "table": "ultimate_enchantment:modifier/wither_loot_addition"

@@ -1,4 +1,4 @@
-// 1.21.1	2024-11-03T18:13:53.0058895	Registries
+// 1.21.1	2024-11-05T23:43:57.6560441	Registries
 e9ca104b35b40ec2fc8d641741efea7b27457966 data/ultimate_enchantment/enchantment/critical_chance.json
 e45d7cc8121c22ca7d9f2cdd489b84fa4b81367a data/ultimate_enchantment/enchantment/critical_damage.json
 9741ae3eb2503c35e2cec46ea2a25b693f43ce82 data/ultimate_enchantment/enchantment/cut_down.json
@@ -12,4 +12,5 @@ b4d5aee1e1178692cb7729dfed09e94147e3f326 data/ultimate_enchantment/enchantment/l
 194639d51fff712d00918c5fc5340b968e223928 data/ultimate_enchantment/enchantment/scabbing.json
 84d617ac405ab30393fe4ae4a8caeaa66826e043 data/ultimate_enchantment/enchantment/smelting.json
 03da08db4e8d5ed47ce7f5d8ee55e1bef4591bb1 data/ultimate_enchantment/enchantment/syphon.json
+c129b5d381bad06f5f0d57b90a8a23292f7a1bf7 data/ultimate_enchantment/enchantment/terminator.json
 eb0a6eb8a090d83ca4326b4670f309aa90c36dde data/ultimate_enchantment/enchantment/ultimate.json

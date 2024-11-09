@@ -14,6 +14,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
 import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
 import net.neoforged.neoforge.common.loot.AddTableLootModifier;
+import net.neoforged.neoforge.common.loot.LootTableIdCondition;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -24,9 +25,9 @@ public class EntityLootModifierProvider extends GlobalLootModifierProvider {
 
     @Override
     protected void start() {
-        add("wither_loot_modifier", new AddTableLootModifier(new LootItemCondition[]{LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().of(EntityType.WITHER)).build()}, key("modifier/wither_loot_addition")));
-        add("ender_dragon_loot_modifier", new AddTableLootModifier(new LootItemCondition[]{LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().of(EntityType.ENDER_DRAGON)).build()}, key("modifier/ender_dragon_loot_addition")));
-        add("warden_loot_modifier", new AddTableLootModifier(new LootItemCondition[]{LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().of(EntityType.WARDEN)).build()}, key("modifier/warden_loot_addition")));
+        add("wither_loot_modifier", new AddTableLootModifier(new LootItemCondition[]{LootTableIdCondition.builder(ResourceLocation.withDefaultNamespace("entities/wither")).build()}, key("modifier/wither_loot_addition")));
+        add("ender_dragon_loot_modifier", new AddTableLootModifier(new LootItemCondition[]{LootTableIdCondition.builder(ResourceLocation.withDefaultNamespace("entities/ender_dragon")).build()}, key("modifier/ender_dragon_loot_addition")));
+        add("warden_loot_modifier", new AddTableLootModifier(new LootItemCondition[]{LootTableIdCondition.builder(ResourceLocation.withDefaultNamespace("entities/warden")).build()}, key("modifier/warden_loot_addition")));
 
     }
 

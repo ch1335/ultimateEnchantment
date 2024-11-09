@@ -29,5 +29,8 @@
   "enchantment.ultimate_enchantment.quick_shooting": "快速射击",
   "enchantment.ultimate_enchantment.quick_shooting.desc": "每级提供10%蓄力速度",
   "enchantment.ultimate_enchantment.scabbing": "碎甲",
-  "enchantment.ultimate_enchantment.scabbing.desc": "每级提供5%的护甲撕裂"
+  "enchantment.ultimate_enchantment.scabbing.desc": "每级提供5%的护甲撕裂",
+  "enchantment.ultimate_enchantment.terminator": "终结者",
+  "enchantment.ultimate_enchantment.terminator.desc": "§d你的弓可以额外射出两只箭，额外射击一次，并且拉弓速度大幅度提升，但是你的暴击几率会被除以4,暴击伤害被除以2"
+
 }

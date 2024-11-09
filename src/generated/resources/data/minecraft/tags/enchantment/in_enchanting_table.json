@@ -1,5 +1,9 @@
 {
   "values": [
-    "#ultimate_enchantment:tradeable_legendary_enchantment"
+    "#ultimate_enchantment:tradeable_legendary_enchantment",
+    {
+      "id": "ultimate_enchantment:terminator",
+      "required": false
+    }
   ]
 }

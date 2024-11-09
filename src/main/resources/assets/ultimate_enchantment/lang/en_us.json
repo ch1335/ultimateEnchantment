@@ -29,5 +29,8 @@
   "enchantment.ultimate_enchantment.quick_shooting": "Quick Shooting",
   "enchantment.ultimate_enchantment.quick_shooting.desc": "Each level provides a 10% charging speed",
   "enchantment.ultimate_enchantment.scabbing": "Scabbing",
-  "enchantment.ultimate_enchantment.scabbing.desc": "Each level provides 5% armor tearing"
+  "enchantment.ultimate_enchantment.scabbing.desc": "Each level provides 5% armor tearing",
+  "enchantment.ultimate_enchantment.terminator": "Terminator",
+  "enchantment.ultimate_enchantment.terminator.desc": "§dYour bow can shoot two additional arrows, shoot once more, and significantly increase the speed of pulling the bow, but your critical strike probability will be divided by 4 and critical strike damage will be divided by 2"
+
 }

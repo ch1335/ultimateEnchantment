@@ -2,13 +2,18 @@ package com.chen1335.ultimateEnchantment.common;
 
 
 import com.chen.simpleRPGCore.common.DamageSourceExtraData;
+import com.chen.simpleRPGCore.event.events.ModifyProjectileEvent;
 import com.chen.simpleRPGCore.mixinsAPI.minecraft.IDamageSourceExtension;
+import com.chen.simpleRPGCore.mixinsAPI.minecraft.IProjectileMixinExtension;
+import com.chen.simpleRPGCore.utils.SimpleSchedule;
+import com.chen1335.ultimateEnchantment.enchantment.ApothicEnchantingEnchantments;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.LegendComponent;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.SyphonComponent;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.UEEnchantmentEffectComponents;
 import com.chen1335.ultimateEnchantment.enchantment.effects.UltimateEnchantment.LastStandEffect;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Unit;
 import net.minecraft.world.damagesource.DamageSource;
@@ -26,6 +31,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.item.enchantment.LevelBasedValue;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -38,6 +44,7 @@ import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
+import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.Objects;
 
@@ -207,6 +214,33 @@ public class EventHandler {
                         }
                     }
                 }
+            }
+        }
+
+        @SubscribeEvent
+        public static void extraShotCountEffect(LivingEntityUseItemEvent.Stop event) {
+            MutableInt extraShotCount = new MutableInt(0);
+
+            ItemStack itemStack = event.getItem();
+            EnchantmentHelper.runIterationOnItem(itemStack, (holder, i) -> {
+                holder.value().getEffects(UEEnchantmentEffectComponents.EXTRA_SHOOT_COUNT.value()).forEach(condition -> {
+                    extraShotCount.setValue(condition.effect().process(i, event.getEntity().getRandom(), extraShotCount.intValue()));
+                });
+            });
+
+
+            for (int i = 0; i < extraShotCount.intValue(); i++) {
+                SimpleSchedule.addSchedule(event.getEntity().level(), new SimpleSchedule.Wait(() -> {
+                    itemStack.releaseUsing(event.getEntity().level(), event.getEntity(), event.getDuration());
+                }, 5));
+            }
+        }
+
+        @SubscribeEvent
+        public static void modifyProjectile(ModifyProjectileEvent event) {
+            ItemEnchantments enchantments = event.itemStack.getAllEnchantments(event.serverLevel.registryAccess().lookupOrThrow(Registries.ENCHANTMENT));
+            if (enchantments.keySet().stream().anyMatch(enchantmentHolder -> enchantmentHolder.getKey() == ApothicEnchantingEnchantments.TERMINATOR)) {
+                ((IProjectileMixinExtension) event.projectile).src$setBypassesCooldownHit(true);
             }
         }
     }
