@@ -18,9 +18,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
@@ -28,13 +28,10 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.slf4j.Logger;
 
-import java.io.File;
-
 @Mod(UltimateEnchantment.MODID)
 public class UltimateEnchantment {
     public static final String MODID = "ultimate_enchantment";
 
-    private static final File configDir;
     public static final DeferredHelper R = DeferredHelper.create(MODID);
 
     public static final Logger LOGGER = LogUtils.getLogger();
@@ -80,16 +77,8 @@ public class UltimateEnchantment {
         UEEnchantmentEffects.ENCHANTMENT_LOCATION_BASED_EFFECT.register(modEventBus);
         UEEnchantmentEffectComponents.TYPES.register(modEventBus);
 
-        UEConfig.addConfigs();
-        UEConfig.load();
-    }
 
-    static {
-        configDir = new File(FMLPaths.CONFIGDIR.get().toFile(), MODID);
-    }
-
-    public static File getConfigFile(String path) {
-        return new File(configDir, path + ".cfg");
+        modContainer.registerConfig(ModConfig.Type.COMMON, UEConfig.SPEC);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
