@@ -1,0 +1,155 @@
+package com.chen1335.ultimateEnchantment.common;
+
+import com.chen1335.ultimateEnchantment.UltimateEnchantment;
+import com.chen1335.ultimateEnchantment.enchantment.EnchantmentEffectsHook;
+import com.chen1335.ultimateEnchantment.enchantment.Enchantments;
+import com.chen1335.ultimateEnchantment.enchantment.IAttributeEnchantment;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.LastStand;
+import com.chen1335.ultimateEnchantment.mixinsAPI.IAttributeExtension;
+import dev.shadowsoffire.placebo.events.GetEnchantmentLevelEvent;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.BowItem;
+import net.minecraft.world.item.Equipable;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraftforge.event.ItemAttributeModifierEvent;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
+import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+
+import java.util.Objects;
+
+public class EventHandler {
+    @Mod.EventBusSubscriber(modid = UltimateEnchantment.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    public static class GameHandler {
+        @SubscribeEvent
+        public static void ultimate(GetEnchantmentLevelEvent event) {
+            int ultimateLevel = 0;
+            ListTag tag = event.getStack().getEnchantmentTags();
+            for (int i = 0; i < tag.size(); ++i) {
+                CompoundTag compoundtag = tag.getCompound(i);
+                if (Objects.equals(EnchantmentHelper.getEnchantmentId(compoundtag), Enchantments.ULTIMATE.getId())) {
+                    ultimateLevel = EnchantmentHelper.getEnchantmentLevel(compoundtag);
+                }
+            }
+
+            int finalUltimateLevel = ultimateLevel;
+            event.getEnchantments().forEach((enchantment, integer) -> {
+                if (enchantment != Enchantments.ULTIMATE.get() && integer > 0) {
+                    event.getEnchantments().put(enchantment, integer + finalUltimateLevel);
+                }
+            });
+        }
+
+        @SubscribeEvent
+        public static void legend(LivingEquipmentChangeEvent event) {
+            ItemStack from = event.getFrom();
+            ItemStack to = event.getTo();
+            LivingEntity livingEntity = event.getEntity();
+
+            Equipable equipable = Equipable.get(to);
+
+            EquipmentSlot slot = event.getSlot();
+
+            boolean slotCorrect = false;
+
+            if (equipable == null && (slot == EquipmentSlot.MAINHAND || slot == EquipmentSlot.OFFHAND)) {
+                slotCorrect = true;
+            } else if (equipable != null && equipable.getEquipmentSlot() == slot) {
+                slotCorrect = true;
+            }
+
+            if (!from.isEmpty()) {
+                livingEntity.getAttributes().supplier.instances.forEach((attribute, attributeInstance) -> {
+                    livingEntity.getAttributes().getInstance(attribute).getModifiers().forEach(attributeModifier -> {
+                        if (attributeModifier.getName().equals("ue:legendModifier_" + slot.getName())) {
+                            livingEntity.getAttributes().getInstance(attribute).removeModifier(attributeModifier.getId());
+                        }
+                    });
+
+
+                });
+            }
+
+            if (!to.isEmpty() && slotCorrect) {
+                int legendLevel = to.getEnchantmentLevel(Enchantments.LEGEND.get());
+                livingEntity.getAttributes().supplier.instances.forEach((attribute, attributeInstance) -> {
+                    IAttributeExtension attributeExtension = (IAttributeExtension) attribute;
+                    if (attributeExtension.ue$getSentiment() == AttributeTypeInfo.Sentiment.POSITIVE) {
+                        livingEntity.getAttributes().getInstance(attribute).addTransientModifier(new AttributeModifier("ue:legendModifier_" + slot.getName(), Enchantments.LEGEND.get().getAttributeBonus(legendLevel), AttributeModifier.Operation.MULTIPLY_BASE));
+                    } else if (attributeExtension.ue$getSentiment() == AttributeTypeInfo.Sentiment.NEGATIVE) {
+                        livingEntity.getAttributes().getInstance(attribute).addTransientModifier(new AttributeModifier("ue:legendModifier_" + slot.getName(), -Enchantments.LEGEND.get().getAttributeBonus(legendLevel), AttributeModifier.Operation.MULTIPLY_TOTAL));
+                    }
+                });
+            }
+
+            event.getEntity().setHealth(event.getEntity().getHealth());
+        }
+
+        @SubscribeEvent
+        public static void lastStand(LivingEquipmentChangeEvent event) {
+            EnchantmentEffectsHook.updateLastStandState(event.getEntity());
+
+        }
+
+        @SubscribeEvent
+        public static void lastStand(ItemAttributeModifierEvent event) {
+            ItemStack itemStack = event.getItemStack();
+            int lastStandLevel = itemStack.getEnchantmentLevel(Enchantments.LAST_STAND.get());
+            Equipable equipable = Equipable.get(itemStack);
+
+            if (itemStack.getTag() != null && itemStack.getItem() instanceof ArmorItem armorItem) {
+                float userHealth = itemStack.getOrCreateTag().getFloat("ue:userHealth");
+                float userMaxHealth = itemStack.getOrCreateTag().getFloat("ue:userMaxHealth");
+                if (userHealth <= userMaxHealth * Enchantments.LAST_STAND.get().getEffectiveMaximumHealthPercentage() && equipable != null && equipable.getEquipmentSlot() == event.getSlotType() && lastStandLevel > 0) {
+                    event.addModifier(Attributes.ARMOR, new AttributeModifier(LastStand.ARMOR_MODIFIER_UUID_PER_TYPE.get(armorItem.getType()), "ue:lastStand_" + event.getSlotType().name(), Enchantments.LAST_STAND.get().getArmorBonus(lastStandLevel), AttributeModifier.Operation.MULTIPLY_TOTAL));
+                    event.addModifier(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(LastStand.ARMOR_TOUGHNESS_MODIFIER_UUID_PER_TYPE.get(armorItem.getType()), "ue:lastStand_" + event.getSlotType().name(), Enchantments.LAST_STAND.get().getArmorToughnessBonus(lastStandLevel), AttributeModifier.Operation.MULTIPLY_TOTAL));
+                }
+            }
+        }
+
+        @SubscribeEvent
+        public static void attributeEnchantment(ItemAttributeModifierEvent event) {
+            ItemStack itemStack = event.getItemStack();
+            EquipmentSlot slot = LivingEntity.getEquipmentSlotForItem(itemStack);
+            event.getItemStack().getAllEnchantments().forEach((enchantment, integer) -> {
+                if (enchantment instanceof IAttributeEnchantment attributeEnchantment && slot == event.getSlotType()) {
+                    attributeEnchantment.getAttributeModifier(event.getSlotType(), integer).forEach(event::addModifier);
+                }
+            });
+        }
+
+
+        @SubscribeEvent
+        public static void quickLatch(LivingEntityUseItemEvent.Tick event) {
+            if (event.getItem().getItem() instanceof BowItem bowItem && event.getItem().getEnchantmentLevel(Enchantments.QUICK_LATCH.get()) > 0) {
+                if (bowItem.getUseDuration(event.getItem()) - event.getDuration() >= BowItem.MAX_DRAW_DURATION) {
+                    event.getEntity().releaseUsingItem();
+                }
+            }
+        }
+
+        @SubscribeEvent(priority = EventPriority.LOWEST)
+        public static void CutDown(LivingHurtEvent event) {
+            if (event.getSource().getDirectEntity() instanceof LivingEntity livingEntity) {
+                int cutDownLevel = livingEntity.getMainHandItem().getEnchantmentLevel(Enchantments.CUT_DOWN.get());
+                float exceedHealthPercentage = ((event.getEntity().getHealth() - livingEntity.getMaxHealth()) / livingEntity.getMaxHealth()) * 100;
+                event.setAmount(event.getAmount() * (1 + Enchantments.CUT_DOWN.get().getDamageBonus(Math.max(0, exceedHealthPercentage), cutDownLevel)));
+            }
+        }
+    }
+
+    @Mod.EventBusSubscriber(modid = UltimateEnchantment.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+    public static class ModHandler {
+
+    }
+}
