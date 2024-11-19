@@ -13,14 +13,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Mixin(EnchantmentHelper.class)
 public class EnchantmentHelperMixin {
     @Inject(method = "setEnchantments", at = @At("HEAD"), cancellable = true)
     private static void setEnchantments(Map<Enchantment, Integer> map, ItemStack itemStack, CallbackInfo ci) {
-        map = new HashMap<>(map);
+        map = new LinkedHashMap<>(map);
         EnchantmentUtils.sortInMap(map);
         ListTag listtag = new ListTag();
         for (Map.Entry<Enchantment, Integer> entry : map.entrySet()) {

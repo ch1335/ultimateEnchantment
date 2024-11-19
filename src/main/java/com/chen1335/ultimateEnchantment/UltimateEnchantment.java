@@ -3,18 +3,20 @@ package com.chen1335.ultimateEnchantment;
 import com.chen1335.ultimateEnchantment.common.AttributeTypeInfo;
 import com.chen1335.ultimateEnchantment.data.LootProvider;
 import com.chen1335.ultimateEnchantment.enchantment.Enchantments;
+import com.chen1335.ultimateEnchantment.enchantment.comfig.EnchantmentConfig;
 import com.chen1335.ultimateEnchantment.mixinsAPI.IEnchantmentExtension;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.logging.LogUtils;
+import dev.shadowsoffire.placebo.config.Configuration;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -23,12 +25,13 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import org.slf4j.Logger;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 @Mod(UltimateEnchantment.MODID)
@@ -36,12 +39,20 @@ public class UltimateEnchantment {
     public static final String MODID = "ultimate_enchantment";
     public static final Logger LOGGER = LogUtils.getLogger();
 
+    public static boolean canBoosDropEnchantmentBook = true;
+
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
+    public static File configDir = new File(FMLPaths.CONFIGDIR.get().toFile(), "ultimate_enchantment");
+
+    public static Configuration config = new Configuration(new File(configDir, "enchantments.cfg"));
+
+    public static Configuration commonConfig = new Configuration(new File(configDir, "common.cfg"));
 
     public static final RegistryObject<CreativeModeTab> ULTIMATE_ENCHANTMENT_TAB = CREATIVE_MODE_TABS.register("ultimate_enchantment_tab", () -> CreativeModeTab.builder()
             .withTabsBefore(CreativeModeTabs.COMBAT)
             .icon(Items.ENCHANTED_BOOK::getDefaultInstance)
+            .title(Component.translatable("itemGroup.ultimate_enchantment"))
             .displayItems((parameters, output) -> {
                 ArrayList<Enchantment> ultimateEnchantments = new ArrayList<>();
                 ArrayList<Enchantment> legendaryEnchantments = new ArrayList<>();
@@ -59,24 +70,31 @@ public class UltimateEnchantment {
                     }
                 });
 
+                ItemStack allEnchantment = Items.ENCHANTED_BOOK.getDefaultInstance();
+
                 ultimateEnchantments.forEach(ultimateEnchantment -> {
                     ItemStack book = Items.ENCHANTED_BOOK.getDefaultInstance();
                     EnchantmentHelper.setEnchantments(ImmutableMap.of(ultimateEnchantment, ultimateEnchantment.getMaxLevel()), book);
+                    EnchantmentHelper.setEnchantments(ImmutableMap.of(ultimateEnchantment, ultimateEnchantment.getMaxLevel()), allEnchantment);
+
                     output.accept(book);
                 });
 
                 legendaryEnchantments.forEach(ultimateEnchantment -> {
                     ItemStack book = Items.ENCHANTED_BOOK.getDefaultInstance();
                     EnchantmentHelper.setEnchantments(ImmutableMap.of(ultimateEnchantment, ultimateEnchantment.getMaxLevel()), book);
+                    EnchantmentHelper.setEnchantments(ImmutableMap.of(ultimateEnchantment, ultimateEnchantment.getMaxLevel()), allEnchantment);
                     output.accept(book);
                 });
 
                 otherEnchantments.forEach(ultimateEnchantment -> {
                     ItemStack book = Items.ENCHANTED_BOOK.getDefaultInstance();
                     EnchantmentHelper.setEnchantments(ImmutableMap.of(ultimateEnchantment, ultimateEnchantment.getMaxLevel()), book);
+                    EnchantmentHelper.setEnchantments(ImmutableMap.of(ultimateEnchantment, ultimateEnchantment.getMaxLevel()), allEnchantment);
                     output.accept(book);
                 });
 
+                output.accept(allEnchantment);
             }).build());
 
     public UltimateEnchantment() {
@@ -101,6 +119,17 @@ public class UltimateEnchantment {
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         AttributeTypeInfo.init();
+        EnchantmentConfig.load(config);
+
+
+        canBoosDropEnchantmentBook = commonConfig.getBoolean("canBoosDropEnchantmentBook", "common", true, "can Boos Drop Enchantment Book");
+        if (config.hasChanged()) {
+            config.save();
+        }
+
+        if (commonConfig.hasChanged()) {
+            commonConfig.save();
+        }
     }
 
     public enum EnchantmentType {

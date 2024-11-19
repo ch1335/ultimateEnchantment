@@ -1,6 +1,7 @@
 package com.chen1335.ultimateEnchantment.enchantment;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.Terminator;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -45,5 +46,9 @@ public class Enchantments {
     public static final RegistryObject<LifeSteal> LIFE_STEAL = ENCHANTMENT_DEFERRED_REGISTER.register("life_steal", LifeSteal::new);
 
     public static final RegistryObject<CutDown> CUT_DOWN = ENCHANTMENT_DEFERRED_REGISTER.register("cut_down", CutDown::new);
+
+    public static final RegistryObject<QuickShooting> QUICK_SHOOTING = ENCHANTMENT_DEFERRED_REGISTER.register("quick_shooting", QuickShooting::new);
+
+    public static final RegistryObject<Terminator> TERMINATOR = ENCHANTMENT_DEFERRED_REGISTER.register("terminator", Terminator::new);
 
 }

@@ -5,7 +5,9 @@ import com.chen1335.ultimateEnchantment.enchantment.EnchantmentEffectsHook;
 import com.chen1335.ultimateEnchantment.enchantment.Enchantments;
 import com.chen1335.ultimateEnchantment.enchantment.IAttributeEnchantment;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.LastStand;
+import com.chen1335.ultimateEnchantment.mixinsAPI.IAbstractArrowExtension;
 import com.chen1335.ultimateEnchantment.mixinsAPI.IAttributeExtension;
+import com.chen1335.ultimateEnchantment.utils.SimpleSchedule;
 import dev.shadowsoffire.placebo.events.GetEnchantmentLevelEvent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -13,12 +15,17 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.Equipable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.ItemAttributeModifierEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -31,6 +38,7 @@ import java.util.Objects;
 public class EventHandler {
     @Mod.EventBusSubscriber(modid = UltimateEnchantment.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class GameHandler {
+
         @SubscribeEvent
         public static void ultimate(GetEnchantmentLevelEvent event) {
             int ultimateLevel = 0;
@@ -131,7 +139,7 @@ public class EventHandler {
 
         @SubscribeEvent
         public static void quickLatch(LivingEntityUseItemEvent.Tick event) {
-            if (event.getItem().getItem() instanceof BowItem bowItem && event.getItem().getEnchantmentLevel(Enchantments.QUICK_LATCH.get()) > 0) {
+            if (!event.getEntity().level().isClientSide &&event.getItem().getItem() instanceof BowItem bowItem && event.getItem().getEnchantmentLevel(Enchantments.QUICK_LATCH.get()) > 0) {
                 if (bowItem.getUseDuration(event.getItem()) - event.getDuration() >= BowItem.MAX_DRAW_DURATION) {
                     event.getEntity().releaseUsingItem();
                 }
@@ -146,6 +154,37 @@ public class EventHandler {
                 event.setAmount(event.getAmount() * (1 + Enchantments.CUT_DOWN.get().getDamageBonus(Math.max(0, exceedHealthPercentage), cutDownLevel)));
             }
         }
+
+        @SubscribeEvent
+        public static void Terminator(LivingEntityUseItemEvent.Stop event) {
+            if (event.getEntity() instanceof Player player && event.getItem().getEnchantmentLevel(Enchantments.TERMINATOR.get()) > 0) {
+                if (event.getItem().getItem() instanceof BowItem || event.getItem().getTags().anyMatch(itemTagKey -> itemTagKey == Tags.Items.TOOLS_BOWS)) {
+                    Enchantments.TERMINATOR.get().shoot(event.getItem(), player.level(), player, event.getDuration());
+                }
+            }
+        }
+
+        @SubscribeEvent
+        public static void LivingHurtByTerminatorArrow(LivingHurtEvent event) {
+            if (event.getSource().getDirectEntity() instanceof AbstractArrow abstractArrow && ((IAbstractArrowExtension) abstractArrow).ue$isByPassInvulnerableTime()) {
+                event.getEntity().invulnerableTime = 0;
+            }
+        }
+
+        @SubscribeEvent
+        public static void ServerTick(TickEvent.ServerTickEvent event) {
+            if (event.phase == TickEvent.Phase.END) {
+                SimpleSchedule.update(Dist.DEDICATED_SERVER);
+            }
+        }
+
+        @SubscribeEvent
+        public static void ClientTick(TickEvent.ClientTickEvent event) {
+            if (event.phase == TickEvent.Phase.END) {
+                SimpleSchedule.update(Dist.CLIENT);
+            }
+        }
+
     }
 
     @Mod.EventBusSubscriber(modid = UltimateEnchantment.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)

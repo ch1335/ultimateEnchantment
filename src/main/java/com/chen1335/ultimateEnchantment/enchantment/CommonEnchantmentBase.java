@@ -1,16 +1,25 @@
 package com.chen1335.ultimateEnchantment.enchantment;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
+import com.chen1335.ultimateEnchantment.enchantment.comfig.EnchantmentConfig;
 import com.chen1335.ultimateEnchantment.mixinsAPI.IEnchantmentExtension;
+import dev.shadowsoffire.placebo.config.Configuration;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
+import org.jetbrains.annotations.NotNull;
 
 public class CommonEnchantmentBase extends Enchantment {
     public CommonEnchantmentBase(Rarity pRarity, EnchantmentCategory pCategory, EquipmentSlot[] pApplicableSlots, UltimateEnchantment.EnchantmentType enchantmentType) {
         super(pRarity, pCategory, pApplicableSlots);
         ((IEnchantmentExtension) this).ue$setEnchantmentType(enchantmentType);
+        EnchantmentConfig.sets.add(this);
     }
+
+    public void loadConfig(Configuration config){
+
+    }
+
 
     @Override
     public boolean isTradeable() {
@@ -25,5 +34,27 @@ public class CommonEnchantmentBase extends Enchantment {
     @Override
     public boolean isDiscoverable() {
         return !(((IEnchantmentExtension) this).ue$getEnchantmentType() == UltimateEnchantment.EnchantmentType.ULTIMATE_ENCHANTMENT);
+    }
+
+    @Override
+    protected boolean checkCompatibility(@NotNull Enchantment pOther) {
+        UltimateEnchantment.EnchantmentType type = ((IEnchantmentExtension) this).ue$getEnchantmentType();
+        if (type == UltimateEnchantment.EnchantmentType.ULTIMATE_ENCHANTMENT) {
+            return type != ((IEnchantmentExtension) pOther).ue$getEnchantmentType();
+        }
+        return true;
+    }
+
+    public String getSimpleName(){
+        return this.getClass().getSimpleName();
+    }
+
+    @Override
+    public int getMinCost(int pLevel) {
+        UltimateEnchantment.EnchantmentType type = ((IEnchantmentExtension) this).ue$getEnchantmentType();
+        if (type == UltimateEnchantment.EnchantmentType.ULTIMATE_ENCHANTMENT) {
+            return 999;
+        }
+        return super.getMinCost(pLevel);
     }
 }

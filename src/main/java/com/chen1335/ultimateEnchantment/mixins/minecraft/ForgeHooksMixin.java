@@ -1,5 +1,6 @@
 package com.chen1335.ultimateEnchantment.mixins.minecraft;
 
+import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.data.LootProvider;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.resources.ResourceLocation;
@@ -15,7 +16,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class ForgeHooksMixin {
     @Inject(method = "modifyLoot(Lnet/minecraft/resources/ResourceLocation;Lit/unimi/dsi/fastutil/objects/ObjectArrayList;Lnet/minecraft/world/level/storage/loot/LootContext;)Lit/unimi/dsi/fastutil/objects/ObjectArrayList;", at = @At("RETURN"))
     private static void modifyLoot(ResourceLocation lootTableId, ObjectArrayList<ItemStack> generatedLoot, LootContext context, CallbackInfoReturnable<ObjectArrayList<ItemStack>> cir) {
-
+        if (!UltimateEnchantment.canBoosDropEnchantmentBook) {
+            return;
+        }
 
         if (lootTableId.equals(new ResourceLocation("entities/ender_dragon"))) {
             context.getLevel().getServer().getLootData().getLootTable(LootProvider.ENDER_DRAGON_LOOT_ADDITION).getRandomItems(context, cir.getReturnValue()::add);
