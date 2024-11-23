@@ -56,6 +56,7 @@ public class SingleAttributeEnchantment extends CommonEnchantmentBase implements
 
     @Override
     public void loadConfig(Configuration config) {
+        super.loadConfig(config);
         this.attributeModifierHolders.forEach(attributeModifierHolder -> {
             attributeModifierHolder.loadFromConfig(this, config);
         });

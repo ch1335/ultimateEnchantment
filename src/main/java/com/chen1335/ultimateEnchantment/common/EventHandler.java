@@ -1,6 +1,7 @@
 package com.chen1335.ultimateEnchantment.common;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
+import com.chen1335.ultimateEnchantment.effect.MobEffects;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentEffectsHook;
 import com.chen1335.ultimateEnchantment.enchantment.Enchantments;
 import com.chen1335.ultimateEnchantment.enchantment.IAttributeEnchantment;
@@ -11,6 +12,7 @@ import com.chen1335.ultimateEnchantment.utils.SimpleSchedule;
 import dev.shadowsoffire.placebo.events.GetEnchantmentLevelEvent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -29,6 +31,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.MobEffectEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -52,7 +55,7 @@ public class EventHandler {
 
             int finalUltimateLevel = ultimateLevel;
             event.getEnchantments().forEach((enchantment, integer) -> {
-                if (enchantment != Enchantments.ULTIMATE.get() && integer > 0) {
+                if (enchantment.getMaxLevel() > 1 && enchantment != Enchantments.ULTIMATE.get() && integer > 0) {
                     event.getEnchantments().put(enchantment, integer + finalUltimateLevel);
                 }
             });
@@ -139,7 +142,7 @@ public class EventHandler {
 
         @SubscribeEvent
         public static void quickLatch(LivingEntityUseItemEvent.Tick event) {
-            if (!event.getEntity().level().isClientSide &&event.getItem().getItem() instanceof BowItem bowItem && event.getItem().getEnchantmentLevel(Enchantments.QUICK_LATCH.get()) > 0) {
+            if (!event.getEntity().level().isClientSide && event.getItem().getItem() instanceof BowItem bowItem && event.getItem().getEnchantmentLevel(Enchantments.QUICK_LATCH.get()) > 0) {
                 if (bowItem.getUseDuration(event.getItem()) - event.getDuration() >= BowItem.MAX_DRAW_DURATION) {
                     event.getEntity().releaseUsingItem();
                 }
@@ -184,7 +187,6 @@ public class EventHandler {
                 SimpleSchedule.update(Dist.CLIENT);
             }
         }
-
     }
 
     @Mod.EventBusSubscriber(modid = UltimateEnchantment.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)

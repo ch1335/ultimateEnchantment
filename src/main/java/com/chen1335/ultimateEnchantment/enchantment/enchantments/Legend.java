@@ -25,6 +25,7 @@ public class Legend extends CommonEnchantmentBase {
 
     @Override
     public void loadConfig(Configuration config) {
+        super.loadConfig(config);
         attributeBonusPerLevel = config.getFloat("attributeBonusPerLevel",this.getSimpleName(),attributeBonusPerLevel,Float.MIN_VALUE,Float.MAX_VALUE,"the attributeBonusPerLevel");
     }
 }

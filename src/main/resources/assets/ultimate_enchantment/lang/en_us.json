@@ -31,6 +31,9 @@
   "enchantment.ultimate_enchantment.scabbing": "Scabbing",
   "enchantment.ultimate_enchantment.scabbing.desc": "Each level provides 5% armor tearing",
   "enchantment.ultimate_enchantment.terminator": "Terminator",
-  "enchantment.ultimate_enchantment.terminator.desc": "§dYour bow can shoot two additional arrows, shoot once more, and significantly increase the speed of pulling the bow, but your critical strike probability will be divided by 4 and critical strike damage will be divided by 2"
-
+  "enchantment.ultimate_enchantment.terminator.desc": "§dYour bow can shoot two additional arrows, shoot once more, and significantly increase the speed of pulling the bow, but your critical strike probability will be divided by 4 and critical strike damage will be divided by 2",
+  "enchantment.ultimate_enchantment.vanquisher": "Vanquisher",
+  "enchantment.ultimate_enchantment.vanquisher.desc": "§dWhen conducting §eeffective attacks§d, a vanquisher effect will be added for 20 seconds, with a maximum of 10 layers. Each layer provides you with a 5% §efinal damage bonus§d and 10% attack speed. When the layer is full, you will also receive 20% health steal and make this §eeffective attack§d ignore invincible frames",
+  "effect.ultimate_enchantment.active_vanquisher" : "Vanquisher",
+  "effect.ultimate_enchantment.un_active_vanquisher" : "Vanquisher"
 }

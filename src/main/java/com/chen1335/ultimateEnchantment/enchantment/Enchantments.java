@@ -51,4 +51,6 @@ public class Enchantments {
 
     public static final RegistryObject<Terminator> TERMINATOR = ENCHANTMENT_DEFERRED_REGISTER.register("terminator", Terminator::new);
 
+    public static final RegistryObject<Vanquisher> VANQUISHER = ENCHANTMENT_DEFERRED_REGISTER.register("vanquisher", Vanquisher::new);
+
 }

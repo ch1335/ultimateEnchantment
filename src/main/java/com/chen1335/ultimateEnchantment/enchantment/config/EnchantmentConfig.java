@@ -1,4 +1,4 @@
-package com.chen1335.ultimateEnchantment.enchantment.comfig;
+package com.chen1335.ultimateEnchantment.enchantment.config;
 
 import com.chen1335.ultimateEnchantment.enchantment.CommonEnchantmentBase;
 import dev.shadowsoffire.placebo.config.Configuration;
@@ -11,8 +11,6 @@ public class EnchantmentConfig {
 
     public static void load(Configuration config) {
         sets.forEach(commonEnchantmentBase -> commonEnchantmentBase.loadConfig(config));
-
     }
-
 
 }

@@ -2,6 +2,7 @@ package com.chen1335.ultimateEnchantment.enchantment.enchantments;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.enchantment.SingleAttributeEnchantment;
+import com.chen1335.ultimateEnchantment.enchantment.config.SimpleEnchantmentInfo;
 import com.chen1335.ultimateEnchantment.utils.SimpleSchedule;
 import dev.shadowsoffire.attributeslib.api.ALObjects;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -24,6 +25,7 @@ public class Terminator extends SingleAttributeEnchantment {
         super(Rarity.VERY_RARE, EnchantmentCategory.BOW, new EquipmentSlot[]{EquipmentSlot.MAINHAND}, UltimateEnchantment.EnchantmentType.ULTIMATE_ENCHANTMENT, ALObjects.Attributes.DRAW_SPEED.get(), 0.5F, AttributeModifier.Operation.ADDITION);
         this.addAttributeModifierHolder(new AttributeModifierHolder(ALObjects.Attributes.CRIT_CHANCE.get(), -0.75F, AttributeModifier.Operation.MULTIPLY_TOTAL));
         this.addAttributeModifierHolder(new AttributeModifierHolder(ALObjects.Attributes.CRIT_DAMAGE.get(), -0.5F, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        this.setInfo(new SimpleEnchantmentInfo(false,false,true));
     }
 
     public int additionalShotPerSide = 2;
@@ -85,5 +87,10 @@ public class Terminator extends SingleAttributeEnchantment {
                 }
             }
         }
+    }
+
+    @Override
+    public int getMinCost(int pLevel) {
+        return 100;
     }
 }

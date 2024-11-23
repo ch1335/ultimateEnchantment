@@ -31,6 +31,9 @@
   "enchantment.ultimate_enchantment.scabbing": "碎甲",
   "enchantment.ultimate_enchantment.scabbing.desc": "每级提供5%的护甲撕裂",
   "enchantment.ultimate_enchantment.terminator": "终结者",
-  "enchantment.ultimate_enchantment.terminator.desc": "§d你的弓可以额外射出两只箭，额外射击一次，并且拉弓速度大幅度提升，但是你的暴击几率会被除以4,暴击伤害被除以2"
-
+  "enchantment.ultimate_enchantment.terminator.desc": "§d你的弓可以额外射出两只箭，额外射击一次，并且拉弓速度大幅度提升，但是你的暴击几率会被除以4,暴击伤害被除以2",
+  "enchantment.ultimate_enchantment.vanquisher": "征服者",
+  "enchantment.ultimate_enchantment.vanquisher.desc": "§d进行§e有效攻击§r§d时会叠加一层征服者效果,持续20秒,最高10层,每层为你提供5%的§e最终伤害加成§r§d以及10%的攻击速度,满层时你还会获得20%的生命窃取,并且使这次§e有效攻击§r§d无视无敌帧",
+  "effect.ultimate_enchantment.active_vanquisher": "征服者",
+  "effect.ultimate_enchantment.un_active_vanquisher": "征服者"
 }

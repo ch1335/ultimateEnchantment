@@ -2,8 +2,9 @@ package com.chen1335.ultimateEnchantment;
 
 import com.chen1335.ultimateEnchantment.common.AttributeTypeInfo;
 import com.chen1335.ultimateEnchantment.data.LootProvider;
+import com.chen1335.ultimateEnchantment.effect.MobEffects;
 import com.chen1335.ultimateEnchantment.enchantment.Enchantments;
-import com.chen1335.ultimateEnchantment.enchantment.comfig.EnchantmentConfig;
+import com.chen1335.ultimateEnchantment.enchantment.config.EnchantmentConfig;
 import com.chen1335.ultimateEnchantment.mixinsAPI.IEnchantmentExtension;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.logging.LogUtils;
@@ -103,7 +104,7 @@ public class UltimateEnchantment {
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::runData);
         CREATIVE_MODE_TABS.register(modEventBus);
-
+        MobEffects.MOB_EFFECT_DEFERRED_REGISTER.register(modEventBus);
         Enchantments.ENCHANTMENT_DEFERRED_REGISTER.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);

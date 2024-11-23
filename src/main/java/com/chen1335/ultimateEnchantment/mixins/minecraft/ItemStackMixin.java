@@ -2,6 +2,7 @@ package com.chen1335.ultimateEnchantment.mixins.minecraft;
 
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentUtils;
 import com.chen1335.ultimateEnchantment.enchantment.Enchantments;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -9,6 +10,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.common.extensions.IForgeItemStack;
+import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,6 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin implements IForgeItemStack {
@@ -43,6 +47,16 @@ public abstract class ItemStackMixin implements IForgeItemStack {
         if (Objects.equals(EnchantmentHelper.getEnchantmentId(compoundTag), Enchantments.ULTIMATE.getId())) {
             return pCompoundTag;
         }
+
+        @NotNull Optional<Holder<Enchantment>> holder = ForgeRegistries.ENCHANTMENTS.getHolder(EnchantmentHelper.getEnchantmentId(compoundTag));
+
+        if (holder.isPresent()) {
+            if (holder.get().value().getMaxLevel() == 1) {
+                return compoundTag;
+            }
+        }
+
+
         EnchantmentHelper.setEnchantmentLevel(compoundTag, EnchantmentHelper.getEnchantmentLevel(compoundTag) + ue$levelAdditionInToolTip);
         return compoundTag;
     }

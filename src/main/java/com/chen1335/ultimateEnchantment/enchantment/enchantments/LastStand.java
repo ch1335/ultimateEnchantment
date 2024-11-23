@@ -46,6 +46,7 @@ public class LastStand extends CommonEnchantmentBase {
 
     @Override
     public void loadConfig(Configuration config) {
+        super.loadConfig(config);
         maxHealthPercentage = config.getFloat("maxHealthPercentage", this.getSimpleName(), maxHealthPercentage, Float.MIN_VALUE, Float.MAX_VALUE, "the maxHealthPercentage");
         armorBonusPerLevel = config.getFloat("armorBonusPerLevel", this.getSimpleName(), armorBonusPerLevel, Float.MIN_VALUE, Float.MAX_VALUE, "the armorBonusPerLevel");
         armorToughnessBonusPerLevel = config.getFloat("armorToughnessBonusPerLevel", this.getSimpleName(), armorToughnessBonusPerLevel, Float.MIN_VALUE, Float.MAX_VALUE, "the armorToughnessBonusPerLevel");
