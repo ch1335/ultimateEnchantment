@@ -1,5 +1,14 @@
 {
   "values": [
+    "#minecraft:enchantable/bow",
+    "#minecraft:enchantable/crossbow",
+    "#minecraft:enchantable/sword",
+    "#minecraft:axes",
+    {
+      "id": "#twilightforest:enchantable/block_and_chain",
+      "required": false
+    },
+    "#minecraft:enchantable/sharp_weapon",
     "#c:tools/ranged_weapon",
     "#c:tools/melee_weapon"
   ]

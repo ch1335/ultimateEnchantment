@@ -28,6 +28,6 @@
   "slots": [
     "hand"
   ],
-  "supported_items": "#minecraft:enchantable/weapon",
+  "supported_items": "#ultimate_enchantment:weapon_tools",
   "weight": 3
 }

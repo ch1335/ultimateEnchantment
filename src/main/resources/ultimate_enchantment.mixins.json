@@ -7,7 +7,7 @@
     "EnchantmentMixin",
     "ItemEnchantmentsMixin",
     "ItemStackMixin",
-    "LivingEntityMixin",
+    "LivingEntityMixin"
   ],
   "client": [
   ],

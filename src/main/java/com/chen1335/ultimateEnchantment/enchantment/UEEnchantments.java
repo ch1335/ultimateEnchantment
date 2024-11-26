@@ -56,7 +56,7 @@ public class UEEnchantments {
                 CUT_DOWN,
                 Enchantment.enchantment(
                                 Enchantment.definition(
-                                        itemHolderGetter.getOrThrow(ItemTags.WEAPON_ENCHANTABLE),
+                                        itemHolderGetter.getOrThrow(UEItemTags.WEAPON_TOOLS),
                                         3,
                                         5,
                                         Enchantment.dynamicCost(30, 10),

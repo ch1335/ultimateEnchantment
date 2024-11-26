@@ -15,7 +15,7 @@
   "enchantment.ultimate_enchantment.ultimate": "终极",
   "enchantment.ultimate_enchantment.ultimate.desc": "§d每级将这个物品上的§e其他所有附魔§d提升1级",
   "enchantment.ultimate_enchantment.life_steal": "生命窃取",
-  "enchantment.ultimate_enchantment.life_steal.desc": "每级提供2%的生命窃取",
+  "enchantment.ultimate_enchantment.life_steal.desc": "每级提供2.5%的生命窃取",
   "enchantment.ultimate_enchantment.smelting": "冶炼",
   "enchantment.ultimate_enchantment.smelting.desc": "自动冶炼矿石，并且会掉落对应的经验",
   "enchantment.ultimate_enchantment.critical_chance": "暴击几率",
