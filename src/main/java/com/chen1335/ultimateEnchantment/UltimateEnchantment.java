@@ -5,7 +5,7 @@ import com.chen1335.ultimateEnchantment.data.LootProvider;
 import com.chen1335.ultimateEnchantment.effect.MobEffects;
 import com.chen1335.ultimateEnchantment.enchantment.Enchantments;
 import com.chen1335.ultimateEnchantment.enchantment.config.EnchantmentConfig;
-import com.chen1335.ultimateEnchantment.mixinsAPI.IEnchantmentExtension;
+import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.api.IEnchantmentExtension;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.logging.LogUtils;
 import dev.shadowsoffire.placebo.config.Configuration;

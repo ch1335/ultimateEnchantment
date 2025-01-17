@@ -9,7 +9,9 @@
     "BlockMixin",
     "EnchantmentHelperMixin",
     "EnchantmentMixin",
+    "EntityMixin",
     "ForgeHooksMixin",
+    "ItemEntityMixin",
     "ItemStackMixin",
     "LivingEntityMixin"
   ],

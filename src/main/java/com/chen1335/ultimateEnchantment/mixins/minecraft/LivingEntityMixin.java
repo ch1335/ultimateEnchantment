@@ -6,7 +6,10 @@ import com.chen1335.ultimateEnchantment.enchantment.Enchantments;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -18,7 +21,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import javax.annotation.Nullable;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin {
+public abstract class LivingEntityMixin extends Entity {
+
+    public LivingEntityMixin(EntityType<?> pEntityType, Level pLevel) {
+        super(pEntityType, pLevel);
+    }
 
     @Shadow
     public abstract float getHealth();
@@ -35,6 +42,18 @@ public abstract class LivingEntityMixin {
 
     @Shadow
     protected abstract void onEffectUpdated(MobEffectInstance pEffectInstance, boolean pForced, @org.jetbrains.annotations.Nullable Entity pEntity);
+
+    @Shadow
+    public abstract boolean isUsingItem();
+
+    @Shadow
+    public ItemStack useItem;
+
+    @Shadow
+    public abstract ItemStack getUseItem();
+
+    @Shadow
+    public abstract int getUseItemRemainingTicks();
 
     @Unique
     private float ue$oldHealth;

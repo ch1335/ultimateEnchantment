@@ -2,6 +2,9 @@
   "ultimate_enchantment.enchantment": "§e终极附魔",
   "apothic_enchanting.enchantment.addition": "§e神化附魔附加",
   "itemGroup.ultimate_enchantment": "终极附魔",
+  "enchantment.ultimate_enchantment.eternal": "永恒",
+  "enchantment.ultimate_enchantment.eternal.desc": "§d这件物品变的无法破坏，并且不会被爆炸，火焰等摧毁，掉落在虚空时会漂浮在虚空上方，它的掉落物也不会消失",
+
   "enchantment.ultimate_enchantment.last_stand": "背水一战",
   "enchantment.ultimate_enchantment.last_stand.desc": "§d生命值低于三分之一时，为你提供每级5%的护甲值与护甲韧性,§e这个增益相互乘算",
   "enchantment.ultimate_enchantment.over_grow": "过度生长",

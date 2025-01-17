@@ -1,7 +1,7 @@
 package com.chen1335.ultimateEnchantment.mixins.minecraft;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
-import com.chen1335.ultimateEnchantment.mixinsAPI.IEnchantmentExtension;
+import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.api.IEnchantmentExtension;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;

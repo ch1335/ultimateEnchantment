@@ -1,7 +1,7 @@
 package com.chen1335.ultimateEnchantment.mixins.minecraft;
 
 import com.chen1335.ultimateEnchantment.common.AttributeTypeInfo;
-import com.chen1335.ultimateEnchantment.mixinsAPI.IAttributeExtension;
+import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.api.IAttributeExtension;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;

@@ -1,4 +1,4 @@
-package com.chen1335.ultimateEnchantment.mixinsAPI;
+package com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.api;
 
 public interface IAbstractArrowExtension {
 

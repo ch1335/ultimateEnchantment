@@ -1,18 +1,16 @@
 package com.chen1335.ultimateEnchantment.common;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
-import com.chen1335.ultimateEnchantment.effect.MobEffects;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentEffectsHook;
 import com.chen1335.ultimateEnchantment.enchantment.Enchantments;
 import com.chen1335.ultimateEnchantment.enchantment.IAttributeEnchantment;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.LastStand;
-import com.chen1335.ultimateEnchantment.mixinsAPI.IAbstractArrowExtension;
-import com.chen1335.ultimateEnchantment.mixinsAPI.IAttributeExtension;
+import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.api.IAbstractArrowExtension;
+import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.api.IAttributeExtension;
 import com.chen1335.ultimateEnchantment.utils.SimpleSchedule;
 import dev.shadowsoffire.placebo.events.GetEnchantmentLevelEvent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -28,10 +26,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.ItemAttributeModifierEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.item.ItemExpireEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.living.MobEffectEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -162,7 +160,7 @@ public class EventHandler {
         public static void Terminator(LivingEntityUseItemEvent.Stop event) {
             if (event.getEntity() instanceof Player player && event.getItem().getEnchantmentLevel(Enchantments.TERMINATOR.get()) > 0) {
                 if (event.getItem().getItem() instanceof BowItem || event.getItem().getTags().anyMatch(itemTagKey -> itemTagKey == Tags.Items.TOOLS_BOWS)) {
-                    Enchantments.TERMINATOR.get().shoot(event.getItem(), player.level(), player, event.getDuration());
+                    Enchantments.TERMINATOR.get().shoot(event.getItem(), event.getEntity().level(), player, event.getDuration());
                 }
             }
         }
@@ -185,6 +183,14 @@ public class EventHandler {
         public static void ClientTick(TickEvent.ClientTickEvent event) {
             if (event.phase == TickEvent.Phase.END) {
                 SimpleSchedule.update(Dist.CLIENT);
+            }
+        }
+
+        @SubscribeEvent
+        public static void eternal(ItemExpireEvent event) {
+            ItemStack itemStack = event.getEntity().getItem();
+            if (itemStack.getEnchantmentLevel(Enchantments.ETERNAL.get()) > 0) {
+                event.setCanceled(true);
             }
         }
     }

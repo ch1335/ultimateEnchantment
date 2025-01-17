@@ -1,4 +1,4 @@
-package com.chen1335.ultimateEnchantment.mixinsAPI;
+package com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.api;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 

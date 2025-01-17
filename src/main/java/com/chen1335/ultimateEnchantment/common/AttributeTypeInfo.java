@@ -1,6 +1,6 @@
 package com.chen1335.ultimateEnchantment.common;
 
-import com.chen1335.ultimateEnchantment.mixinsAPI.IAttributeExtension;
+import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.api.IAttributeExtension;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -8,7 +8,7 @@ public class AttributeTypeInfo {
     public enum Sentiment {
         POSITIVE,
         NEUTRAL,
-        NEGATIVE;
+        NEGATIVE
     }
 
     public static void init() {

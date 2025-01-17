@@ -1,7 +1,7 @@
 package com.chen1335.ultimateEnchantment.enchantment;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
-import com.chen1335.ultimateEnchantment.mixinsAPI.IEnchantmentExtension;
+import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.api.IEnchantmentExtension;
 import net.minecraft.Util;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;

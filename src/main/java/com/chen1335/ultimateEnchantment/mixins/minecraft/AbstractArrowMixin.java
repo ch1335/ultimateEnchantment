@@ -1,7 +1,7 @@
 package com.chen1335.ultimateEnchantment.mixins.minecraft;
 
 import com.chen1335.ultimateEnchantment.enchantment.Enchantments;
-import com.chen1335.ultimateEnchantment.mixinsAPI.IAbstractArrowExtension;
+import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.api.IAbstractArrowExtension;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -33,6 +33,7 @@ public abstract class AbstractArrowMixin extends Projectile implements IAbstract
     @Inject(method = "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;)V", at = @At("RETURN"))
     private void init(EntityType<?> pEntityType, LivingEntity pShooter, Level pLevel, CallbackInfo ci) {
         ItemStack useItem = pShooter.getUseItem();
+
         if (!useItem.isEmpty()) {
             if (useItem.getEnchantmentLevel(Enchantments.TERMINATOR.get()) > 0) {
                 ue$byPassInvulnerableTime = true;

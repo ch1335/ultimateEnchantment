@@ -53,4 +53,6 @@ public class Enchantments {
 
     public static final RegistryObject<Vanquisher> VANQUISHER = ENCHANTMENT_DEFERRED_REGISTER.register("vanquisher", Vanquisher::new);
 
+    public static final RegistryObject<Eternal> ETERNAL = ENCHANTMENT_DEFERRED_REGISTER.register("eternal", Eternal::new);
+
 }

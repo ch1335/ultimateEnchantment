@@ -3,7 +3,7 @@ package com.chen1335.ultimateEnchantment.enchantment;
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.enchantment.config.EnchantmentConfig;
 import com.chen1335.ultimateEnchantment.enchantment.config.SimpleEnchantmentInfo;
-import com.chen1335.ultimateEnchantment.mixinsAPI.IEnchantmentExtension;
+import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.api.IEnchantmentExtension;
 import dev.shadowsoffire.placebo.config.Configuration;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.enchantment.Enchantment;
