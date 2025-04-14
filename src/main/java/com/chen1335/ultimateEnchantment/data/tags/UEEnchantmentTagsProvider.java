@@ -1,8 +1,9 @@
 package com.chen1335.ultimateEnchantment.data.tags;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
-import com.chen1335.ultimateEnchantment.enchantment.ApothicEnchantingEnchantments;
-import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
+import com.chen1335.ultimateEnchantment.enchantment.enchatments.ApothicEnchantingEnchantments;
+import com.chen1335.ultimateEnchantment.enchantment.enchatments.IronsSpellBooksEnchantments;
+import com.chen1335.ultimateEnchantment.enchantment.enchatments.UEEnchantments;
 import com.chen1335.ultimateEnchantment.tags.UEEnchantmentTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -32,7 +33,8 @@ public class UEEnchantmentTagsProvider extends EnchantmentTagsProvider {
                 .addTag(UEEnchantmentTags.LEGENDARY_ENCHANTMENT);
 
         tag(EnchantmentTags.IN_ENCHANTING_TABLE)
-                .addTag(UEEnchantmentTags.TRADEABLE_LEGENDARY_ENCHANTMENT);
+                .addTag(UEEnchantmentTags.TRADEABLE_LEGENDARY_ENCHANTMENT)
+                .add(UEEnchantments.VANQUISHER);
 
         tag(EnchantmentTags.DOUBLE_TRADE_PRICE)
                 .addTag(UEEnchantmentTags.TRADEABLE_LEGENDARY_ENCHANTMENT);
@@ -48,14 +50,17 @@ public class UEEnchantmentTagsProvider extends EnchantmentTagsProvider {
                 .addTag(UEEnchantmentTags.COMMON_ENCHANTMENT);
 
         tag(UEEnchantmentTags.LIFE_STEAL_ENCHANTMENT).add(
-                UEEnchantments.SYPHON,
                 UEEnchantments.LIFE_STEAL
         );
 
         tag(UEEnchantmentTags.ULTIMATE_ENCHANTMENT)
-                .add(UEEnchantments.ULTIMATE)
-                .add(UEEnchantments.LEGEND)
-                .add(UEEnchantments.LAST_STAND);
+                .add(
+                        UEEnchantments.ULTIMATE,
+                        UEEnchantments.LEGEND,
+                        UEEnchantments.VANQUISHER,
+                        UEEnchantments.LAST_STAND,
+                        UEEnchantments.ETERNAL
+                );
 
         tag(UEEnchantmentTags.LEGENDARY_ENCHANTMENT)
                 .add(Enchantments.MENDING)
@@ -63,7 +68,6 @@ public class UEEnchantmentTagsProvider extends EnchantmentTagsProvider {
                 .addTag(UEEnchantmentTags.UN_TRADEABLE_LEGENDARY_ENCHANTMENT);
 
         tag(UEEnchantmentTags.TRADEABLE_LEGENDARY_ENCHANTMENT).add(
-                UEEnchantments.SYPHON,
                 UEEnchantments.PIERCE_THROUGH,
                 UEEnchantments.CUT_DOWN,
                 UEEnchantments.OVER_GROW
@@ -77,9 +81,9 @@ public class UEEnchantmentTagsProvider extends EnchantmentTagsProvider {
                 UEEnchantments.CRITICAL_DAMAGE,
                 UEEnchantments.CRITICAL_CHANCE,
                 UEEnchantments.SMELTING,
-                UEEnchantments.QUICK_LATCH
+                UEEnchantments.QUICK_LATCH,
+                UEEnchantments.MANA_STEAL
         );
-
 
         tag(UEEnchantmentTags.ENCHANTMENTS)
                 .addTag(UEEnchantmentTags.ULTIMATE_ENCHANTMENT)
@@ -90,6 +94,7 @@ public class UEEnchantmentTagsProvider extends EnchantmentTagsProvider {
                 .addTag(UEEnchantmentTags.ULTIMATE_ENCHANTMENT)
                 .addTag(UEEnchantmentTags.LEGENDARY_ENCHANTMENT);
         this.addApothicEnchantingAdditionTag(pProvider);
+        this.addIronsSpellBooksTag(pProvider);
     }
 
     private void addApothicEnchantingAdditionTag(HolderLookup.@NotNull Provider pProvider) {
@@ -107,5 +112,11 @@ public class UEEnchantmentTagsProvider extends EnchantmentTagsProvider {
                 .addOptional(ApothicEnchantingEnchantments.TERMINATOR.location())
                 .addOptional(ApothicEnchantingEnchantments.SCABBING.location())
                 .addOptional(ApothicEnchantingEnchantments.QUICK_SHOOTING.location());
+    }
+
+    private void addIronsSpellBooksTag(HolderLookup.@NotNull Provider pProvider) {
+        tag(UEEnchantmentTags.COMMON_ENCHANTMENT).addOptional(
+                IronsSpellBooksEnchantments.HARDENED_MANA.location()
+        );
     }
 }

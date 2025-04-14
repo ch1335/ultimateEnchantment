@@ -4,6 +4,11 @@
     "ultimate_enchantment:critical_damage",
     "ultimate_enchantment:critical_chance",
     "ultimate_enchantment:smelting",
-    "ultimate_enchantment:quick_latch"
+    "ultimate_enchantment:quick_latch",
+    "ultimate_enchantment:mana_steal",
+    {
+      "id": "ultimate_enchantment:hardened_mana",
+      "required": false
+    }
   ]
 }

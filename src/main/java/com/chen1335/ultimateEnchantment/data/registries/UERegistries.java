@@ -2,10 +2,12 @@ package com.chen1335.ultimateEnchantment.data.registries;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.data.lootTableModifier.EntityLootModifierProvider;
+import com.chen1335.ultimateEnchantment.data.recipe.UERecipesProvider;
 import com.chen1335.ultimateEnchantment.data.tags.UEEnchantmentTagsProvider;
 import com.chen1335.ultimateEnchantment.data.tags.UEItemTagsProvider;
-import com.chen1335.ultimateEnchantment.enchantment.ApothicEnchantingEnchantments;
-import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
+import com.chen1335.ultimateEnchantment.enchantment.enchatments.ApothicEnchantingEnchantments;
+import com.chen1335.ultimateEnchantment.enchantment.enchatments.IronsSpellBooksEnchantments;
+import com.chen1335.ultimateEnchantment.enchantment.enchatments.UEEnchantments;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
@@ -33,28 +35,31 @@ public class UERegistries {
     public static void gatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
 
-        DatapackBuiltinEntriesProvider provider = generator.addProvider(event.includeServer(), new DatapackBuiltinEntriesProvider(
+        DatapackBuiltinEntriesProvider ueLookupProvider = generator.addProvider(event.includeServer(), new DatapackBuiltinEntriesProvider(
                 generator.getPackOutput(),
                 event.getLookupProvider(),
                 new RegistrySetBuilder()
                         .add(Registries.ENCHANTMENT, bootstrapContext -> {
                             UEEnchantments.bootstrap(bootstrapContext);
                             ApothicEnchantingEnchantments.bootstrap(bootstrapContext);
+                            IronsSpellBooksEnchantments.bootstrap(bootstrapContext);
 
                             conditions.putAll(UEEnchantments.conditions);
                             conditions.putAll(ApothicEnchantingEnchantments.conditions);
-                        }),
+                            conditions.putAll(IronsSpellBooksEnchantments.conditions);
+                        })
+                ,
                 conditions,
                 Set.of(UltimateEnchantment.MODID)
         ));
 
         generator.addProvider(event.includeServer(), new UEEnchantmentTagsProvider(
                 generator.getPackOutput(),
-                provider.getRegistryProvider(),
+                ueLookupProvider.getRegistryProvider(),
                 event.getExistingFileHelper()
         ));
 
-        BlockTagsProvider blockTagsProvider = new BlockTagsProvider(generator.getPackOutput(), event.getLookupProvider(), UltimateEnchantment.MODID, event.getExistingFileHelper()) {
+        BlockTagsProvider blockTagsProvider = new BlockTagsProvider(generator.getPackOutput(), ueLookupProvider.getRegistryProvider(), UltimateEnchantment.MODID, event.getExistingFileHelper()) {
             @Override
             protected void addTags(HolderLookup.@NotNull Provider provider) {
 
@@ -65,15 +70,20 @@ public class UERegistries {
 
         generator.addProvider(event.includeServer(), new UEItemTagsProvider(
                 generator.getPackOutput(),
-                event.getLookupProvider(),
+                ueLookupProvider.getRegistryProvider(),
                 blockTagsProvider.contentsGetter(),
                 event.getExistingFileHelper()
         ));
 
         generator.addProvider(event.includeServer(), new EntityLootModifierProvider(
                 generator.getPackOutput(),
-                event.getLookupProvider(),
+                ueLookupProvider.getRegistryProvider(),
                 UltimateEnchantment.MODID
+        ));
+
+        generator.addProvider(event.includeServer(), new UERecipesProvider(
+                generator.getPackOutput(),
+                ueLookupProvider.getRegistryProvider()
         ));
     }
 }

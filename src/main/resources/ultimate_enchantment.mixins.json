@@ -5,11 +5,16 @@
   "mixins": [
     "EnchantmentHelperMixin",
     "EnchantmentMixin",
+    "EntityMixin",
     "ItemEnchantmentsMixin",
+    "ItemEntityMixin",
     "ItemStackMixin",
-    "LivingEntityMixin"
+    "LivingEntityMixin",
+    "ProjectileWeaponItemMixin",
+    "TagLoaderMixin"
   ],
   "client": [
+    "GuiMixin"
   ],
   "minVersion": "0.8"
 }

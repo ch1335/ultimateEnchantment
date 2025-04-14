@@ -1,8 +1,11 @@
 package com.chen1335.ultimateEnchantment;
 
+import com.chen1335.ultimateEnchantment.API.AttachmentTypes;
+import com.chen1335.ultimateEnchantment.common.EventHandler;
 import com.chen1335.ultimateEnchantment.dataComponentType.UEDataComponentTypes;
-import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.UEEnchantmentEffectComponents;
-import com.chen1335.ultimateEnchantment.enchantment.effects.UltimateEnchantment.UEEnchantmentEffects;
+import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
+import com.chen1335.ultimateEnchantment.enchantment.effects.UEEnchantmentEffects;
+import com.chen1335.ultimateEnchantment.mobEffect.MobEffects;
 import com.chen1335.ultimateEnchantment.tags.UEEnchantmentTags;
 import com.mojang.logging.LogUtils;
 import dev.shadowsoffire.placebo.registry.DeferredHelper;
@@ -16,6 +19,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
@@ -44,20 +48,20 @@ public class UltimateEnchantment {
             .displayItems((parameters, output) -> {
 
                 ItemStack allEnchantmentBook1 = new ItemStack(Items.ENCHANTED_BOOK);
-                allEnchantmentBook1.set(DataComponents.CUSTOM_NAME,Component.translatable("ultimate_enchantment.enchantment"));
+                allEnchantmentBook1.set(DataComponents.CUSTOM_NAME, Component.translatable("ultimate_enchantment.enchantment"));
                 parameters.holders().lookupOrThrow(Registries.ENCHANTMENT).get(UEEnchantmentTags.ENCHANTMENTS).ifPresent(holders -> {
                     holders.forEach(enchantmentHolder -> {
-                        allEnchantmentBook1.enchant(enchantmentHolder,enchantmentHolder.value().getMaxLevel());
+                        allEnchantmentBook1.enchant(enchantmentHolder, enchantmentHolder.value().getMaxLevel());
                         output.accept(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(enchantmentHolder, enchantmentHolder.value().getMaxLevel())));
                     });
                 });
                 output.accept(allEnchantmentBook1);
 
                 ItemStack allEnchantmentBook2 = new ItemStack(Items.ENCHANTED_BOOK);
-                allEnchantmentBook2.set(DataComponents.CUSTOM_NAME,Component.translatable("apothic_enchanting.enchantment.addition"));
+                allEnchantmentBook2.set(DataComponents.CUSTOM_NAME, Component.translatable("apothic_enchanting.enchantment.addition"));
                 parameters.holders().lookupOrThrow(Registries.ENCHANTMENT).get(UEEnchantmentTags.UE_APOTHIC_ENCHANTING_ADDITION).ifPresent(holders -> {
                     holders.forEach(enchantmentHolder -> {
-                        allEnchantmentBook2.enchant(enchantmentHolder,enchantmentHolder.value().getMaxLevel());
+                        allEnchantmentBook2.enchant(enchantmentHolder, enchantmentHolder.value().getMaxLevel());
                     });
                 });
 
@@ -76,9 +80,14 @@ public class UltimateEnchantment {
         UEEnchantmentEffects.ENCHANTMENT_ENTITY_EFFECT.register(modEventBus);
         UEEnchantmentEffects.ENCHANTMENT_LOCATION_BASED_EFFECT.register(modEventBus);
         UEEnchantmentEffectComponents.TYPES.register(modEventBus);
-
+        AttachmentTypes.ATTACHMENT_TYPES.register(modEventBus);
+        MobEffects.MOB_EFFECT_DEFERRED_REGISTER.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.COMMON, UEConfig.SPEC);
+
+        if (ModList.get().isLoaded("irons_spellbooks")) {
+            NeoForge.EVENT_BUS.register(EventHandler.Game.IronsSpellBooksEvents.class);
+        }
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {

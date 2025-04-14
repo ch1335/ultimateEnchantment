@@ -9,20 +9,6 @@
   "description": {
     "translate": "enchantment.ultimate_enchantment.life_steal"
   },
-  "effects": {
-    "minecraft:attributes": [
-      {
-        "amount": {
-          "type": "minecraft:linear",
-          "base": 0.025,
-          "per_level_above_first": 0.025
-        },
-        "attribute": "simple_rpg_core:life_steal",
-        "id": "ultimate_enchantment:enchantmentlife_steal",
-        "operation": "add_value"
-      }
-    ]
-  },
   "exclusive_set": "#ultimate_enchantment:life_steal_enchantment",
   "max_cost": {
     "base": 65,
@@ -31,7 +17,7 @@
   "max_level": 4,
   "min_cost": {
     "base": 15,
-    "per_level_above_first": 9
+    "per_level_above_first": 8
   },
   "primary_items": "#minecraft:enchantable/sword",
   "slots": [

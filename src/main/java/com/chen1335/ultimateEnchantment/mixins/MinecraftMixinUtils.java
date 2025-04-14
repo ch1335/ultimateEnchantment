@@ -34,28 +34,4 @@ public class MinecraftMixinUtils {
             }
         }
     }
-
-    public static class ItemEnchantmentsMixin{
-        public static void getTagOrEmpty(HolderLookup.Provider pRegistries, ResourceKey<Registry<Enchantment>> pRegistryKey, TagKey<Enchantment> pKey, CallbackInfoReturnable<HolderSet<Enchantment>> cir) {
-            if (pRegistryKey == Registries.ENCHANTMENT && pKey == EnchantmentTags.TOOLTIP_ORDER) {
-                List<Holder<Enchantment>> ultimate = new ArrayList<>();
-                List<Holder<Enchantment>> legendary = new ArrayList<>();
-                List<Holder<Enchantment>> normal = new ArrayList<>();
-
-                HolderSet<Enchantment> holders = cir.getReturnValue();
-                holders.forEach(enchantmentHolder -> {
-                    if (enchantmentHolder.tags().anyMatch(enchantmentTagKey -> enchantmentTagKey == UEEnchantmentTags.ULTIMATE_ENCHANTMENT)) {
-                        ultimate.add(enchantmentHolder);
-                    } else if (enchantmentHolder.tags().anyMatch(enchantmentTagKey -> enchantmentTagKey == UEEnchantmentTags.LEGENDARY_ENCHANTMENT)) {
-                        legendary.add(enchantmentHolder);
-                    } else {
-                        normal.add(enchantmentHolder);
-                    }
-                });
-                ultimate.addAll(legendary);
-                ultimate.addAll(normal);
-                cir.setReturnValue(HolderSet.direct(ultimate));
-            }
-        }
-    }
 }

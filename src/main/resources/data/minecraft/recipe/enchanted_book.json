@@ -1,0 +1,46 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "minecraft:book"
+    },
+    "D": {
+      "item": "minecraft:diamond_block"
+    },
+    "M": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:stored_enchantments": {
+          "levels": {
+            "minecraft:mending": 1
+          }
+        }
+      },
+      "items": "minecraft:enchanted_book"
+    },
+    "N": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "T": {
+      "item": "minecraft:totem_of_undying"
+    }
+  },
+  "pattern": [
+    "DTD",
+    "MBM",
+    "DND"
+  ],
+  "result": {
+    "components": {
+      "minecraft:stored_enchantments": {
+        "levels": {
+          "ultimate_enchantment:eternal": 1
+        }
+      }
+    },
+    "count": 1,
+    "id": "minecraft:enchanted_book"
+  },
+  "show_notification": false
+}

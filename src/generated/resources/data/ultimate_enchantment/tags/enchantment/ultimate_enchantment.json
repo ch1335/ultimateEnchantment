@@ -2,7 +2,9 @@
   "values": [
     "ultimate_enchantment:ultimate",
     "ultimate_enchantment:legend",
+    "ultimate_enchantment:vanquisher",
     "ultimate_enchantment:last_stand",
+    "ultimate_enchantment:eternal",
     {
       "id": "ultimate_enchantment:terminator",
       "required": false

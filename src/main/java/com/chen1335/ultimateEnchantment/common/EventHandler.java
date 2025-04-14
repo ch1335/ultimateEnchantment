@@ -1,22 +1,36 @@
 package com.chen1335.ultimateEnchantment.common;
 
 
+import com.chen.simpleRPGCore.API.objects.SRCAttributes;
 import com.chen.simpleRPGCore.common.DamageSourceExtraData;
+import com.chen.simpleRPGCore.common.capability.PlayerExtraData;
+import com.chen.simpleRPGCore.common.capability.SRCCapabilities;
+import com.chen.simpleRPGCore.event.events.ModifyDamageEvent;
 import com.chen.simpleRPGCore.event.events.ModifyProjectileEvent;
 import com.chen.simpleRPGCore.mixinsAPI.minecraft.IDamageSourceExtension;
 import com.chen.simpleRPGCore.mixinsAPI.minecraft.IProjectileMixinExtension;
+import com.chen.simpleRPGCore.tags.SRCDamageTags;
 import com.chen.simpleRPGCore.utils.SimpleSchedule;
-import com.chen1335.ultimateEnchantment.enchantment.ApothicEnchantingEnchantments;
+import com.chen1335.ultimateEnchantment.API.AttachmentTypes;
+import com.chen1335.ultimateEnchantment.AttachmentDatas.PlayerData;
+import com.chen1335.ultimateEnchantment.enchantment.EnchantmentConfigs;
+import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.LegendComponent;
-import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.SyphonComponent;
-import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.UEEnchantmentEffectComponents;
+import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.VanquisherComponent;
 import com.chen1335.ultimateEnchantment.enchantment.effects.UltimateEnchantment.LastStandEffect;
+import com.chen1335.ultimateEnchantment.enchantment.enchatments.ApothicEnchantingEnchantments;
+import com.chen1335.ultimateEnchantment.enchantment.enchatments.IronsSpellBooksEnchantments;
+import com.chen1335.ultimateEnchantment.enchantment.enchatments.UEEnchantments;
+import com.chen1335.ultimateEnchantment.mobEffect.MobEffects;
+import com.chen1335.ultimateEnchantment.utils.ItemEnchantmentHelper;
 import com.mojang.datafixers.util.Pair;
+import io.redspace.ironsspellbooks.api.events.SpellOnCastEvent;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Unit;
-import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
@@ -25,14 +39,11 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.Equipable;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.item.crafting.*;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.ItemEnchantments;
-import net.minecraft.world.item.enchantment.LevelBasedValue;
+import net.minecraft.world.item.enchantment.*;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -44,6 +55,7 @@ import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.Objects;
@@ -52,18 +64,24 @@ import java.util.Objects;
 public class EventHandler {
     @EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME)
     public static class Game {
+        @SubscribeEvent
+        public static void PlayerPreTick(PlayerTickEvent.Pre event) {
+            if (!event.getEntity().level().isClientSide) {
+                event.getEntity().getData(AttachmentTypes.PLAYER_DATA).tick(event.getEntity());
+            }
+        }
 
         @SubscribeEvent
         public static void QuickLatch(LivingEntityUseItemEvent.Tick event) {
             Entity entity = event.getEntity();
             if (entity instanceof Player player) {
                 ItemStack itemStack = player.getUseItem();
-                if (itemStack.getItem() instanceof BowItem item) {
+                if (itemStack.getItem() instanceof ProjectileWeaponItem item) {
                     EnchantmentHelper.runIterationOnItem(itemStack, (pEnchantment, pLevel) -> {
                         Unit quickLatch = pEnchantment.value().effects().get(UEEnchantmentEffectComponents.QUICK_LATCH.value());
                         if (quickLatch != null) {
-                            int defaultTime = itemStack.getItem().getClass() == BowItem.class ? BowItem.MAX_DRAW_DURATION : item.getDefaultProjectileRange();
-                            if (item.getUseDuration(itemStack, player) - player.getUseItemRemainingTicks() >= defaultTime) {
+                            int defaultTime = item.getDefaultProjectileRange();
+                            if (item.getUseDuration(itemStack, player) - player.getUseItemRemainingTicks() >= defaultTime+1) {
                                 player.releaseUsingItem();
                             }
                         }
@@ -100,65 +118,62 @@ public class EventHandler {
         @SubscribeEvent(priority = EventPriority.LOW)
         public static void cutDown(LivingIncomingDamageEvent event) {
             DamageSourceExtraData extraData = ((IDamageSourceExtension) event.getSource()).src$getExtraData();
-            if (event.getSource().getDirectEntity() instanceof LivingEntity attacker && extraData.isMeleeDamageToEntity(event.getEntity())) {
+            if (event.getSource().getDirectEntity() instanceof LivingEntity attacker && extraData.isMeleeDamageToEntity(event.getEntity().getId())) {
                 float attackerMaxHealth = attacker.getMaxHealth();
                 float percentage = ((event.getEntity().getHealth() - attackerMaxHealth) / attackerMaxHealth) * 100;
                 if (percentage > 0) {
                     Pair<LevelBasedValue, Integer> pair = EnchantmentHelper.getHighestLevel(attacker.getMainHandItem(), UEEnchantmentEffectComponents.CUT_DOWN.value());
                     if (pair != null) {
                         float damageMultiplier = (float) Math.min(pair.getFirst().calculate(pair.getSecond()) * percentage, 0.1 * pair.getSecond());
-                        extraData.addUnCriticalAbleDamage(damageMultiplier * event.getContainer().getNewDamage());
+                        extraData.addFinalDamageAddition(damageMultiplier * event.getContainer().getNewDamage());
                     }
                 }
             }
         }
 
-        @SubscribeEvent(priority = EventPriority.LOWEST)
-        public static void Syphon(LivingDamageEvent.Pre event) {
-            DamageSource damageSource = event.getSource();
-            IDamageSourceExtension iDamageSource = (IDamageSourceExtension) damageSource;
-            DamageSourceExtraData extraData = iDamageSource.src$getExtraData();
-            if (!extraData.isCanDoLifeSteal()) {
-                return;
-            }
-            LivingEntity attacker;
-            if (damageSource.getEntity() instanceof LivingEntity livingEntity) {
-                attacker = livingEntity;
-            } else {
-                attacker = null;
-            }
+        @SubscribeEvent
+        public static void lifeStealAndManaSteal(LivingDamageEvent.Pre event) {
+            if (event.getSource().getEntity() instanceof LivingEntity attacker && event.getSource().is(SRCDamageTags.CAN_LIFE_STEAL)) {
+                DamageSourceExtraData extraData = ((IDamageSourceExtension) event.getSource()).src$getExtraData();
+                if (extraData.isMeleeDamageToEntity(event.getEntity().getId())) {
+                    float actualDamage = Math.min(event.getEntity().getHealth(), event.getNewDamage());
 
-            if (attacker != null) {
-                if (extraData.isCriticalDamageToEntity(event.getEntity())) {
-                    float finalCritDmg = event.getNewDamage();
+                    int lifeStealLevel = ItemEnchantmentHelper.getEnchantmentLevel(attacker.getMainHandItem(), UEEnchantments.LIFE_STEAL);
+                    float healAmount = Math.min(actualDamage * lifeStealLevel * EnchantmentConfigs.LifeSteal.healPercentPerLevel, attacker.getMaxHealth() * EnchantmentConfigs.LifeSteal.maxHealPercentBaseMaxHealth * lifeStealLevel);
+                    attacker.heal(healAmount);
 
-                    EnchantmentHelper.runIterationOnItem(attacker.getMainHandItem(), ((pEnchantment, pLevel) -> {
-                        SyphonComponent syphon = pEnchantment.value().effects().get(UEEnchantmentEffectComponents.SYPHON.value());
-                        if (syphon != null) {
-                            float maxSyphonCritDmg = syphon.maxSyphonCritDmgPerLevel() * pLevel;
-                            float healPerDmg = syphon.healPerDmgPerLevel() * pLevel;
-                            attacker.heal(attacker.getMaxHealth() * healPerDmg * Math.min(finalCritDmg, maxSyphonCritDmg));
+                    if (attacker instanceof Player player) {
+                        PlayerExtraData playerExtraData = player.getCapability(SRCCapabilities.SRC_PLAYER_DATA);
+
+                        if (playerExtraData != null) {
+                            int manaStealLevel = ItemEnchantmentHelper.getEnchantmentLevel(attacker.getMainHandItem(), UEEnchantments.MANA_STEAL);
+                            float manaRegainAmount = (float) Math.min(actualDamage * manaStealLevel * EnchantmentConfigs.ManaSteal.ManaRegainPercentPerLevel, player.getAttributeValue(SRCAttributes.MAX_MANA) * EnchantmentConfigs.ManaSteal.maxManaRegainPercentBaseMaxMana * manaStealLevel);
+                            playerExtraData.regainMana(manaRegainAmount);
                         }
-                    }));
+
+                    }
                 }
+
             }
         }
 
         @SubscribeEvent
         public static void GetEnchantmentLevelEvent(GetEnchantmentLevelEvent event) {
             int legendLevel = 0;
-
             for (Holder<Enchantment> holder : event.getEnchantments().keySet()) {
                 if (holder.value().effects().has(UEEnchantmentEffectComponents.ULTIMATE.value())) {
                     int newLevel = event.getEnchantments().getLevel(holder);
                     legendLevel = Math.max(legendLevel, newLevel);
                 }
             }
-
             for (Holder<Enchantment> holder : event.getEnchantments().keySet()) {
                 if (event.getEnchantments().getLevel(holder) > 0) {
                     if (!holder.value().effects().has(UEEnchantmentEffectComponents.ULTIMATE.value()) && holder.value().getMaxLevel() > 1) {
-                        event.getEnchantments().set(holder, event.getEnchantments().getLevel(holder) + legendLevel);
+                        int newLevel = event.getEnchantments().getLevel(holder) + legendLevel;
+                        if (holder.is(Enchantments.QUICK_CHARGE)) {
+                            newLevel = Math.min(newLevel, 5);
+                        }
+                        event.getEnchantments().set(holder, newLevel);
                     }
                 }
             }
@@ -170,15 +185,12 @@ public class EventHandler {
             EquipmentSlot slot = event.getSlot();
             ItemStack form = event.getFrom();
             ItemStack to = event.getTo();
-
             Pair<LegendComponent, Integer> pairFrom = EnchantmentHelper.getHighestLevel(form, UEEnchantmentEffectComponents.LEGEND.value());
             if (pairFrom != null) {
                 livingEntity.getAttributes().supplier.instances.keySet().forEach((attributeHolder) -> {
                     Objects.requireNonNull(livingEntity.getAttributes().getInstance(attributeHolder)).removeModifier(LegendComponent.idForSlot(slot));
                 });
             }
-
-
             Pair<LegendComponent, Integer> pairTo = EnchantmentHelper.getHighestLevel(to, UEEnchantmentEffectComponents.LEGEND.value());
             if (pairTo != null) {
                 livingEntity.getAttributes().supplier.instances.keySet().forEach((attributeHolder) -> {
@@ -220,14 +232,12 @@ public class EventHandler {
         @SubscribeEvent
         public static void extraShotCountEffect(LivingEntityUseItemEvent.Stop event) {
             MutableInt extraShotCount = new MutableInt(0);
-
             ItemStack itemStack = event.getItem();
             EnchantmentHelper.runIterationOnItem(itemStack, (holder, i) -> {
                 holder.value().getEffects(UEEnchantmentEffectComponents.EXTRA_SHOOT_COUNT.value()).forEach(condition -> {
                     extraShotCount.setValue(condition.effect().process(i, event.getEntity().getRandom(), extraShotCount.intValue()));
                 });
             });
-
 
             for (int i = 0; i < extraShotCount.intValue(); i++) {
                 SimpleSchedule.addSchedule(event.getEntity().level(), new SimpleSchedule.Wait(() -> {
@@ -241,6 +251,50 @@ public class EventHandler {
             ItemEnchantments enchantments = event.itemStack.getAllEnchantments(event.serverLevel.registryAccess().lookupOrThrow(Registries.ENCHANTMENT));
             if (enchantments.keySet().stream().anyMatch(enchantmentHolder -> enchantmentHolder.getKey() == ApothicEnchantingEnchantments.TERMINATOR)) {
                 ((IProjectileMixinExtension) event.projectile).src$setBypassesCooldownHit(true);
+            }
+        }
+
+        @SubscribeEvent
+        public static void VanquisherEffect(ModifyDamageEvent.AfterCritical event) {
+
+
+            if (event.getDamageContainer().getSource().getDirectEntity() instanceof LivingEntity livingEntity && event.getExtraData().isMeleeDamageToEntity(event.getEntity().getId())) {
+                if (livingEntity instanceof Player player && player.getAttackStrengthScale(0) < 0.5) {
+                    return;
+                }
+
+                Pair<VanquisherComponent, Integer> pair = EnchantmentHelper.getHighestLevel(livingEntity.getMainHandItem(), UEEnchantmentEffectComponents.VANQUISHER.value());
+                if (pair == null) {
+                    return;
+                }
+
+                if (livingEntity.getEffect(MobEffects.ACTIVE_VANQUISHER) != null) {
+                    event.getExtraData().addAdditionTags(DamageTypeTags.BYPASSES_COOLDOWN);
+                    livingEntity.addEffect(new MobEffectInstance(MobEffects.ACTIVE_VANQUISHER, pair.getFirst().buffDuration(), 0, false, false, true));
+                    return;
+                }
+
+                MobEffectInstance instance = livingEntity.getEffect(MobEffects.UN_ACTIVE_VANQUISHER);
+                int amplifier = 0;
+                if (instance != null) {
+                    amplifier = instance.getAmplifier() + 1;
+                }
+
+
+                livingEntity.addEffect(new MobEffectInstance(MobEffects.UN_ACTIVE_VANQUISHER, pair.getFirst().buffDuration(), amplifier, false, false, true));
+            }
+        }
+
+        public static class IronsSpellBooksEvents {
+            @SubscribeEvent(priority = EventPriority.LOWEST)
+            public static void SpellOnCastEvent(SpellOnCastEvent event) {
+                for (ItemStack itemStack : event.getEntity().getArmorSlots()) {
+                    Equipable equipable = Equipable.get(itemStack);
+                    if (!itemStack.isEmpty() && equipable != null) {
+                        PlayerData playerData = event.getEntity().getData(AttachmentTypes.PLAYER_DATA);
+                        playerData.hardenedManaEffect.addArmor(event.getEntity(), equipable.getEquipmentSlot(), event.getManaCost() * 0.01F, ItemEnchantmentHelper.getEnchantmentLevel(itemStack, IronsSpellBooksEnchantments.HARDENED_MANA));
+                    }
+                }
             }
         }
     }

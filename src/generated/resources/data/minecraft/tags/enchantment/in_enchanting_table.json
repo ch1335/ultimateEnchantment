@@ -1,6 +1,7 @@
 {
   "values": [
     "#ultimate_enchantment:tradeable_legendary_enchantment",
+    "ultimate_enchantment:vanquisher",
     {
       "id": "ultimate_enchantment:terminator",
       "required": false

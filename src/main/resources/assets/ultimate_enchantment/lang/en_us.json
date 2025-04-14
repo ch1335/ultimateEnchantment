@@ -4,33 +4,65 @@
   "itemGroup.ultimate_enchantment": "UltimateEnchantment",
   "enchantment.ultimate_enchantment.last_stand": "Last Stand",
   "enchantment.ultimate_enchantment.last_stand.desc": "§dWhen the health value is less than one-third, it provides you with 5% armor value and armor toughness for each level,§eand this gain is multiplied by each other",
+  "enchantment.ultimate_enchantment.last_stand.specialDesc": "§dWhen the health value is less than one-third, it provides you with %d%% armor value and armor toughness,§eand this gain is multiplied by each other",
+
   "enchantment.ultimate_enchantment.over_grow": "Over Grow",
   "enchantment.ultimate_enchantment.over_grow.desc": "Each level provides you with a maximum health of 2%",
+  "enchantment.ultimate_enchantment.over_grow.specialDesc": "Provides you with a maximum health of %d%%",
+
   "enchantment.ultimate_enchantment.quick_latch": "Quick Latch",
   "enchantment.ultimate_enchantment.quick_latch.desc": "Automatically release bow",
-  "enchantment.ultimate_enchantment.syphon": "Syphon",
-  "enchantment.ultimate_enchantment.syphon.desc": "When dealing critical damage, it will heal you based on the critical damage value and your maximum health",
+
   "enchantment.ultimate_enchantment.legend": "Legend",
   "enchantment.ultimate_enchantment.legend.desc": "§dEach level provides a 2% §eall attribute bonus",
+  "enchantment.ultimate_enchantment.legend.specialDesc": "§dProvides %d%% §eall attribute bonus",
+
   "enchantment.ultimate_enchantment.ultimate": "Ultimate",
   "enchantment.ultimate_enchantment.ultimate.desc": "§dEach level increases §eall other enchantments §don this item by 1 level",
+  "enchantment.ultimate_enchantment.ultimate.specialDesc": "§dIncreases §eall other enchantments §don this item by %d level",
+
   "enchantment.ultimate_enchantment.life_steal": "Life Steal",
-  "enchantment.ultimate_enchantment.life_steal.desc": "Each level provides 2% of life steal",
+  "enchantment.ultimate_enchantment.life_steal.desc": "When attacking, it will recover 2.5% of the actual damage per level, and the maximum healing limit per level is 3% of your maximum health",
+  "enchantment.ultimate_enchantment.life_steal.specialDesc": "When attacking, it will recover %d%% of the actual damage, and the maximum healing limit of a single treatment is %d%% of your maximum health",
+
   "enchantment.ultimate_enchantment.smelting": "Smelting",
   "enchantment.ultimate_enchantment.smelting.desc": "Automatically smelting ore and dropping corresponding experience",
   "enchantment.ultimate_enchantment.critical_chance": "Critical Chance",
-  "enchantment.ultimate_enchantment.critical_chance.desc": "Each level provides a 5% critical strike chance for the weapon",
+  "enchantment.ultimate_enchantment.critical_chance.desc": "Each level provides a 2% critical strike chance for the weapon",
+  "enchantment.ultimate_enchantment.critical_chance.specialDesc": "Provides a %d%% critical strike chance for the weapon",
+
   "enchantment.ultimate_enchantment.critical_damage": "Critical Damage",
-  "enchantment.ultimate_enchantment.critical_damage.desc": "Each level provides 10% critical strike damage to the weapon",
+  "enchantment.ultimate_enchantment.critical_damage.desc": "Each level provides 5% critical strike damage to the weapon",
+  "enchantment.ultimate_enchantment.critical_damage.specialDesc": "Provides %d%% critical strike damage to the weapon",
+
   "enchantment.ultimate_enchantment.pierce_through": "pierce Through",
   "enchantment.ultimate_enchantment.pierce_through.desc": "Each level provides 2 armor penetrations for weapons",
   "enchantment.ultimate_enchantment.cut_down": "Cut Down",
   "enchantment.ultimate_enchantment.cut_down.desc": "When dealing melee damage, every 1% increase in the target's current health compared to your maximum health will cause an additional 0.01% of final damage per level, up to a maximum of 10% per level",
+  "enchantment.ultimate_enchantment.cut_down.specialDesc": "When dealing melee damage, every 1% increase in the target's current health compared to your maximum health will result in an additional %d%% final damage, up to a maximum of %d%%",
+
   "enchantment.ultimate_enchantment.quick_shooting": "Quick Shooting",
-  "enchantment.ultimate_enchantment.quick_shooting.desc": "Each level provides a 10% charging speed",
+  "enchantment.ultimate_enchantment.quick_shooting.desc": "Each level provides a 5% charging speed",
+  "enchantment.ultimate_enchantment.quick_shooting.specialDesc": "Provides %d%% charging speed",
+
   "enchantment.ultimate_enchantment.scabbing": "Scabbing",
   "enchantment.ultimate_enchantment.scabbing.desc": "Each level provides 5% armor tearing",
-  "enchantment.ultimate_enchantment.terminator": "Terminator",
-  "enchantment.ultimate_enchantment.terminator.desc": "§dYour bow can shoot two additional arrows, shoot once more, and significantly increase the speed of pulling the bow, but your critical strike probability will be divided by 4 and critical strike damage will be divided by 2"
+  "enchantment.ultimate_enchantment.scabbing.specialDesc": "Provides %d%% armor tearing",
 
+  "enchantment.ultimate_enchantment.terminator": "Terminator",
+  "enchantment.ultimate_enchantment.terminator.desc": "§dYour bow can shoot two additional arrows, shoot once more, and significantly increase the speed of pulling the bow, but your critical strike probability will be divided by 4 and critical strike damage will be divided by 2",
+  "enchantment.ultimate_enchantment.vanquisher": "Vanquisher",
+  "enchantment.ultimate_enchantment.vanquisher.desc": "§dWhen conducting §eeffective attacks§d, a vanquisher effect will be added for 20 seconds, with a maximum of 10 layers. Each layer provides you with a 5% §efinal damage bonus§d and 10% attack speed. When the layer is full, you will also receive 5% health steal and make this §eeffective attack§d ignore invincible frames",
+  "enchantment.ultimate_enchantment.eternal": "Eternal",
+  "enchantment.ultimate_enchantment.eternal.desc": "§dThis item becomes indestructible and will not be destroyed by explosions, flames, etc. When it falls into the void, it will float above the void and its dropped objects will not disappear",
+  "effect.ultimate_enchantment.active_vanquisher" : "Vanquisher",
+  "effect.ultimate_enchantment.un_active_vanquisher" : "Vanquisher",
+  "enchantment.ultimate_enchantment.pierce_through.specialDesc": "Provide %d armor penetration for this weapon",
+
+  "enchantment.ultimate_enchantment.mana_steal": "Mana Steal",
+  "enchantment.ultimate_enchantment.mana_steal.desc": "When attacking, you will gain 2% mana of the actual damage per level, and the maximum regain mana limit per level is 2.5% of your maximum mana",
+  "enchantment.ultimate_enchantment.mana_steal.specialDesc": "When attacking, you will gain %d%% mana of the actual damage, and the maximum regain mana limit of a single attack is %d%% of your maximum mana",
+  "enchantment.ultimate_enchantment.hardened_mana": "Hardened Mana",
+  "enchantment.ultimate_enchantment.hardened_mana.desc": "Convert 1% of the mana you use to cast spells into armor value for ten seconds, with a maximum of 1 armor value per level",
+  "enchantment.ultimate_enchantment.hardened_mana.specialDesc": "Convert 1%% of the mana you use to cast spells into armor value for ten seconds, with a maximum of %d armor value"
 }

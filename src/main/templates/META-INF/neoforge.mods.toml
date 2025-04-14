@@ -51,6 +51,8 @@ description = '''${mod_description}'''
 config="${mod_id}.mixins.json"
 [[mixins]]
 config="ultimate_enchantment_apothic_enchanting.mixins.json"
+[[mixins]]
+config="ultimate_enchantment_enchdesc.mixins.json"
 # The [[accessTransformers]] block allows you to declare where your AT file is.
 # If this block is omitted, a fallback attempt will be made to load an AT from META-INF/accesstransformer.cfg
 [[accessTransformers]]
@@ -89,7 +91,7 @@ side = "BOTH"
 [[dependencies.${ mod_id }]]
 modId = "simple_rpg_core"
 type = "required"
-versionRange = "[20241106,)"
+versionRange = "[2101.1.4,)"
 ordering = "NONE"
 side = "BOTH"
 
@@ -104,6 +106,13 @@ side = "BOTH"
 modId = "apothic_enchanting"
 type = "optional"
 versionRange = "[1.2.3,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${ mod_id }]]
+modId = "enchdesc"
+type = "optional"
+versionRange = "[21.1.7,)"
 ordering = "NONE"
 side = "BOTH"
 

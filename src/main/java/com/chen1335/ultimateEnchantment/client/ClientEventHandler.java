@@ -8,7 +8,6 @@ import net.neoforged.neoforge.client.event.RenderTooltipEvent;
 
 @EventBusSubscriber(modid = UltimateEnchantment.MODID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
 public class ClientEventHandler {
-    private static boolean a = true;
     @SubscribeEvent
     public static void RenderTooltipEvent(RenderTooltipEvent.Pre event){
 
