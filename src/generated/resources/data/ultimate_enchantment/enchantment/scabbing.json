@@ -23,7 +23,6 @@
       }
     ]
   },
-  "exclusive_set": "ultimate_enchantment:pierce_through",
   "max_cost": {
     "base": 90,
     "per_level_above_first": 10

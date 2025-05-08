@@ -1,14 +1,11 @@
 package com.chen1335.ultimateEnchantment.enchantment.enchatments;
 
-import com.chen.simpleRPGCore.API.objects.SRCAttributes;
-import com.chen.simpleRPGCore.common.conditions.ManaSystemEnableCondition;
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.LegendComponent;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.VanquisherComponent;
 import com.chen1335.ultimateEnchantment.enchantment.effects.UltimateEnchantment.LastStandEffect;
 import com.chen1335.ultimateEnchantment.tags.UEEnchantmentTags;
-import com.chen1335.ultimateEnchantment.tags.UEItemTags;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
@@ -42,18 +39,98 @@ public class UEEnchantments {
     public static final ResourceKey<Enchantment> ULTIMATE = key("ultimate");
     public static final ResourceKey<Enchantment> LEGEND = key("legend");
     public static final ResourceKey<Enchantment> SMELTING = key("smelting");
-    public static final ResourceKey<Enchantment> CRITICAL_CHANCE = key("critical_chance");
-    public static final ResourceKey<Enchantment> CRITICAL_DAMAGE = key("critical_damage");
-    public static final ResourceKey<Enchantment> PIERCE_THROUGH = key("pierce_through");
     public static final ResourceKey<Enchantment> CUT_DOWN = key("cut_down");
     public static final ResourceKey<Enchantment> VANQUISHER = key("vanquisher");
     public static final ResourceKey<Enchantment> ETERNAL = key("eternal");
-    public static final ResourceKey<Enchantment> MANA_STEAL = key("mana_steal");
     public static final ResourceKey<Enchantment> LETHAL_TEMPO = key("lethal_tempo");
+    public static final ResourceKey<Enchantment> THUNDER_BOLT = key("thunder_bolt");
+
+    public static final ResourceKey<Enchantment> TEAR = key("tear");
+    public static final ResourceKey<Enchantment> KINETIC_ENERGY = key("kinetic_energy");
+
+
+    public static final ResourceKey<Enchantment> DOUBLE_HOOK = key("double_hook");
+    public static final ResourceKey<Enchantment> QUICK_BAIT = key("quick_bait");
 
     public static void bootstrap(BootstrapContext<Enchantment> pContext) {
         HolderGetter<Enchantment> enchantmentHolderGetter = pContext.lookup(Registries.ENCHANTMENT);
         HolderGetter<Item> itemHolderGetter = pContext.lookup(Registries.ITEM);
+
+        register(
+                pContext,
+                QUICK_BAIT,
+                Enchantment.enchantment(
+                        Enchantment.definition(
+                                itemHolderGetter.getOrThrow(ItemTags.FISHING_ENCHANTABLE),
+                                3,
+                                5,
+                                Enchantment.dynamicCost(20, 5),
+                                Enchantment.dynamicCost(60, 10),
+                                1
+                        )
+                )
+        );
+
+        register(
+                pContext,
+                DOUBLE_HOOK,
+                Enchantment.enchantment(
+                        Enchantment.definition(
+                                itemHolderGetter.getOrThrow(ItemTags.FISHING_ENCHANTABLE),
+                                3,
+                                5,
+                                Enchantment.dynamicCost(20, 5),
+                                Enchantment.dynamicCost(60, 10),
+                                1
+                        )
+                )
+        );
+
+
+        register(
+                pContext,
+                KINETIC_ENERGY,
+                Enchantment.enchantment(
+                        Enchantment.definition(
+                                itemHolderGetter.getOrThrow(ItemTags.MINING_ENCHANTABLE),
+                                3,
+                                5,
+                                Enchantment.dynamicCost(20, 5),
+                                Enchantment.dynamicCost(60, 10),
+                                1
+                        )
+                )
+        );
+
+        register(
+                pContext,
+                TEAR,
+                Enchantment.enchantment(
+                        Enchantment.definition(
+                                itemHolderGetter.getOrThrow(ItemTags.SHARP_WEAPON_ENCHANTABLE),
+                                3,
+                                5,
+                                Enchantment.constantCost(80),
+                                Enchantment.constantCost(150),
+                                1
+                        )
+                ).exclusiveWith(enchantmentHolderGetter.getOrThrow(UEEnchantmentTags.ULTIMATE_ENCHANTMENT_EXCLUSIVE))
+        );
+
+        register(
+                pContext,
+                THUNDER_BOLT,
+                Enchantment.enchantment(
+                        Enchantment.definition(
+                                itemHolderGetter.getOrThrow(ItemTags.SHARP_WEAPON_ENCHANTABLE),
+                                3,
+                                3,
+                                Enchantment.constantCost(25),
+                                Enchantment.constantCost(30),
+                                1
+                        )
+                )
+        );
 
         register(
                 pContext,
@@ -67,25 +144,9 @@ public class UEEnchantments {
                                 Enchantment.constantCost(150),
                                 1
                         )
-                ).exclusiveWith(enchantmentHolderGetter.getOrThrow(UEEnchantmentTags.ULTIMATE_ENCHANTMENT))
+                ).exclusiveWith(enchantmentHolderGetter.getOrThrow(UEEnchantmentTags.ULTIMATE_ENCHANTMENT_EXCLUSIVE))
         );
 
-
-        register(
-                pContext,
-                MANA_STEAL,
-                Enchantment.enchantment(
-                        Enchantment.definition(
-                                itemHolderGetter.getOrThrow(ItemTags.SHARP_WEAPON_ENCHANTABLE),
-                                3,
-                                4,
-                                Enchantment.dynamicCost(15, 10),
-                                Enchantment.dynamicCost(60, 10),
-                                1
-                        )
-                ).exclusiveWith(enchantmentHolderGetter.getOrThrow(UEEnchantmentTags.LIFE_STEAL_ENCHANTMENT))
-        );
-        conditions.get(MANA_STEAL).add(new ManaSystemEnableCondition());
 
         register(
                 pContext,
@@ -106,92 +167,16 @@ public class UEEnchantments {
                 pContext,
                 CUT_DOWN,
                 Enchantment.enchantment(
-                                Enchantment.definition(
-                                        itemHolderGetter.getOrThrow(ItemTags.SHARP_WEAPON_ENCHANTABLE),
-                                        3,
-                                        5,
-                                        Enchantment.dynamicCost(20, 5),
-                                        Enchantment.dynamicCost(60, 10),
-                                        1,
-                                        EquipmentSlotGroup.HAND
-                                )
+                        Enchantment.definition(
+                                itemHolderGetter.getOrThrow(ItemTags.SHARP_WEAPON_ENCHANTABLE),
+                                3,
+                                5,
+                                Enchantment.dynamicCost(20, 5),
+                                Enchantment.dynamicCost(60, 10),
+                                1,
+                                EquipmentSlotGroup.HAND
                         )
-                        .withSpecialEffect(
-                                UEEnchantmentEffectComponents.CUT_DOWN.value(),
-                                LevelBasedValue.perLevel(0.0001F)
-                        )
-        );
-        register(
-                pContext,
-                PIERCE_THROUGH,
-                Enchantment.enchantment(
-                                Enchantment.definition(
-                                        itemHolderGetter.getOrThrow(UEItemTags.WEAPON_TOOLS),
-                                        3,
-                                        5,
-                                        Enchantment.dynamicCost(20, 5),
-                                        Enchantment.dynamicCost(60, 10),
-                                        1,
-                                        EquipmentSlotGroup.HAND
-                                )
-                        )
-                        .withEffect(
-                                EnchantmentEffectComponents.ATTRIBUTES,
-                                new EnchantmentAttributeEffect(
-                                        ResourceLocation.fromNamespaceAndPath(UltimateEnchantment.MODID, "enchantment" + CRITICAL_DAMAGE.location().getPath()),
-                                        SRCAttributes.ARMOR_PENETRATION,
-                                        LevelBasedValue.perLevel(2F),
-                                        AttributeModifier.Operation.ADD_VALUE
-                                )
-                        )
-        );
-        register(
-                pContext,
-                CRITICAL_DAMAGE,
-                Enchantment.enchantment(
-                                Enchantment.definition(
-                                        itemHolderGetter.getOrThrow(UEItemTags.WEAPON_TOOLS),
-                                        4,
-                                        5,
-                                        Enchantment.dynamicCost(15, 10),
-                                        Enchantment.dynamicCost(80, 10),
-                                        1,
-                                        EquipmentSlotGroup.HAND
-                                )
-                        )
-                        .withEffect(
-                                EnchantmentEffectComponents.ATTRIBUTES,
-                                new EnchantmentAttributeEffect(
-                                        ResourceLocation.fromNamespaceAndPath(UltimateEnchantment.MODID, "enchantment" + CRITICAL_DAMAGE.location().getPath()),
-                                        SRCAttributes.CRITICAL_DAMAGE,
-                                        LevelBasedValue.perLevel(0.05F),
-                                        AttributeModifier.Operation.ADD_VALUE
-                                )
-                        )
-        );
-        register(
-                pContext,
-                CRITICAL_CHANCE,
-                Enchantment.enchantment(
-                                Enchantment.definition(
-                                        itemHolderGetter.getOrThrow(UEItemTags.WEAPON_TOOLS),
-                                        4,
-                                        4,
-                                        Enchantment.dynamicCost(20, 10),
-                                        Enchantment.dynamicCost(80, 10),
-                                        1,
-                                        EquipmentSlotGroup.HAND
-                                )
-                        )
-                        .withEffect(
-                                EnchantmentEffectComponents.ATTRIBUTES,
-                                new EnchantmentAttributeEffect(
-                                        ResourceLocation.fromNamespaceAndPath(UltimateEnchantment.MODID, "enchantment" + CRITICAL_CHANCE.location().getPath()),
-                                        SRCAttributes.CRITICAL_CHANCE,
-                                        LevelBasedValue.perLevel(0.02F),
-                                        AttributeModifier.Operation.ADD_VALUE
-                                )
-                        )
+                )
         );
         register(
                 pContext,
@@ -226,9 +211,9 @@ public class UEEnchantments {
                                         EquipmentSlotGroup.ANY
                                 )
                         )
-                        .exclusiveWith(enchantmentHolderGetter.getOrThrow(UEEnchantmentTags.ULTIMATE_ENCHANTMENT))
+                        .exclusiveWith(enchantmentHolderGetter.getOrThrow(UEEnchantmentTags.ULTIMATE_ENCHANTMENT_EXCLUSIVE))
                         .withSpecialEffect(UEEnchantmentEffectComponents.LEGEND.value(),
-                                new LegendComponent(0.02F)
+                                new LegendComponent(0.01F)
                         )
 
         );
@@ -246,7 +231,7 @@ public class UEEnchantments {
                                         EquipmentSlotGroup.ARMOR
                                 )
                         )
-                        .exclusiveWith(enchantmentHolderGetter.getOrThrow(UEEnchantmentTags.ULTIMATE_ENCHANTMENT))
+                        .exclusiveWith(enchantmentHolderGetter.getOrThrow(UEEnchantmentTags.ULTIMATE_ENCHANTMENT_EXCLUSIVE))
                         .withEffect(UEEnchantmentEffectComponents.LAST_STAND.value(),
                                 new LastStandEffect(
                                         Attributes.ARMOR,
@@ -337,7 +322,7 @@ public class UEEnchantments {
                                         EquipmentSlotGroup.ANY
                                 )
                         )
-                        .exclusiveWith(enchantmentHolderGetter.getOrThrow(UEEnchantmentTags.ULTIMATE_ENCHANTMENT))
+                        .exclusiveWith(enchantmentHolderGetter.getOrThrow(UEEnchantmentTags.ULTIMATE_ENCHANTMENT_EXCLUSIVE))
                         .withSpecialEffect(UEEnchantmentEffectComponents.ULTIMATE.value(), Unit.INSTANCE)
         );
 
@@ -356,7 +341,7 @@ public class UEEnchantments {
                                         EquipmentSlotGroup.HAND
                                 )
                         )
-                        .exclusiveWith(enchantmentHolderGetter.getOrThrow(UEEnchantmentTags.ULTIMATE_ENCHANTMENT))
+                        .exclusiveWith(enchantmentHolderGetter.getOrThrow(UEEnchantmentTags.ULTIMATE_ENCHANTMENT_EXCLUSIVE))
                         .withSpecialEffect(UEEnchantmentEffectComponents.VANQUISHER.get(), new VanquisherComponent(400))
         );
 

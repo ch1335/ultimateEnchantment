@@ -2,13 +2,11 @@ package com.chen1335.ultimateEnchantment.enchantment.effectComponents;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.LegendComponent;
-import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.SyphonComponent;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.VanquisherComponent;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.enchantment.ConditionalEffect;
-import net.minecraft.world.item.enchantment.LevelBasedValue;
 import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
 import net.minecraft.world.item.enchantment.effects.EnchantmentValueEffect;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
@@ -22,8 +20,6 @@ public class UEEnchantmentEffectComponents {
 
     public static DeferredHolder<DataComponentType<?>, DataComponentType<List<ConditionalEffect<EnchantmentEntityEffect>>>> LAST_STAND = TYPES.register("last_stand", () -> DataComponentType.<List<ConditionalEffect<EnchantmentEntityEffect>>>builder().persistent(ConditionalEffect.codec(EnchantmentEntityEffect.CODEC, LootContextParamSets.ENCHANTED_ITEM).listOf()).build());
 
-    public static DeferredHolder<DataComponentType<?>, DataComponentType<SyphonComponent>> SYPHON = TYPES.register("syphon", () -> DataComponentType.<SyphonComponent>builder().persistent(SyphonComponent.CODEC).build());
-
     public static DeferredHolder<DataComponentType<?>, DataComponentType<VanquisherComponent>> VANQUISHER = TYPES.register("vanquisher", () -> DataComponentType.<VanquisherComponent>builder().persistent(VanquisherComponent.CODEC).build());
 
 
@@ -34,8 +30,6 @@ public class UEEnchantmentEffectComponents {
     public static DeferredHolder<DataComponentType<?>, DataComponentType<LegendComponent>> LEGEND = TYPES.register("legend", () -> DataComponentType.<LegendComponent>builder().persistent(LegendComponent.CODEC).build());
 
     public static DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> SMELTING = TYPES.register("smelting", () -> DataComponentType.<Unit>builder().persistent(Unit.CODEC).build());
-
-    public static DeferredHolder<DataComponentType<?>, DataComponentType<LevelBasedValue>> CUT_DOWN = TYPES.register("cut_down", () -> DataComponentType.<LevelBasedValue>builder().persistent(LevelBasedValue.CODEC).build());
 
     public static DeferredHolder<DataComponentType<?>, DataComponentType<List<ConditionalEffect<EnchantmentValueEffect>>>> EXTRA_SHOOT_COUNT = TYPES.register("extra_shoot_count", () -> DataComponentType.<List<ConditionalEffect<EnchantmentValueEffect>>>builder().persistent(ConditionalEffect.codec(EnchantmentValueEffect.CODEC, LootContextParamSets.ENCHANTED_ENTITY).listOf()).build());
 

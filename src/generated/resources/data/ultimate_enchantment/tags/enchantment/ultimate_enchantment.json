@@ -5,6 +5,8 @@
     "ultimate_enchantment:vanquisher",
     "ultimate_enchantment:last_stand",
     "ultimate_enchantment:eternal",
+    "ultimate_enchantment:tear",
+    "ultimate_enchantment:lethal_tempo",
     {
       "id": "ultimate_enchantment:terminator",
       "required": false

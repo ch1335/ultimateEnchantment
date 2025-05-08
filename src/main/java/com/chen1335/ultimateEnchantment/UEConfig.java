@@ -1,9 +1,45 @@
 package com.chen1335.ultimateEnchantment;
 
-import net.neoforged.neoforge.common.ModConfigSpec;
+import com.electronwill.nightconfig.core.CommentedConfig;
+import com.electronwill.nightconfig.core.file.CommentedFileConfig;
+import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.fml.loading.FMLPaths;
 
 public class UEConfig {
-    private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
+    public static void loadConfig() {
+        try (CommentedFileConfig config = CommentedFileConfig.of(FMLPaths.CONFIGDIR.get().resolve("ultimate_enchantment.toml"))) {
+            config.load();
+            CommonConfig.load(config);
+            config.save();
+        }
+    }
 
-    static final ModConfigSpec SPEC = BUILDER.build();
+
+    public static class CommonConfig {
+        public static boolean isUltimateEnchantmentExclusiveEachOther = true;
+
+        private static void load(CommentedConfig config) {
+            CommentedConfig common = get(config, "Common", config.createSubConfig());
+            isUltimateEnchantmentExclusiveEachOther = get(common, "isUltimateEnchantmentExclusiveEachOther", isUltimateEnchantmentExclusiveEachOther, "define whether ultimate enchantment exclusive each other");
+        }
+    }
+
+    private static <T> T get(CommentedConfig config, String string, T defaultValue) {
+        T value = config.get(string);
+        if (value == null) {
+            config.set(string, defaultValue);
+            return defaultValue;
+        }
+        return value;
+    }
+
+    private static <T> T get(CommentedConfig config, String name, T defaultValue, String comment) {
+        T value = config.get(name);
+        if (value == null) {
+            config.set(name, defaultValue);
+            config.setComment(name, comment);
+            return defaultValue;
+        }
+        return value;
+    }
 }

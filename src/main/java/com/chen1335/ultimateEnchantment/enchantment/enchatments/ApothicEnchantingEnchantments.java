@@ -18,7 +18,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.LevelBasedValue;
-import net.minecraft.world.item.enchantment.effects.AddValue;
 import net.minecraft.world.item.enchantment.effects.EnchantmentAttributeEffect;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
@@ -39,54 +38,54 @@ public class ApothicEnchantingEnchantments {
     public static void bootstrap(BootstrapContext<Enchantment> pContext) {
         HolderGetter<Enchantment> enchantmentHolderGetter = pContext.lookup(Registries.ENCHANTMENT);
         HolderGetter<Item> itemHolderGetter = pContext.lookup(Registries.ITEM);
-        register(
-                pContext,
-                TERMINATOR,
-                Enchantment.enchantment(
-                                Enchantment.definition(
-                                        itemHolderGetter.getOrThrow(ItemTags.BOW_ENCHANTABLE),
-                                        1,
-                                        1,
-                                        Enchantment.constantCost(80),
-                                        Enchantment.constantCost(150),
-                                        1,
-                                        EquipmentSlotGroup.HAND
-                                )
-                        )
-                        .exclusiveWith(enchantmentHolderGetter.getOrThrow(UEEnchantmentTags.ULTIMATE_ENCHANTMENT))
-                        .withEffect(EnchantmentEffectComponents.PROJECTILE_COUNT, new AddValue(LevelBasedValue.perLevel(2.0F)))
-                        .withEffect(EnchantmentEffectComponents.PROJECTILE_SPREAD, new AddValue(LevelBasedValue.perLevel(10.0F)))
-                        .withEffect(
-                                EnchantmentEffectComponents.ATTRIBUTES,
-                                new EnchantmentAttributeEffect(
-                                        ResourceLocation.fromNamespaceAndPath(UltimateEnchantment.MODID, "enchantment.terminator"),
-                                        ALObjects.Attributes.DRAW_SPEED,
-                                        new LevelBasedValue.Constant(0.5F),
-                                        AttributeModifier.Operation.ADD_VALUE
-                                )
-                        )
-                        .withEffect(
-                                EnchantmentEffectComponents.ATTRIBUTES,
-                                new EnchantmentAttributeEffect(
-                                        ResourceLocation.fromNamespaceAndPath(UltimateEnchantment.MODID, "enchantment.terminator"),
-                                        ALObjects.Attributes.CRIT_CHANCE,
-                                        new LevelBasedValue.Constant(-0.75F),
-                                        AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
-                                )
-                        )
-                        .withEffect(
-                                EnchantmentEffectComponents.ATTRIBUTES,
-                                new EnchantmentAttributeEffect(
-                                        ResourceLocation.fromNamespaceAndPath(UltimateEnchantment.MODID, "enchantment.terminator"),
-                                        ALObjects.Attributes.CRIT_DAMAGE,
-                                        new LevelBasedValue.Constant(-0.5F),
-                                        AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
-                                )
-                        )
-                        .withEffect(UEEnchantmentEffectComponents.EXTRA_SHOOT_COUNT.value(),
-                                new AddValue(LevelBasedValue.perLevel(1.0F))
-                        )
-        );
+//        register(
+//                pContext,
+//                TERMINATOR,
+//                Enchantment.enchantment(
+//                                Enchantment.definition(
+//                                        itemHolderGetter.getOrThrow(ItemTags.BOW_ENCHANTABLE),
+//                                        1,
+//                                        1,
+//                                        Enchantment.constantCost(80),
+//                                        Enchantment.constantCost(150),
+//                                        1,
+//                                        EquipmentSlotGroup.HAND
+//                                )
+//                        )
+//                        .exclusiveWith(enchantmentHolderGetter.getOrThrow(UEEnchantmentTags.ULTIMATE_ENCHANTMENT))
+//                        .withEffect(EnchantmentEffectComponents.PROJECTILE_COUNT, new AddValue(LevelBasedValue.perLevel(2.0F)))
+//                        .withEffect(EnchantmentEffectComponents.PROJECTILE_SPREAD, new AddValue(LevelBasedValue.perLevel(10.0F)))
+//                        .withEffect(
+//                                EnchantmentEffectComponents.ATTRIBUTES,
+//                                new EnchantmentAttributeEffect(
+//                                        ResourceLocation.fromNamespaceAndPath(UltimateEnchantment.MODID, "enchantment.terminator"),
+//                                        ALObjects.Attributes.DRAW_SPEED,
+//                                        new LevelBasedValue.Constant(0.5F),
+//                                        AttributeModifier.Operation.ADD_VALUE
+//                                )
+//                        )
+//                        .withEffect(
+//                                EnchantmentEffectComponents.ATTRIBUTES,
+//                                new EnchantmentAttributeEffect(
+//                                        ResourceLocation.fromNamespaceAndPath(UltimateEnchantment.MODID, "enchantment.terminator"),
+//                                        ALObjects.Attributes.CRIT_CHANCE,
+//                                        new LevelBasedValue.Constant(-0.75F),
+//                                        AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+//                                )
+//                        )
+//                        .withEffect(
+//                                EnchantmentEffectComponents.ATTRIBUTES,
+//                                new EnchantmentAttributeEffect(
+//                                        ResourceLocation.fromNamespaceAndPath(UltimateEnchantment.MODID, "enchantment.terminator"),
+//                                        ALObjects.Attributes.CRIT_DAMAGE,
+//                                        new LevelBasedValue.Constant(-0.5F),
+//                                        AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+//                                )
+//                        )
+//                        .withEffect(UEEnchantmentEffectComponents.EXTRA_SHOOT_COUNT.value(),
+//                                new AddValue(LevelBasedValue.perLevel(1.0F))
+//                        )
+//        );
 
 
         register(
@@ -103,7 +102,6 @@ public class ApothicEnchantingEnchantments {
                                         EquipmentSlotGroup.HAND
                                 )
                         )
-                        .exclusiveWith(HolderSet.direct(enchantmentHolderGetter.getOrThrow(UEEnchantments.PIERCE_THROUGH)))
                         .withEffect(
                                 EnchantmentEffectComponents.ATTRIBUTES,
                                 new EnchantmentAttributeEffect(

@@ -14,6 +14,8 @@ public interface UEEnchantmentTags {
 
     TagKey<Enchantment> ULTIMATE_ENCHANTMENT = create("ultimate_enchantment");
 
+    TagKey<Enchantment> ULTIMATE_ENCHANTMENT_EXCLUSIVE = create("ultimate_enchantment_exclusive");
+
     TagKey<Enchantment> LEGENDARY_ENCHANTMENT = create("legendary_enchantment");
 
     TagKey<Enchantment> TRADEABLE_LEGENDARY_ENCHANTMENT = create("tradeable_legendary_enchantment");
@@ -25,6 +27,8 @@ public interface UEEnchantmentTags {
     TagKey<Enchantment> LIFE_STEAL_ENCHANTMENT = create("life_steal_enchantment");
 
     TagKey<Enchantment> UE_APOTHIC_ENCHANTING_ADDITION = create("ue_apothic_enchanting_addition");
+
+    TagKey<Enchantment> IGNORE_ULTIMATE = create("ignore_ultimate");
 
     private static TagKey<Enchantment> create(String pName) {
         return TagKey.create(Registries.ENCHANTMENT, ResourceLocation.fromNamespaceAndPath(UltimateEnchantment.MODID,pName));

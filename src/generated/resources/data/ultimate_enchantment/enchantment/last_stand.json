@@ -35,7 +35,7 @@
       }
     ]
   },
-  "exclusive_set": "#ultimate_enchantment:ultimate_enchantment",
+  "exclusive_set": "#ultimate_enchantment:ultimate_enchantment_exclusive",
   "max_cost": {
     "base": 999,
     "per_level_above_first": 0

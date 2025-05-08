@@ -8,26 +8,18 @@ import com.chen1335.ultimateEnchantment.enchantment.effects.UEEnchantmentEffects
 import com.chen1335.ultimateEnchantment.mobEffect.MobEffects;
 import com.chen1335.ultimateEnchantment.tags.UEEnchantmentTags;
 import com.mojang.logging.LogUtils;
-import dev.shadowsoffire.placebo.registry.DeferredHelper;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.slf4j.Logger;
@@ -35,12 +27,12 @@ import org.slf4j.Logger;
 @Mod(UltimateEnchantment.MODID)
 public class UltimateEnchantment {
     public static final String MODID = "ultimate_enchantment";
-
-    public static final DeferredHelper R = DeferredHelper.create(MODID);
-
     public static final Logger LOGGER = LogUtils.getLogger();
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
+    private static boolean IRONS_SPELL_BOOKS_LOADED = false;
+
+    private static boolean TWILIGHT_FOREST_LOADED = false;
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> ENCHANTMENT_TAB = CREATIVE_MODE_TABS.register("ultimate_enchantment", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.ultimate_enchantment"))
             .withTabsBefore(CreativeModeTabs.COMBAT)
@@ -71,11 +63,7 @@ public class UltimateEnchantment {
             }).build());
 
     public UltimateEnchantment(IEventBus modEventBus, ModContainer modContainer) {
-        modEventBus.addListener(this::commonSetup);
         CREATIVE_MODE_TABS.register(modEventBus);
-        NeoForge.EVENT_BUS.register(this);
-        modEventBus.addListener(this::addCreative);
-
         UEDataComponentTypes.AEA_DATA.register(modEventBus);
         UEEnchantmentEffects.ENCHANTMENT_ENTITY_EFFECT.register(modEventBus);
         UEEnchantmentEffects.ENCHANTMENT_LOCATION_BASED_EFFECT.register(modEventBus);
@@ -83,32 +71,22 @@ public class UltimateEnchantment {
         AttachmentTypes.ATTACHMENT_TYPES.register(modEventBus);
         MobEffects.MOB_EFFECT_DEFERRED_REGISTER.register(modEventBus);
 
-        modContainer.registerConfig(ModConfig.Type.COMMON, UEConfig.SPEC);
-
         if (ModList.get().isLoaded("irons_spellbooks")) {
+            IRONS_SPELL_BOOKS_LOADED = true;
             NeoForge.EVENT_BUS.register(EventHandler.Game.IronsSpellBooksEvents.class);
         }
-    }
-
-    private void commonSetup(final FMLCommonSetupEvent event) {
-
-    }
-
-    private void addCreative(BuildCreativeModeTabContentsEvent event) {
-
-
-    }
-
-    @SubscribeEvent
-    public void onServerAboutToStart(ServerAboutToStartEvent event) {
-
-    }
-
-    @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public static class ClientModEvents {
-        @SubscribeEvent
-        public static void onClientSetup(FMLClientSetupEvent event) {
-
+        if (ModList.get().isLoaded("twilightforest")) {
+            TWILIGHT_FOREST_LOADED = true;
         }
+
+        UEConfig.loadConfig();
+    }
+
+    public static boolean isIronsSpellBooksLoaded() {
+        return IRONS_SPELL_BOOKS_LOADED;
+    }
+
+    public static boolean isTwilightForestLoaded() {
+        return TWILIGHT_FOREST_LOADED;
     }
 }

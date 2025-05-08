@@ -1,33 +1,31 @@
 package com.chen1335.ultimateEnchantment.common;
 
 
-import com.chen.simpleRPGCore.API.objects.SRCAttributes;
-import com.chen.simpleRPGCore.common.DamageSourceExtraData;
-import com.chen.simpleRPGCore.common.capability.PlayerExtraData;
-import com.chen.simpleRPGCore.common.capability.SRCCapabilities;
-import com.chen.simpleRPGCore.event.events.ModifyDamageEvent;
-import com.chen.simpleRPGCore.event.events.ModifyProjectileEvent;
-import com.chen.simpleRPGCore.mixinsAPI.minecraft.IDamageSourceExtension;
-import com.chen.simpleRPGCore.mixinsAPI.minecraft.IProjectileMixinExtension;
-import com.chen.simpleRPGCore.tags.SRCDamageTags;
-import com.chen.simpleRPGCore.utils.SimpleSchedule;
 import com.chen1335.ultimateEnchantment.API.AttachmentTypes;
+import com.chen1335.ultimateEnchantment.API.UEDamageTypeTags;
 import com.chen1335.ultimateEnchantment.AttachmentDatas.PlayerData;
+import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentConfigs;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.LegendComponent;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.VanquisherComponent;
 import com.chen1335.ultimateEnchantment.enchantment.effects.UltimateEnchantment.LastStandEffect;
-import com.chen1335.ultimateEnchantment.enchantment.enchatments.ApothicEnchantingEnchantments;
 import com.chen1335.ultimateEnchantment.enchantment.enchatments.IronsSpellBooksEnchantments;
 import com.chen1335.ultimateEnchantment.enchantment.enchatments.UEEnchantments;
+import com.chen1335.ultimateEnchantment.enchantment.specialEnchantEffects.CutDown;
+import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IDamageSourceMixin;
 import com.chen1335.ultimateEnchantment.mobEffect.MobEffects;
+import com.chen1335.ultimateEnchantment.netWork.BreakSpeedMultiplierPack;
+import com.chen1335.ultimateEnchantment.tags.UEEnchantmentTags;
 import com.chen1335.ultimateEnchantment.utils.ItemEnchantmentHelper;
+import com.chen1335.ultimateEnchantment.utils.SimpleSchedule;
 import com.mojang.datafixers.util.Pair;
 import io.redspace.ironsspellbooks.api.events.SpellOnCastEvent;
+import io.redspace.ironsspellbooks.api.magic.MagicData;
+import io.redspace.ironsspellbooks.api.registry.AttributeRegistry;
+import io.redspace.ironsspellbooks.network.SyncManaPacket;
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Unit;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -43,19 +41,26 @@ import net.minecraft.world.item.Equipable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.item.crafting.*;
-import net.minecraft.world.item.enchantment.*;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 import net.neoforged.neoforge.event.enchanting.GetEnchantmentLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+import net.neoforged.neoforge.event.entity.player.ItemFishedEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.Objects;
@@ -64,6 +69,12 @@ import java.util.Objects;
 public class EventHandler {
     @EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME)
     public static class Game {
+        @SubscribeEvent
+        public static void ItemFishedEvent(ItemFishedEvent event){
+
+        }
+
+
         @SubscribeEvent
         public static void PlayerPreTick(PlayerTickEvent.Pre event) {
             if (!event.getEntity().level().isClientSide) {
@@ -81,7 +92,7 @@ public class EventHandler {
                         Unit quickLatch = pEnchantment.value().effects().get(UEEnchantmentEffectComponents.QUICK_LATCH.value());
                         if (quickLatch != null) {
                             int defaultTime = item.getDefaultProjectileRange();
-                            if (item.getUseDuration(itemStack, player) - player.getUseItemRemainingTicks() >= defaultTime+1) {
+                            if (item.getUseDuration(itemStack, player) - player.getUseItemRemainingTicks() >= defaultTime + 1) {
                                 player.releaseUsingItem();
                             }
                         }
@@ -117,59 +128,67 @@ public class EventHandler {
 
         @SubscribeEvent(priority = EventPriority.LOW)
         public static void cutDown(LivingIncomingDamageEvent event) {
-            DamageSourceExtraData extraData = ((IDamageSourceExtension) event.getSource()).src$getExtraData();
-            if (event.getSource().getDirectEntity() instanceof LivingEntity attacker && extraData.isMeleeDamageToEntity(event.getEntity().getId())) {
+            if (event.getSource().getDirectEntity() instanceof LivingEntity attacker && event.getSource().is(UEDamageTypeTags.IS_ATTACK)) {
                 float attackerMaxHealth = attacker.getMaxHealth();
                 float percentage = ((event.getEntity().getHealth() - attackerMaxHealth) / attackerMaxHealth) * 100;
                 if (percentage > 0) {
-                    Pair<LevelBasedValue, Integer> pair = EnchantmentHelper.getHighestLevel(attacker.getMainHandItem(), UEEnchantmentEffectComponents.CUT_DOWN.value());
-                    if (pair != null) {
-                        float damageMultiplier = (float) Math.min(pair.getFirst().calculate(pair.getSecond()) * percentage, 0.1 * pair.getSecond());
-                        extraData.addFinalDamageAddition(damageMultiplier * event.getContainer().getNewDamage());
-                    }
+                    int level = ItemEnchantmentHelper.getEnchantmentLevel(attacker.getMainHandItem(), UEEnchantments.CUT_DOWN);
+                    float damageMultiplier = CutDown.getDamageMultiplier(attackerMaxHealth, event.getEntity().getHealth(), level);
+                    event.setAmount(event.getAmount() * (damageMultiplier + 1));
+
                 }
+            }
+        }
+
+        @SubscribeEvent(priority = EventPriority.LOWEST)
+        public static void playerBreakSpeed(PlayerEvent.BreakSpeed event) {
+            float breakSpeedMultiplier = event.getEntity().getData(AttachmentTypes.PLAYER_DATA).breakSpeedMultiplier;
+            event.setNewSpeed((1 + breakSpeedMultiplier) * event.getNewSpeed());
+        }
+
+        @SubscribeEvent(priority = EventPriority.LOWEST)
+        public static void playerBreakBlock(BlockEvent.BreakEvent event) {
+            if (!event.isCanceled()) {
+                int level = ItemEnchantmentHelper.getEnchantmentLevel(event.getPlayer().getMainHandItem(), UEEnchantments.KINETIC_ENERGY);
+                PlayerData data = event.getPlayer().getData(AttachmentTypes.PLAYER_DATA);
+                data.breakSpeedMultiplier = (float) Math.min(data.breakSpeedMultiplier + 0.025, level * 0.1);
+                if (!event.getPlayer().level().isClientSide()) {
+                    PacketDistributor.sendToPlayer((ServerPlayer) event.getPlayer(), new BreakSpeedMultiplierPack(data.breakSpeedMultiplier));
+                }
+                data.breakSpeedMultiplierRemainingTime = 200;
             }
         }
 
         @SubscribeEvent
         public static void lifeStealAndManaSteal(LivingDamageEvent.Pre event) {
-            if (event.getSource().getEntity() instanceof LivingEntity attacker && event.getSource().is(SRCDamageTags.CAN_LIFE_STEAL)) {
-                DamageSourceExtraData extraData = ((IDamageSourceExtension) event.getSource()).src$getExtraData();
-                if (extraData.isMeleeDamageToEntity(event.getEntity().getId())) {
-                    float actualDamage = Math.min(event.getEntity().getHealth(), event.getNewDamage());
+            if (event.getSource().getEntity() instanceof LivingEntity attacker && event.getSource().is(UEDamageTypeTags.IS_ATTACK)) {
+                float actualDamage = Math.min(event.getEntity().getHealth(), event.getNewDamage());
+                int lifeStealLevel = ItemEnchantmentHelper.getEnchantmentLevel(attacker.getMainHandItem(), UEEnchantments.LIFE_STEAL);
+                float healAmount = (float) Math.min(actualDamage * lifeStealLevel * EnchantmentConfigs.LifeSteal.healPercentPerLevel, attacker.getMaxHealth() * 0.04);
+                attacker.heal(healAmount);
 
-                    int lifeStealLevel = ItemEnchantmentHelper.getEnchantmentLevel(attacker.getMainHandItem(), UEEnchantments.LIFE_STEAL);
-                    float healAmount = Math.min(actualDamage * lifeStealLevel * EnchantmentConfigs.LifeSteal.healPercentPerLevel, attacker.getMaxHealth() * EnchantmentConfigs.LifeSteal.maxHealPercentBaseMaxHealth * lifeStealLevel);
-                    attacker.heal(healAmount);
+                if (UltimateEnchantment.isIronsSpellBooksLoaded() && attacker instanceof ServerPlayer player) {
+                    int manaStealLevel = ItemEnchantmentHelper.getEnchantmentLevel(attacker.getMainHandItem(), IronsSpellBooksEnchantments.MANA_STEAL);
+                    float manaRegainAmount = (float) Math.min(actualDamage * manaStealLevel * EnchantmentConfigs.ManaSteal.ManaRegainPercentPerLevel, player.getAttributeValue(AttributeRegistry.MAX_MANA) * 0.06);
+                    MagicData.getPlayerMagicData(player).addMana(manaRegainAmount);
+                    PacketDistributor.sendToPlayer(player, new SyncManaPacket(MagicData.getPlayerMagicData(player)));
 
-                    if (attacker instanceof Player player) {
-                        PlayerExtraData playerExtraData = player.getCapability(SRCCapabilities.SRC_PLAYER_DATA);
-
-                        if (playerExtraData != null) {
-                            int manaStealLevel = ItemEnchantmentHelper.getEnchantmentLevel(attacker.getMainHandItem(), UEEnchantments.MANA_STEAL);
-                            float manaRegainAmount = (float) Math.min(actualDamage * manaStealLevel * EnchantmentConfigs.ManaSteal.ManaRegainPercentPerLevel, player.getAttributeValue(SRCAttributes.MAX_MANA) * EnchantmentConfigs.ManaSteal.maxManaRegainPercentBaseMaxMana * manaStealLevel);
-                            playerExtraData.regainMana(manaRegainAmount);
-                        }
-
-                    }
                 }
-
             }
         }
 
         @SubscribeEvent
         public static void GetEnchantmentLevelEvent(GetEnchantmentLevelEvent event) {
-            int legendLevel = 0;
-            for (Holder<Enchantment> holder : event.getEnchantments().keySet()) {
-                if (holder.value().effects().has(UEEnchantmentEffectComponents.ULTIMATE.value())) {
-                    int newLevel = event.getEnchantments().getLevel(holder);
-                    legendLevel = Math.max(legendLevel, newLevel);
-                }
+            Holder.Reference<Enchantment> ultimateHolder = event.getLookup().getOrThrow(UEEnchantments.ULTIMATE);
+            if (event.getTargetEnchant() != null && event.getTargetEnchant().equals(ultimateHolder)) {
+                return;
             }
+
+            int ultimateLevel = event.getStack().getEnchantmentLevel(event.getLookup().getOrThrow(UEEnchantments.ULTIMATE));
             for (Holder<Enchantment> holder : event.getEnchantments().keySet()) {
                 if (event.getEnchantments().getLevel(holder) > 0) {
-                    if (!holder.value().effects().has(UEEnchantmentEffectComponents.ULTIMATE.value()) && holder.value().getMaxLevel() > 1) {
-                        int newLevel = event.getEnchantments().getLevel(holder) + legendLevel;
+                    if (!holder.is(UEEnchantmentTags.IGNORE_ULTIMATE) && !holder.equals(ultimateHolder) && holder.value().getMaxLevel() > 1) {
+                        int newLevel = event.getEnchantments().getLevel(holder) + ultimateLevel;
                         if (holder.is(Enchantments.QUICK_CHARGE)) {
                             newLevel = Math.min(newLevel, 5);
                         }
@@ -177,6 +196,7 @@ public class EventHandler {
                     }
                 }
             }
+
         }
 
         @SubscribeEvent
@@ -198,8 +218,6 @@ public class EventHandler {
                     Objects.requireNonNull(livingEntity.getAttributes().getInstance(attributeHolder)).removeModifier(LegendComponent.idForSlot(slot));
                     if (sentiment == Attribute.Sentiment.POSITIVE) {
                         Objects.requireNonNull(livingEntity.getAttributes().getInstance(attributeHolder)).addTransientModifier(new AttributeModifier(LegendComponent.idForSlot(slot), pairTo.getFirst().attributeMultiplePerLevel() * pairTo.getSecond(), AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
-                    } else if (sentiment == Attribute.Sentiment.NEGATIVE) {
-                        Objects.requireNonNull(livingEntity.getAttributes().getInstance(attributeHolder)).addTransientModifier(new AttributeModifier(LegendComponent.idForSlot(slot), -pairTo.getFirst().attributeMultiplePerLevel() * pairTo.getSecond(), AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
                     }
                 });
             }
@@ -244,21 +262,12 @@ public class EventHandler {
                     itemStack.releaseUsing(event.getEntity().level(), event.getEntity(), event.getDuration());
                 }, 5));
             }
+
         }
 
         @SubscribeEvent
-        public static void modifyProjectile(ModifyProjectileEvent event) {
-            ItemEnchantments enchantments = event.itemStack.getAllEnchantments(event.serverLevel.registryAccess().lookupOrThrow(Registries.ENCHANTMENT));
-            if (enchantments.keySet().stream().anyMatch(enchantmentHolder -> enchantmentHolder.getKey() == ApothicEnchantingEnchantments.TERMINATOR)) {
-                ((IProjectileMixinExtension) event.projectile).src$setBypassesCooldownHit(true);
-            }
-        }
-
-        @SubscribeEvent
-        public static void VanquisherEffect(ModifyDamageEvent.AfterCritical event) {
-
-
-            if (event.getDamageContainer().getSource().getDirectEntity() instanceof LivingEntity livingEntity && event.getExtraData().isMeleeDamageToEntity(event.getEntity().getId())) {
+        public static void VanquisherEffect(LivingIncomingDamageEvent event) {
+            if (((IDamageSourceMixin) event.getSource()).isDirectAttackedEntity(event.getEntity()) && event.getSource().getEntity() instanceof LivingEntity livingEntity && event.getSource().is(UEDamageTypeTags.IS_ATTACK)) {
                 if (livingEntity instanceof Player player && player.getAttackStrengthScale(0) < 0.5) {
                     return;
                 }
@@ -269,7 +278,7 @@ public class EventHandler {
                 }
 
                 if (livingEntity.getEffect(MobEffects.ACTIVE_VANQUISHER) != null) {
-                    event.getExtraData().addAdditionTags(DamageTypeTags.BYPASSES_COOLDOWN);
+                    event.getEntity().invulnerableTime = 0;
                     livingEntity.addEffect(new MobEffectInstance(MobEffects.ACTIVE_VANQUISHER, pair.getFirst().buffDuration(), 0, false, false, true));
                     return;
                 }
@@ -302,8 +311,9 @@ public class EventHandler {
     @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
     public static class Mod {
         @SubscribeEvent
-        public static void RegisterCapabilitiesEvent(RegisterCapabilitiesEvent event) {
-
+        public static void RegisterPayloadHandlersEvent(RegisterPayloadHandlersEvent event) {
+            final PayloadRegistrar registrar = event.registrar("1");
+            registrar.playToClient(BreakSpeedMultiplierPack.TYPE, BreakSpeedMultiplierPack.STREAM_CODEC, BreakSpeedMultiplierPack::handler);
         }
     }
 }

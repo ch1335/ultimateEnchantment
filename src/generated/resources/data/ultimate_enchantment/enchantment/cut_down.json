@@ -9,13 +9,6 @@
   "description": {
     "translate": "enchantment.ultimate_enchantment.cut_down"
   },
-  "effects": {
-    "ultimate_enchantment:cut_down": {
-      "type": "minecraft:linear",
-      "base": 1.0E-4,
-      "per_level_above_first": 1.0E-4
-    }
-  },
   "max_cost": {
     "base": 60,
     "per_level_above_first": 10

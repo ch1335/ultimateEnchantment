@@ -3,6 +3,7 @@
   "package": "com.chen1335.ultimateEnchantment.mixins.apothicEnchanting",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "ApothicEnchantingMixin",
     "TooltipUtilMixin"
   ],
   "client": [

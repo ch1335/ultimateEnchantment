@@ -1,5 +1,6 @@
 package com.chen1335.ultimateEnchantment.mixins.minecraft;
 
+import com.chen1335.ultimateEnchantment.UEConfig;
 import com.chen1335.ultimateEnchantment.tags.UEEnchantmentTags;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.resources.ResourceLocation;
@@ -42,6 +43,10 @@ public class TagLoaderMixin {
             newOrder.add(legendaryEnchantments);
             newOrder.addAll(otherEnchantments);
             original.put(EnchantmentTags.TOOLTIP_ORDER.location(), newOrder);
+
+            if (!UEConfig.CommonConfig.isUltimateEnchantmentExclusiveEachOther) {
+                original.put(UEEnchantmentTags.ULTIMATE_ENCHANTMENT_EXCLUSIVE.location(), List.of());
+            }
         }
         return original;
     }

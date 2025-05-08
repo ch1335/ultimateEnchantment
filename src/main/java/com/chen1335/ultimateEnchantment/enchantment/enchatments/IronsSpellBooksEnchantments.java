@@ -1,7 +1,7 @@
 package com.chen1335.ultimateEnchantment.enchantment.enchatments;
 
-import com.chen.simpleRPGCore.common.conditions.ManaSystemEnableCondition;
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
+import com.chen1335.ultimateEnchantment.tags.UEEnchantmentTags;
 import io.redspace.ironsspellbooks.IronsSpellbooks;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
@@ -21,12 +21,27 @@ import java.util.Map;
 
 public class IronsSpellBooksEnchantments {
     public static final Map<ResourceKey<?>, List<ICondition>> conditions = new HashMap<>();
-
+    public static final ResourceKey<Enchantment> MANA_STEAL = key("mana_steal");
     public static final ResourceKey<Enchantment> HARDENED_MANA = key("hardened_mana");
 
     public static void bootstrap(BootstrapContext<Enchantment> pContext) {
         HolderGetter<Enchantment> enchantmentHolderGetter = pContext.lookup(Registries.ENCHANTMENT);
         HolderGetter<Item> itemHolderGetter = pContext.lookup(Registries.ITEM);
+
+        register(
+                pContext,
+                MANA_STEAL,
+                Enchantment.enchantment(
+                        Enchantment.definition(
+                                itemHolderGetter.getOrThrow(ItemTags.SHARP_WEAPON_ENCHANTABLE),
+                                3,
+                                4,
+                                Enchantment.dynamicCost(15, 10),
+                                Enchantment.dynamicCost(60, 10),
+                                1
+                        )
+                ).exclusiveWith(enchantmentHolderGetter.getOrThrow(UEEnchantmentTags.LIFE_STEAL_ENCHANTMENT))
+        );
 
         register(
                 pContext,

@@ -1,8 +1,10 @@
 package com.chen1335.ultimateEnchantment.data.registries;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
+import com.chen1335.ultimateEnchantment.data.lootTable.UELootTableProvider;
 import com.chen1335.ultimateEnchantment.data.lootTableModifier.EntityLootModifierProvider;
 import com.chen1335.ultimateEnchantment.data.recipe.UERecipesProvider;
+import com.chen1335.ultimateEnchantment.data.tags.DamageTypeTagProvider;
 import com.chen1335.ultimateEnchantment.data.tags.UEEnchantmentTagsProvider;
 import com.chen1335.ultimateEnchantment.data.tags.UEItemTagsProvider;
 import com.chen1335.ultimateEnchantment.enchantment.enchatments.ApothicEnchantingEnchantments;
@@ -48,12 +50,19 @@ public class UERegistries {
                             conditions.putAll(ApothicEnchantingEnchantments.conditions);
                             conditions.putAll(IronsSpellBooksEnchantments.conditions);
                         })
+                        .add(Registries.DAMAGE_TYPE, UEDamageType::bootstrapContext)
                 ,
                 conditions,
                 Set.of(UltimateEnchantment.MODID)
         ));
 
         generator.addProvider(event.includeServer(), new UEEnchantmentTagsProvider(
+                generator.getPackOutput(),
+                ueLookupProvider.getRegistryProvider(),
+                event.getExistingFileHelper()
+        ));
+
+        generator.addProvider(event.includeServer(), new DamageTypeTagProvider(
                 generator.getPackOutput(),
                 ueLookupProvider.getRegistryProvider(),
                 event.getExistingFileHelper()
@@ -85,5 +94,9 @@ public class UERegistries {
                 generator.getPackOutput(),
                 ueLookupProvider.getRegistryProvider()
         ));
+
+        generator.addProvider(event.includeServer(), new UELootTableProvider(
+                generator.getPackOutput(),
+                ueLookupProvider.getRegistryProvider()));
     }
 }

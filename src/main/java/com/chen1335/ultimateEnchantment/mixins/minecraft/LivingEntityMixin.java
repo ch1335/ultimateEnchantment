@@ -1,24 +1,36 @@
 package com.chen1335.ultimateEnchantment.mixins.minecraft;
 
+import com.chen1335.ultimateEnchantment.API.UEDamageTypeTags;
 import com.chen1335.ultimateEnchantment.dataComponentType.UEDataComponentTypes;
+import com.chen1335.ultimateEnchantment.enchantment.specialEnchantEffects.TearEffect;
+import com.chen1335.ultimateEnchantment.enchantment.specialEnchantEffects.ThunderBolt;
+import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IDamageSourceMixin;
+import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.ILivingEntityMixin;
 import com.chen1335.ultimateEnchantment.mobEffect.MobEffects;
+import com.chen1335.ultimateEnchantment.utils.Util;
 import net.minecraft.core.Holder;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.neoforged.neoforge.common.damagesource.DamageContainer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import javax.annotation.Nullable;
+import java.util.Stack;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin {
+public abstract class LivingEntityMixin implements ILivingEntityMixin {
+    @Unique
+    private boolean ue$disableHurtSound = false;
 
     @Shadow
     @Nullable
@@ -32,6 +44,28 @@ public abstract class LivingEntityMixin {
 
     @Shadow
     protected abstract void onEffectUpdated(MobEffectInstance effectInstance, boolean forced, @org.jetbrains.annotations.Nullable Entity entity);
+
+    @Shadow
+    @Nullable
+    protected Stack<DamageContainer> damageContainers;
+
+    @Inject(method = "playHurtSound", at = @At("HEAD"), cancellable = true)
+    private void playHurtSound(DamageSource source, CallbackInfo ci) {
+        if (ue$disableHurtSound) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "actuallyHurt", at = @At("HEAD"))
+    private void actuallyHurt(DamageSource damageSource, float damageAmount, CallbackInfo ci) {
+        LivingEntity living = (LivingEntity) (Object) this;
+        if (((IDamageSourceMixin) damageSource).isDirectAttackedEntity(living) && damageSource.getEntity() instanceof LivingEntity attacker && damageSource.is(UEDamageTypeTags.IS_ATTACK)) {
+            Util.addAttackedCount(attacker);
+        }
+        TearEffect.onAttack(damageSource, this.damageContainers, living);
+        ThunderBolt.onAttack(damageSource, this.damageContainers, living);
+
+    }
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void tick(CallbackInfo ci) {
@@ -80,5 +114,13 @@ public abstract class LivingEntityMixin {
                 this.addEffect(new MobEffectInstance(MobEffects.ACTIVE_VANQUISHER, 400, 0, false, false, true));
             }
         }
+    }
+
+    public boolean ue$isDisableHurtSound() {
+        return ue$disableHurtSound;
+    }
+
+    public void ue$setDisableHurtSound(boolean disableHurtSound) {
+        this.ue$disableHurtSound = disableHurtSound;
     }
 }
