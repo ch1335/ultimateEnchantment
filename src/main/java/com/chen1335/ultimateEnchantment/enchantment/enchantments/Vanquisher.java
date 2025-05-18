@@ -47,7 +47,7 @@ public class Vanquisher extends CommonEnchantmentBase {
 
     @Override
     public int getMinCost(int pLevel) {
-        return 100;
+        return 50;
     }
 
 }

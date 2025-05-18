@@ -11,7 +11,7 @@ public class CriticalChance extends SingleAttributeEnchantment {
 
 
     public CriticalChance() {
-        super(Rarity.COMMON, UEEnchantmentCategory.WEAPON_AND_BOW, new EquipmentSlot[]{EquipmentSlot.MAINHAND}, UltimateEnchantment.EnchantmentType.OTHER, ALObjects.Attributes.CRIT_CHANCE.get(), 0.05F, AttributeModifier.Operation.ADDITION);
+        super(Rarity.COMMON, UEEnchantmentCategory.WEAPON_AND_BOW, new EquipmentSlot[]{EquipmentSlot.MAINHAND}, UltimateEnchantment.EnchantmentType.OTHER, ALObjects.Attributes.CRIT_CHANCE.get(), 0.02F, AttributeModifier.Operation.ADDITION);
     }
 
     @Override

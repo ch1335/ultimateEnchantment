@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import javax.annotation.Nullable;
 
-@Mixin(value = TaskBowAttack.class,remap = false)
+@Mixin(value = TaskBowAttack.class, remap = false)
 public abstract class TaskBowAttackMixin implements ITaskBowAttackExtension {
 
     @Shadow
@@ -26,8 +26,10 @@ public abstract class TaskBowAttackMixin implements ITaskBowAttackExtension {
     private void getArrow(EntityMaid maid, float chargeTime, CallbackInfoReturnable<AbstractArrow> cir) {
         if (maid.getMainHandItem().getEnchantmentLevel(Enchantments.TERMINATOR.get()) > 0) {
             IAbstractArrowExtension arrowExtension = (IAbstractArrowExtension) cir.getReturnValue();
-            arrowExtension.ue$setByPassInvulnerableTime(true);
-            cir.setReturnValue((AbstractArrow) arrowExtension);
+            if (arrowExtension != null) {
+                arrowExtension.ue$setByPassInvulnerableTime(true);
+                cir.setReturnValue((AbstractArrow) arrowExtension);
+            }
         }
     }
 

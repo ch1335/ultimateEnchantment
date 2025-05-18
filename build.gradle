@@ -17,7 +17,9 @@ base {
 
 mixin {
     config "ultimate_enchantment.mixins.json"
+    config("ultimate_enchantment_enchdesc.mixins.json")
     config("ultimate_enchantment_touhou_little_maid.mixins.json")
+
     add sourceSets.main, "ultimate_enchantment.mixins.refmap.json"
 }
 
@@ -99,6 +101,15 @@ dependencies {
 
     implementation fg.deobf("blank:CyclopsCore-1.20.1:1.19.5")
     implementation fg.deobf("blank:EverlastingAbilities-1.20.1:2.2.0")
+
+    implementation fg.deobf("blank:EnchantmentDescriptions-Forge-1.20.1:17.1.19")
+
+    implementation fg.deobf("blank:Bookshelf-Forge-1.20.1:20.2.13")
+
+    implementation fg.deobf("blank:EnchantingInfuser:8.0.3")
+    implementation fg.deobf("blank:PuzzlesLib:8.1.25")
+    implementation fg.deobf("blank:jei-1.20.1-forge:15.20.0.106")
+
 //    implementation fileTree(dir: 'libs')
 }
 

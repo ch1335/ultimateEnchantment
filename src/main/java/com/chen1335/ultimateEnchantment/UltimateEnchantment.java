@@ -2,9 +2,11 @@ package com.chen1335.ultimateEnchantment;
 
 import com.chen1335.ultimateEnchantment.common.AttributeTypeInfo;
 import com.chen1335.ultimateEnchantment.data.LootProvider;
+import com.chen1335.ultimateEnchantment.data.UERecipeProvider;
 import com.chen1335.ultimateEnchantment.effect.MobEffects;
 import com.chen1335.ultimateEnchantment.enchantment.Enchantments;
 import com.chen1335.ultimateEnchantment.enchantment.config.EnchantmentConfig;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.Legend;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.api.IEnchantmentExtension;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.logging.LogUtils;
@@ -18,12 +20,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
@@ -33,6 +34,7 @@ import org.slf4j.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Mod(UltimateEnchantment.MODID)
@@ -108,22 +110,23 @@ public class UltimateEnchantment {
         Enchantments.ENCHANTMENT_DEFERRED_REGISTER.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
-
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 
     public void runData(GatherDataEvent event) {
         PackOutput packOutput = event.getGenerator().getPackOutput();
         event.getGenerator().addProvider(true, new LootProvider(packOutput, Set.of()));
+        event.getGenerator().addProvider(true, new UERecipeProvider(packOutput));
     }
 
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         AttributeTypeInfo.init();
         EnchantmentConfig.load(config);
-
-
         canBoosDropEnchantmentBook = commonConfig.getBoolean("canBoosDropEnchantmentBook", "common", true, "can Boos Drop Enchantment Book");
+
+        List<String> legendBlackList = List.of(commonConfig.getStringList("legendBlackList", "common", new String[]{ForgeMod.ENTITY_GRAVITY.getId().toString()}, "the attributes that legend will not boost"));
+
+        Legend.buildBlackList(legendBlackList);
         if (config.hasChanged()) {
             config.save();
         }

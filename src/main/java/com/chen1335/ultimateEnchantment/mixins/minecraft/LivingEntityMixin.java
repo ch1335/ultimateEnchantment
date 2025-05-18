@@ -43,18 +43,6 @@ public abstract class LivingEntityMixin extends Entity {
     @Shadow
     protected abstract void onEffectUpdated(MobEffectInstance pEffectInstance, boolean pForced, @org.jetbrains.annotations.Nullable Entity pEntity);
 
-    @Shadow
-    public abstract boolean isUsingItem();
-
-    @Shadow
-    public ItemStack useItem;
-
-    @Shadow
-    public abstract ItemStack getUseItem();
-
-    @Shadow
-    public abstract int getUseItemRemainingTicks();
-
     @Unique
     private float ue$oldHealth;
 
@@ -69,15 +57,17 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(method = "addEffect(Lnet/minecraft/world/effect/MobEffectInstance;Lnet/minecraft/world/entity/Entity;)Z", at = @At("RETURN"))
     private void addEffect(MobEffectInstance pEffectInstance, Entity pEntity, CallbackInfoReturnable<Boolean> cir) {
         MobEffectInstance activeVanquisher = this.getEffect(MobEffects.ACTIVE_VANQUISHER.get());
-        if (pEffectInstance.getEffect() == MobEffects.UN_ACTIVE_VANQUISHER.get() && pEffectInstance.getAmplifier() + 1 >= 10 && activeVanquisher == null) {
-            this.removeEffect(MobEffects.UN_ACTIVE_VANQUISHER.get());
-            this.addEffect(new MobEffectInstance(MobEffects.ACTIVE_VANQUISHER.get(), Enchantments.VANQUISHER.get().buffDuration, 0, false, false, true));
-        } else if (activeVanquisher != null) {
-            this.removeEffect(MobEffects.UN_ACTIVE_VANQUISHER.get());
-            MobEffectInstance newActiveVanquisher = new MobEffectInstance(MobEffects.ACTIVE_VANQUISHER.get(), Enchantments.VANQUISHER.get().buffDuration, 0, false, false, true);
+        if (pEffectInstance.getEffect() == MobEffects.UN_ACTIVE_VANQUISHER.get()) {
+            if (pEffectInstance.getAmplifier() + 1 >= 10 && activeVanquisher == null) {
+                this.removeEffect(MobEffects.UN_ACTIVE_VANQUISHER.get());
+                this.addEffect(new MobEffectInstance(MobEffects.ACTIVE_VANQUISHER.get(), Enchantments.VANQUISHER.get().buffDuration, 0, false, false, true));
+            } else if (activeVanquisher != null) {
+                this.removeEffect(MobEffects.UN_ACTIVE_VANQUISHER.get());
+                MobEffectInstance newActiveVanquisher = new MobEffectInstance(MobEffects.ACTIVE_VANQUISHER.get(), Enchantments.VANQUISHER.get().buffDuration, 0, false, false, true);
 
-            activeVanquisher.update(newActiveVanquisher);
-            this.onEffectUpdated(newActiveVanquisher, true, null);
+                activeVanquisher.update(newActiveVanquisher);
+                this.onEffectUpdated(newActiveVanquisher, true, null);
+            }
         }
     }
 }

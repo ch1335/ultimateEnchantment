@@ -5,6 +5,7 @@ import com.chen1335.ultimateEnchantment.enchantment.EnchantmentEffectsHook;
 import com.chen1335.ultimateEnchantment.enchantment.Enchantments;
 import com.chen1335.ultimateEnchantment.enchantment.IAttributeEnchantment;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.LastStand;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.Legend;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.api.IAbstractArrowExtension;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.api.IAttributeExtension;
 import com.chen1335.ultimateEnchantment.utils.SimpleSchedule;
@@ -54,7 +55,11 @@ public class EventHandler {
             int finalUltimateLevel = ultimateLevel;
             event.getEnchantments().forEach((enchantment, integer) -> {
                 if (enchantment.getMaxLevel() > 1 && enchantment != Enchantments.ULTIMATE.get() && integer > 0) {
-                    event.getEnchantments().put(enchantment, integer + finalUltimateLevel);
+                    int finalLevel = integer + finalUltimateLevel;
+                    if (enchantment == net.minecraft.world.item.enchantment.Enchantments.QUICK_CHARGE) {
+                        finalLevel = Math.min(finalLevel, 5);
+                    }
+                    event.getEnchantments().put(enchantment, finalLevel);
                 }
             });
         }
@@ -79,13 +84,13 @@ public class EventHandler {
 
             if (!from.isEmpty()) {
                 livingEntity.getAttributes().supplier.instances.forEach((attribute, attributeInstance) -> {
-                    livingEntity.getAttributes().getInstance(attribute).getModifiers().forEach(attributeModifier -> {
-                        if (attributeModifier.getName().equals("ue:legendModifier_" + slot.getName())) {
-                            livingEntity.getAttributes().getInstance(attribute).removeModifier(attributeModifier.getId());
-                        }
-                    });
-
-
+                    if (!Legend.BLACK_LIST.contains(attribute)) {
+                        livingEntity.getAttributes().getInstance(attribute).getModifiers().forEach(attributeModifier -> {
+                            if (attributeModifier.getName().equals("ue:legendModifier_" + slot.getName())) {
+                                livingEntity.getAttributes().getInstance(attribute).removeModifier(attributeModifier.getId());
+                            }
+                        });
+                    }
                 });
             }
 

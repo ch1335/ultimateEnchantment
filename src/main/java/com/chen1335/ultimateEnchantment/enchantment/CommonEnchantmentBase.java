@@ -66,7 +66,7 @@ public class CommonEnchantmentBase extends Enchantment {
     public int getMinCost(int pLevel) {
         UltimateEnchantment.EnchantmentType type = ((IEnchantmentExtension) this).ue$getEnchantmentType();
         if (type == UltimateEnchantment.EnchantmentType.ULTIMATE_ENCHANTMENT) {
-            return 999;
+            return 120;
         }
         return super.getMinCost(pLevel);
     }
