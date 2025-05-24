@@ -4,6 +4,7 @@ package com.chen1335.ultimateEnchantment.common;
 import com.chen1335.ultimateEnchantment.API.AttachmentTypes;
 import com.chen1335.ultimateEnchantment.API.UEDamageTypeTags;
 import com.chen1335.ultimateEnchantment.AttachmentDatas.PlayerData;
+import com.chen1335.ultimateEnchantment.UEConfig;
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentConfigs;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
@@ -53,7 +54,6 @@ import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
-import net.neoforged.neoforge.event.entity.player.ItemFishedEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
@@ -69,10 +69,6 @@ import java.util.Objects;
 public class EventHandler {
     @EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME)
     public static class Game {
-        @SubscribeEvent
-        public static void ItemFishedEvent(ItemFishedEvent event){
-
-        }
 
 
         @SubscribeEvent
@@ -216,7 +212,7 @@ public class EventHandler {
                 livingEntity.getAttributes().supplier.instances.keySet().forEach((attributeHolder) -> {
                     Attribute.Sentiment sentiment = attributeHolder.value().sentiment;
                     Objects.requireNonNull(livingEntity.getAttributes().getInstance(attributeHolder)).removeModifier(LegendComponent.idForSlot(slot));
-                    if (sentiment == Attribute.Sentiment.POSITIVE) {
+                    if (sentiment == Attribute.Sentiment.POSITIVE && !UEConfig.CommonConfig.loadedLegendBlackList.contains(attributeHolder.value())) {
                         Objects.requireNonNull(livingEntity.getAttributes().getInstance(attributeHolder)).addTransientModifier(new AttributeModifier(LegendComponent.idForSlot(slot), pairTo.getFirst().attributeMultiplePerLevel() * pairTo.getSecond(), AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
                     }
                 });
@@ -240,7 +236,7 @@ public class EventHandler {
                                 i++;
                             }
                             event.setDroppedExperience(event.getDroppedExperience() + i);
-                            drop.setItem(outputItemStack.copyWithCount(count));
+                            drop.setItem(outputItemStack.copyWithCount(outputItemStack.getCount() * count));
                         }
                     }
                 }

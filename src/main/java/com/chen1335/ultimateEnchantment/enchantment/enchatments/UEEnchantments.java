@@ -25,10 +25,7 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class UEEnchantments {
     public static final Map<ResourceKey<?>, List<ICondition>> conditions = new HashMap<>();
@@ -44,17 +41,15 @@ public class UEEnchantments {
     public static final ResourceKey<Enchantment> ETERNAL = key("eternal");
     public static final ResourceKey<Enchantment> LETHAL_TEMPO = key("lethal_tempo");
     public static final ResourceKey<Enchantment> THUNDER_BOLT = key("thunder_bolt");
-
     public static final ResourceKey<Enchantment> TEAR = key("tear");
     public static final ResourceKey<Enchantment> KINETIC_ENERGY = key("kinetic_energy");
-
-
     public static final ResourceKey<Enchantment> DOUBLE_HOOK = key("double_hook");
     public static final ResourceKey<Enchantment> QUICK_BAIT = key("quick_bait");
 
     public static void bootstrap(BootstrapContext<Enchantment> pContext) {
         HolderGetter<Enchantment> enchantmentHolderGetter = pContext.lookup(Registries.ENCHANTMENT);
         HolderGetter<Item> itemHolderGetter = pContext.lookup(Registries.ITEM);
+
 
         register(
                 pContext,

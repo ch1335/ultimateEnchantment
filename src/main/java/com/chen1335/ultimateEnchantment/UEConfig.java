@@ -2,8 +2,14 @@ package com.chen1335.ultimateEnchantment;
 
 import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
-import net.neoforged.fml.event.config.ModConfigEvent;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.neoforged.fml.loading.FMLPaths;
+
+import java.util.*;
 
 public class UEConfig {
     public static void loadConfig() {
@@ -18,9 +24,23 @@ public class UEConfig {
     public static class CommonConfig {
         public static boolean isUltimateEnchantmentExclusiveEachOther = true;
 
+        public static List<String> legendBlackList = new ArrayList<>();
+
+        public static List<Attribute> loadedLegendBlackList = new ArrayList<>();
+
         private static void load(CommentedConfig config) {
             CommentedConfig common = get(config, "Common", config.createSubConfig());
             isUltimateEnchantmentExclusiveEachOther = get(common, "isUltimateEnchantmentExclusiveEachOther", isUltimateEnchantmentExclusiveEachOther, "define whether ultimate enchantment exclusive each other");
+            List<String> defaultBlackList = new ArrayList<>();
+            defaultBlackList.add(Attributes.SCALE.getKey().location().toString());
+            legendBlackList = get(common, "LegendEnchantmentBlackList", defaultBlackList);
+
+            legendBlackList.forEach(s -> {
+                Attribute attribute = BuiltInRegistries.ATTRIBUTE.get(ResourceLocation.parse(s));
+                if (attribute != null) {
+                    loadedLegendBlackList.add(attribute);
+                }
+            });
         }
     }
 

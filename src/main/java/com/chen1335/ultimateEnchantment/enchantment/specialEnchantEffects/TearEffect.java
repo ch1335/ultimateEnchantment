@@ -27,7 +27,7 @@ public class TearEffect {
 
             float finalDamage = damageContainers.peek().getNewDamage();
             damageContainers.peek().setNewDamage(0);
-            float damagePerHit = finalDamage / (level + 1) * 1.2F;
+            float damagePerHit = (float) (finalDamage / (level + 1) * 1.2F + target.getHealth() * 0.001);
 
             float tickPerHit = 60F / (level + 1);
 
@@ -55,7 +55,7 @@ public class TearEffect {
             if (target instanceof Hydra hydra) {
                 // I hate this :(
                 hydra.body.hurt(damageSource1, damagePerHit);
-            }else {
+            } else {
                 target.hurt(damageSource1, damagePerHit);
             }
         } else {

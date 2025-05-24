@@ -18,7 +18,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -70,7 +70,7 @@ public class UltimateEnchantment {
         UEEnchantmentEffectComponents.TYPES.register(modEventBus);
         AttachmentTypes.ATTACHMENT_TYPES.register(modEventBus);
         MobEffects.MOB_EFFECT_DEFERRED_REGISTER.register(modEventBus);
-
+        modEventBus.addListener(this::setUp);
         if (ModList.get().isLoaded("irons_spellbooks")) {
             IRONS_SPELL_BOOKS_LOADED = true;
             NeoForge.EVENT_BUS.register(EventHandler.Game.IronsSpellBooksEvents.class);
@@ -78,7 +78,9 @@ public class UltimateEnchantment {
         if (ModList.get().isLoaded("twilightforest")) {
             TWILIGHT_FOREST_LOADED = true;
         }
+    }
 
+    public void setUp(FMLCommonSetupEvent event) {
         UEConfig.loadConfig();
     }
 
