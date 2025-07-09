@@ -31,7 +31,9 @@ public class Smelting extends Enchantment {
                 }
                 return false;
             }).findFirst().ifPresent(smeltingRecipe -> {
-                drops.set(finalI, smeltingRecipe.getResultItem(serverLevel.registryAccess()).copy());
+                ItemStack result = smeltingRecipe.getResultItem(serverLevel.registryAccess()).copy();
+                result.setCount(result.getCount() * itemStack.getCount());
+                drops.set(finalI, result);
                 expValue.updateAndGet(v -> v + smeltingRecipe.getExperience());
             });
         }

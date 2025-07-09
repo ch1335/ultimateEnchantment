@@ -8,7 +8,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,6 +21,9 @@ import javax.annotation.Nullable;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
+
+    @Unique
+    private float ue$oldHealth;
 
     public LivingEntityMixin(EntityType<?> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -42,9 +44,6 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Shadow
     protected abstract void onEffectUpdated(MobEffectInstance pEffectInstance, boolean pForced, @org.jetbrains.annotations.Nullable Entity pEntity);
-
-    @Unique
-    private float ue$oldHealth;
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void tick(CallbackInfo ci) {

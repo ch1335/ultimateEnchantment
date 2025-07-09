@@ -52,6 +52,7 @@ public class UltimateEnchantment {
 
     public static Configuration commonConfig = new Configuration(new File(configDir, "common.cfg"));
 
+
     public static final RegistryObject<CreativeModeTab> ULTIMATE_ENCHANTMENT_TAB = CREATIVE_MODE_TABS.register("ultimate_enchantment_tab", () -> CreativeModeTab.builder()
             .withTabsBefore(CreativeModeTabs.COMBAT)
             .icon(Items.ENCHANTED_BOOK::getDefaultInstance)
@@ -141,4 +142,6 @@ public class UltimateEnchantment {
         LEGENDARY_ENCHANTMENT,
         OTHER
     }
+
+
 }

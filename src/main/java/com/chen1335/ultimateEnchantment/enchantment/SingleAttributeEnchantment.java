@@ -30,7 +30,7 @@ public class SingleAttributeEnchantment extends CommonEnchantmentBase implements
     public SingleAttributeEnchantment(Rarity pRarity, EnchantmentCategory pCategory, EquipmentSlot[] pApplicableSlots, UltimateEnchantment.EnchantmentType enchantmentType, Attribute attribute, float bonusPerLevel, AttributeModifier.Operation operation) {
         super(pRarity, pCategory, pApplicableSlots, enchantmentType);
         this.modifierUuidPerSlot = Util.make(new EnumMap<>(EquipmentSlot.class), (enumMap) -> {
-            for (EquipmentSlot pApplicableSlot : pApplicableSlots) {
+            for (EquipmentSlot pApplicableSlot : EquipmentSlot.values()) {
                 enumMap.put(pApplicableSlot, Mth.createInsecureUUID(RandomSource.createNewThreadLocalInstance()));
             }
         });
@@ -45,7 +45,11 @@ public class SingleAttributeEnchantment extends CommonEnchantmentBase implements
     public Multimap<Attribute, AttributeModifier> getAttributeModifier(EquipmentSlot slot, int level) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         this.attributeModifierHolders.forEach(attributeModifierHolder -> {
-            builder.put(attributeModifierHolder.attribute, new AttributeModifier(modifierUuidPerSlot.get(slot), "", attributeModifierHolder.bonusPerLevel * level, attributeModifierHolder.operation));
+            UUID uuid = modifierUuidPerSlot.get(slot);
+            if (uuid == null) {
+                throw new Error("EquipmentSlot not found :" + slot.getName());
+            }
+            builder.put(attributeModifierHolder.attribute, new AttributeModifier(uuid, "", attributeModifierHolder.bonusPerLevel * level, attributeModifierHolder.operation));
         });
         return builder.build();
     }
