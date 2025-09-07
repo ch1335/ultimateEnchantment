@@ -47,7 +47,6 @@ public class UEEnchantmentTagsProvider extends EnchantmentTagsProvider {
 
         tag(EnchantmentTags.ON_RANDOM_LOOT)
                 .addTag(UEEnchantmentTags.LEGENDARY_ENCHANTMENT);
-
         tag(EnchantmentTags.NON_TREASURE)
                 .addTag(UEEnchantmentTags.COMMON_ENCHANTMENT);
 

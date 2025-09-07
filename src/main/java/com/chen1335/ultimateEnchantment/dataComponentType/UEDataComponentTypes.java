@@ -23,6 +23,4 @@ public class UEDataComponentTypes {
 
     public static DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> LETHAL_TEMPO_TIME_LEFT = AEA_DATA.register("lethal_tempo_time_left", () -> DataComponentType.<Integer>builder().networkSynchronized(ByteBufCodecs.INT).persistent(Codec.INT).build());
 
-    public static DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> ITEM_FISHED_COUNT = AEA_DATA.register("item_fished_count", () -> DataComponentType.<Integer>builder().networkSynchronized(ByteBufCodecs.INT).persistent(Codec.INT).build());
-
 }

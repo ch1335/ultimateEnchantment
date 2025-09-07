@@ -9,6 +9,12 @@
   "description": {
     "translate": "enchantment.ultimate_enchantment.life_steal"
   },
+  "effects": {
+    "ultimate_enchantment:life_steal": {
+      "healPercentPerLevel": 0.025,
+      "maxPercent": 0.04
+    }
+  },
   "exclusive_set": "#ultimate_enchantment:life_steal_enchantment",
   "max_cost": {
     "base": 65,

@@ -2,8 +2,7 @@ package com.chen1335.ultimateEnchantment.enchantment.enchatments;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
-import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.LegendComponent;
-import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.VanquisherComponent;
+import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.*;
 import com.chen1335.ultimateEnchantment.enchantment.effects.UltimateEnchantment.LastStandEffect;
 import com.chen1335.ultimateEnchantment.tags.UEEnchantmentTags;
 import net.minecraft.core.HolderGetter;
@@ -25,7 +24,10 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class UEEnchantments {
     public static final Map<ResourceKey<?>, List<ICondition>> conditions = new HashMap<>();
@@ -63,7 +65,7 @@ public class UEEnchantments {
                                 Enchantment.dynamicCost(60, 10),
                                 1
                         )
-                )
+                ).withSpecialEffect(UEEnchantmentEffectComponents.QUICK_BAIT.get(), new QuickBaitComponent(0.05f))
         );
 
         register(
@@ -78,7 +80,7 @@ public class UEEnchantments {
                                 Enchantment.dynamicCost(60, 10),
                                 1
                         )
-                )
+                ).withSpecialEffect(UEEnchantmentEffectComponents.DOUBLE_HOOK.get(), new DoubleHookComponent(0.05f))
         );
 
 
@@ -94,22 +96,23 @@ public class UEEnchantments {
                                 Enchantment.dynamicCost(60, 10),
                                 1
                         )
-                )
+                ).withSpecialEffect(UEEnchantmentEffectComponents.KINETIC_ENERGY.get(), new KineticEnergyComponent(0.01f, 0.1f))
         );
 
         register(
                 pContext,
                 TEAR,
                 Enchantment.enchantment(
-                        Enchantment.definition(
-                                itemHolderGetter.getOrThrow(ItemTags.SHARP_WEAPON_ENCHANTABLE),
-                                3,
-                                5,
-                                Enchantment.constantCost(80),
-                                Enchantment.constantCost(150),
-                                1
-                        )
-                ).exclusiveWith(enchantmentHolderGetter.getOrThrow(UEEnchantmentTags.ULTIMATE_ENCHANTMENT_EXCLUSIVE))
+                                Enchantment.definition(
+                                        itemHolderGetter.getOrThrow(ItemTags.SHARP_WEAPON_ENCHANTABLE),
+                                        3,
+                                        5,
+                                        Enchantment.constantCost(80),
+                                        Enchantment.constantCost(150),
+                                        1
+                                )
+                        ).withSpecialEffect(UEEnchantmentEffectComponents.TEAR.get(), new TearComponent(0.2f, 0.001f))
+                        .exclusiveWith(enchantmentHolderGetter.getOrThrow(UEEnchantmentTags.ULTIMATE_ENCHANTMENT_EXCLUSIVE))
         );
 
         register(
@@ -124,22 +127,23 @@ public class UEEnchantments {
                                 Enchantment.constantCost(30),
                                 1
                         )
-                )
+                ).withSpecialEffect(UEEnchantmentEffectComponents.THUNDER_BOLT.get(), new ThunderBoltComponent(0.1f, 0.05f, 2))
         );
 
         register(
                 pContext,
                 LETHAL_TEMPO,
                 Enchantment.enchantment(
-                        Enchantment.definition(
-                                itemHolderGetter.getOrThrow(ItemTags.BOW_ENCHANTABLE),
-                                3,
-                                5,
-                                Enchantment.constantCost(80),
-                                Enchantment.constantCost(150),
-                                1
-                        )
-                ).exclusiveWith(enchantmentHolderGetter.getOrThrow(UEEnchantmentTags.ULTIMATE_ENCHANTMENT_EXCLUSIVE))
+                                Enchantment.definition(
+                                        itemHolderGetter.getOrThrow(ItemTags.BOW_ENCHANTABLE),
+                                        3,
+                                        5,
+                                        Enchantment.constantCost(80),
+                                        Enchantment.constantCost(150),
+                                        1
+                                )
+                        ).withSpecialEffect(UEEnchantmentEffectComponents.LETHAL_TEMPO.get(), new LethalTempoComponent(0.2f, 0.2f, 0.4f, 200))
+                        .exclusiveWith(enchantmentHolderGetter.getOrThrow(UEEnchantmentTags.ULTIMATE_ENCHANTMENT_EXCLUSIVE))
         );
 
 
@@ -171,7 +175,7 @@ public class UEEnchantments {
                                 1,
                                 EquipmentSlotGroup.HAND
                         )
-                )
+                ).withSpecialEffect(UEEnchantmentEffectComponents.CUT_DOWN.get(), new CutDownComponent(0.0002F, 0.1f))
         );
         register(
                 pContext,
@@ -299,6 +303,7 @@ public class UEEnchantments {
                                         EquipmentSlotGroup.HAND
                                 )
                         )
+                        .withSpecialEffect(UEEnchantmentEffectComponents.LIFE_STEAL.get(), new LifeStealComponent(0.025f, 0.04f))
                         .exclusiveWith(enchantmentHolderGetter.getOrThrow(UEEnchantmentTags.LIFE_STEAL_ENCHANTMENT))
         );
 
@@ -318,7 +323,7 @@ public class UEEnchantments {
                                 )
                         )
                         .exclusiveWith(enchantmentHolderGetter.getOrThrow(UEEnchantmentTags.ULTIMATE_ENCHANTMENT_EXCLUSIVE))
-                        .withSpecialEffect(UEEnchantmentEffectComponents.ULTIMATE.value(), Unit.INSTANCE)
+                        .withSpecialEffect(UEEnchantmentEffectComponents.ULTIMATE.value(), LevelBasedValue.perLevel(1))
         );
 
         register(

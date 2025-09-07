@@ -10,7 +10,11 @@
     "translate": "enchantment.ultimate_enchantment.ultimate"
   },
   "effects": {
-    "ultimate_enchantment:ultimate": {}
+    "ultimate_enchantment:ultimate": {
+      "type": "minecraft:linear",
+      "base": 1.0,
+      "per_level_above_first": 1.0
+    }
   },
   "exclusive_set": "#ultimate_enchantment:ultimate_enchantment_exclusive",
   "max_cost": {

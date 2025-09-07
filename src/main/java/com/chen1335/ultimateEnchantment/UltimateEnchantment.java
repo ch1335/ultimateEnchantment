@@ -22,6 +22,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforgespi.Environment;
 import org.slf4j.Logger;
 
 @Mod(UltimateEnchantment.MODID)
@@ -78,7 +79,15 @@ public class UltimateEnchantment {
         if (ModList.get().isLoaded("twilightforest")) {
             TWILIGHT_FOREST_LOADED = true;
         }
+
+
+        if (ModList.get().isLoaded("cloth_config")) {
+            if (Environment.get().getDist().isClient()) {
+
+            }
+        }
     }
+
 
     public void setUp(FMLCommonSetupEvent event) {
         UEConfig.loadConfig();

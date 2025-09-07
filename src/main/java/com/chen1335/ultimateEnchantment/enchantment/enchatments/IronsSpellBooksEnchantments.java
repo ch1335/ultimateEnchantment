@@ -1,6 +1,9 @@
 package com.chen1335.ultimateEnchantment.enchantment.enchatments;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
+import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
+import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.HardenedManaComponent;
+import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.ManaStealComponent;
 import com.chen1335.ultimateEnchantment.tags.UEEnchantmentTags;
 import io.redspace.ironsspellbooks.IronsSpellbooks;
 import net.minecraft.core.HolderGetter;
@@ -32,15 +35,16 @@ public class IronsSpellBooksEnchantments {
                 pContext,
                 MANA_STEAL,
                 Enchantment.enchantment(
-                        Enchantment.definition(
-                                itemHolderGetter.getOrThrow(ItemTags.SHARP_WEAPON_ENCHANTABLE),
-                                3,
-                                4,
-                                Enchantment.dynamicCost(15, 10),
-                                Enchantment.dynamicCost(60, 10),
-                                1
-                        )
-                ).exclusiveWith(enchantmentHolderGetter.getOrThrow(UEEnchantmentTags.LIFE_STEAL_ENCHANTMENT))
+                                Enchantment.definition(
+                                        itemHolderGetter.getOrThrow(ItemTags.SHARP_WEAPON_ENCHANTABLE),
+                                        3,
+                                        4,
+                                        Enchantment.dynamicCost(15, 10),
+                                        Enchantment.dynamicCost(60, 10),
+                                        1
+                                )
+                        ).withSpecialEffect(UEEnchantmentEffectComponents.MANA_STEAL.get(), new ManaStealComponent(0.1f, 0.06f))
+                        .exclusiveWith(enchantmentHolderGetter.getOrThrow(UEEnchantmentTags.LIFE_STEAL_ENCHANTMENT))
         );
 
         register(
@@ -55,7 +59,7 @@ public class IronsSpellBooksEnchantments {
                                 Enchantment.dynamicCost(50, 10),
                                 1
                         )
-                )
+                ).withSpecialEffect(UEEnchantmentEffectComponents.HARDENED_MANA.get(), new HardenedManaComponent(0.01f, 1))
         );
     }
 

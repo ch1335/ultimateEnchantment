@@ -3,31 +3,38 @@ package com.chen1335.ultimateEnchantment.enchantment.specialEnchantEffects;
 import com.chen1335.ultimateEnchantment.API.UEDamageTypeTags;
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.data.registries.UEDamageType;
+import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
+import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.TearComponent;
 import com.chen1335.ultimateEnchantment.enchantment.enchatments.UEEnchantments;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IDamageSourceMixin;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.ILivingEntityMixin;
-import com.chen1335.ultimateEnchantment.utils.ItemEnchantmentHelper;
 import com.chen1335.ultimateEnchantment.utils.SimpleSchedule;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.neoforged.neoforge.common.damagesource.DamageContainer;
 import twilightforest.entity.boss.Hydra;
 
+import java.util.Objects;
 import java.util.Stack;
 
 public class TearEffect {
     public static void onAttack(DamageSource damageSource, Stack<DamageContainer> damageContainers, LivingEntity target) {
         if (damageSource.getEntity() instanceof Player attacker && damageSource.is(UEDamageTypeTags.IS_ATTACK) && !damageSource.is(UEDamageType.TEAR_DAMAGE)) {
-            int level = ItemEnchantmentHelper.getEnchantmentLevel(attacker.getMainHandItem(), UEEnchantments.TEAR);
+            Holder.Reference<Enchantment> holder = attacker.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(UEEnchantments.TEAR);
+            int level = attacker.getWeaponItem().getEnchantmentLevel(holder);
             if (level <= 0) {
                 return;
             }
+            TearComponent tearComponent = Objects.requireNonNull(holder.value().effects().get(UEEnchantmentEffectComponents.TEAR.get()));
 
             float finalDamage = damageContainers.peek().getNewDamage();
             damageContainers.peek().setNewDamage(0);
-            float damagePerHit = (float) (finalDamage / (level + 1) * 1.2F + target.getHealth() * 0.001);
+            float damagePerHit = finalDamage / (level + 1) * (1 + tearComponent.damageAdd()) + target.getHealth() * tearComponent.totalHealthDamage();
 
             float tickPerHit = 60F / (level + 1);
 
