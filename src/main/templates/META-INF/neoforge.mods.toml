@@ -14,9 +14,6 @@ config="${mod_id}.mixins.json"
 [[mixins]]
 config="ultimate_enchantment_apothic_enchanting.mixins.json"
 
-[[mixins]]
-config="ultimate_enchantment_enchdesc.mixins.json"
-
 [[accessTransformers]]
 file="META-INF/accesstransformer.cfg"
 

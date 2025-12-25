@@ -11,7 +11,9 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -42,7 +44,9 @@ public class EnchantmentSpecialDesc {
 
         for (Map.Entry<ResourceKey<Enchantment>, BiFunction<Holder<Enchantment>, Integer, MutableComponent>> entry : DESC.entrySet()) {
             if (entry.getKey().equals(resourceKey)) {
-                return entry.getValue().apply(holder, level);
+                MutableComponent component = entry.getValue().apply(holder, level);
+                ComponentUtils.mergeStyles(component, Style.EMPTY.withColor(ChatFormatting.DARK_GRAY));
+                return component;
             }
         }
 
@@ -165,6 +169,16 @@ public class EnchantmentSpecialDesc {
         DESC.put(UEEnchantments.DOUBLE_HOOK, (holder, level) -> {
             DoubleHookComponent component = Objects.requireNonNull(holder.value().effects().get(UEEnchantmentEffectComponents.DOUBLE_HOOK.get()));
             return Component.translatable("enchantment.ultimate_enchantment.double_hook.specialDesc", level * component.chancePerLevel() * 100);
+        });
+
+        DESC.put(UEEnchantments.VANQUISHER, (holder, level) -> {
+            VanquisherComponent component = Objects.requireNonNull(holder.value().effects().get(UEEnchantmentEffectComponents.VANQUISHER.get()));
+
+            return Component.translatable("enchantment.ultimate_enchantment.vanquisher.specialDesc");
+        });
+
+        DESC.put(UEEnchantments.ETERNAL, (holder, level) -> {
+            return Component.translatable("enchantment.ultimate_enchantment.eternal.specialDesc");
         });
     }
 

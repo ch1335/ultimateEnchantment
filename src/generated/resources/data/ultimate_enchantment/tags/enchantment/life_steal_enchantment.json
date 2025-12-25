@@ -1,5 +1,8 @@
 {
-  "values": [
-    "ultimate_enchantment:life_steal"
-  ]
+    "values": [
+        {
+            "id": "ultimate_enchantment:life_steal",
+            "required": false
+        }
+    ]
 }

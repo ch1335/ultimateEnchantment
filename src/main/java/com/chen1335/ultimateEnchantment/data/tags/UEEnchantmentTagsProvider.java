@@ -36,7 +36,7 @@ public class UEEnchantmentTagsProvider extends EnchantmentTagsProvider {
 
         tag(EnchantmentTags.IN_ENCHANTING_TABLE)
                 .addTag(UEEnchantmentTags.TRADEABLE_LEGENDARY_ENCHANTMENT)
-                .add(UEEnchantments.VANQUISHER);
+                .addOptional(UEEnchantments.VANQUISHER.location());
 
         tag(EnchantmentTags.DOUBLE_TRADE_PRICE)
                 .addTag(UEEnchantmentTags.TRADEABLE_LEGENDARY_ENCHANTMENT);
@@ -50,20 +50,17 @@ public class UEEnchantmentTagsProvider extends EnchantmentTagsProvider {
         tag(EnchantmentTags.NON_TREASURE)
                 .addTag(UEEnchantmentTags.COMMON_ENCHANTMENT);
 
-        tag(UEEnchantmentTags.LIFE_STEAL_ENCHANTMENT).add(
-                UEEnchantments.LIFE_STEAL
-        );
+        tag(UEEnchantmentTags.LIFE_STEAL_ENCHANTMENT)
+                .addOptional(UEEnchantments.LIFE_STEAL.location());
 
         tag(UEEnchantmentTags.ULTIMATE_ENCHANTMENT)
-                .add(
-                        UEEnchantments.ULTIMATE,
-                        UEEnchantments.LEGEND,
-                        UEEnchantments.VANQUISHER,
-                        UEEnchantments.LAST_STAND,
-                        UEEnchantments.ETERNAL,
-                        UEEnchantments.TEAR,
-                        UEEnchantments.LETHAL_TEMPO
-                );
+                .addOptional(UEEnchantments.ULTIMATE.location())
+                .addOptional(UEEnchantments.LEGEND.location())
+                .addOptional(UEEnchantments.VANQUISHER.location())
+                .addOptional(UEEnchantments.LAST_STAND.location())
+                .addOptional(UEEnchantments.ETERNAL.location())
+                .addOptional(UEEnchantments.TEAR.location())
+                .addOptional(UEEnchantments.LETHAL_TEMPO.location());
 
         tag(UEEnchantmentTags.ULTIMATE_ENCHANTMENT_EXCLUSIVE)
                 .addTag(UEEnchantmentTags.ULTIMATE_ENCHANTMENT);
@@ -73,23 +70,21 @@ public class UEEnchantmentTagsProvider extends EnchantmentTagsProvider {
                 .addTag(UEEnchantmentTags.TRADEABLE_LEGENDARY_ENCHANTMENT)
                 .addTag(UEEnchantmentTags.UN_TRADEABLE_LEGENDARY_ENCHANTMENT);
 
-        tag(UEEnchantmentTags.TRADEABLE_LEGENDARY_ENCHANTMENT).add(
-                UEEnchantments.CUT_DOWN,
-                UEEnchantments.OVER_GROW,
-                UEEnchantments.KINETIC_ENERGY,
-                UEEnchantments.DOUBLE_HOOK,
-                UEEnchantments.QUICK_BAIT
-        );
+        tag(UEEnchantmentTags.TRADEABLE_LEGENDARY_ENCHANTMENT)
+                .addOptional(UEEnchantments.CUT_DOWN.location())
+                .addOptional(UEEnchantments.OVER_GROW.location())
+                .addOptional(UEEnchantments.KINETIC_ENERGY.location())
+                .addOptional(UEEnchantments.DOUBLE_HOOK.location())
+                .addOptional(UEEnchantments.QUICK_BAIT.location());
 
 
-        tag(UEEnchantmentTags.UN_TRADEABLE_LEGENDARY_ENCHANTMENT).add(
-                UEEnchantments.THUNDER_BOLT
-        );
+        tag(UEEnchantmentTags.UN_TRADEABLE_LEGENDARY_ENCHANTMENT)
+                .addOptional(UEEnchantments.THUNDER_BOLT.location());
 
-        tag(UEEnchantmentTags.COMMON_ENCHANTMENT).add(
-                UEEnchantments.LIFE_STEAL,
-                UEEnchantments.SMELTING,
-                UEEnchantments.QUICK_LATCH);
+        tag(UEEnchantmentTags.COMMON_ENCHANTMENT)
+                .addOptional(UEEnchantments.LIFE_STEAL.location())
+                .addOptional(UEEnchantments.SMELTING.location())
+                .addOptional(UEEnchantments.QUICK_LATCH.location());
 
         tag(UEEnchantmentTags.ENCHANTMENTS)
                 .addTag(UEEnchantmentTags.ULTIMATE_ENCHANTMENT)
@@ -100,6 +95,10 @@ public class UEEnchantmentTagsProvider extends EnchantmentTagsProvider {
                 .addTag(UEEnchantmentTags.ULTIMATE_ENCHANTMENT)
                 .addTag(UEEnchantmentTags.LEGENDARY_ENCHANTMENT);
 
+        tag(UEEnchantmentTags.END_CITY_LOOTABLE)
+                .addOptional(UEEnchantments.TEAR.location())
+                .addOptional(UEEnchantments.LETHAL_TEMPO.location())
+                .addOptional(UEEnchantments.VANQUISHER.location());
 
         this.addApothicEnchantingAdditionTag(pProvider);
         this.addIronsSpellBooksTag(pProvider);

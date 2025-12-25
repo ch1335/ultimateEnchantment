@@ -1,15 +1,36 @@
 {
-  "values": [
-    "ultimate_enchantment:ultimate",
-    "ultimate_enchantment:legend",
-    "ultimate_enchantment:vanquisher",
-    "ultimate_enchantment:last_stand",
-    "ultimate_enchantment:eternal",
-    "ultimate_enchantment:tear",
-    "ultimate_enchantment:lethal_tempo",
-    {
-      "id": "ultimate_enchantment:terminator",
-      "required": false
-    }
-  ]
+    "values": [
+        {
+            "id": "ultimate_enchantment:ultimate",
+            "required": false
+        },
+        {
+            "id": "ultimate_enchantment:legend",
+            "required": false
+        },
+        {
+            "id": "ultimate_enchantment:vanquisher",
+            "required": false
+        },
+        {
+            "id": "ultimate_enchantment:last_stand",
+            "required": false
+        },
+        {
+            "id": "ultimate_enchantment:eternal",
+            "required": false
+        },
+        {
+            "id": "ultimate_enchantment:tear",
+            "required": false
+        },
+        {
+            "id": "ultimate_enchantment:lethal_tempo",
+            "required": false
+        },
+        {
+            "id": "ultimate_enchantment:terminator",
+            "required": false
+        }
+    ]
 }

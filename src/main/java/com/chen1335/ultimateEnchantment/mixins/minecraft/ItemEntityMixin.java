@@ -1,7 +1,7 @@
 package com.chen1335.ultimateEnchantment.mixins.minecraft;
 
 import com.chen1335.ultimateEnchantment.enchantment.enchatments.UEEnchantments;
-import net.minecraft.core.registries.Registries;
+import com.chen1335.ultimateEnchantment.utils.UEEnchantmentHelper;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -32,16 +32,20 @@ public abstract class ItemEntityMixin extends Entity {
 
     @Inject(method = "<init>(Lnet/minecraft/world/level/Level;DDDLnet/minecraft/world/item/ItemStack;DDD)V", at = @At("RETURN"))
     private void init(Level pLevel, double pPosX, double pPosY, double pPosZ, ItemStack pItemStack, double pDeltaX, double pDeltaY, double pDeltaZ, CallbackInfo ci) {
-        if (pItemStack.getEnchantmentLevel(this.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(UEEnchantments.ETERNAL)) > 0) {
-            this.lifespan = Integer.MAX_VALUE;
-            this.health = Integer.MAX_VALUE;
-        }
+        UEEnchantmentHelper.getEnchantment(UEEnchantments.ETERNAL).ifPresent(holder -> {
+            if (pItemStack.getEnchantmentLevel(holder) > 0) {
+                this.lifespan = Integer.MAX_VALUE;
+                this.health = Integer.MAX_VALUE;
+            }
+        });
     }
 
     @Inject(method = "hurt", at = @At("HEAD"), cancellable = true)
     private void hurt(DamageSource pSource, float pAmount, CallbackInfoReturnable<Boolean> cir) {
-        if (getItem().getEnchantmentLevel(this.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(UEEnchantments.ETERNAL)) > 0) {
-            cir.setReturnValue(false);
-        }
+        UEEnchantmentHelper.getEnchantment(UEEnchantments.ETERNAL).ifPresent(holder -> {
+            if (getItem().getEnchantmentLevel(holder) > 0) {
+                cir.setReturnValue(false);
+            }
+        });
     }
 }

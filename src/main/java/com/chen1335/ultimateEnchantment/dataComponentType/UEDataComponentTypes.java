@@ -1,7 +1,6 @@
 package com.chen1335.ultimateEnchantment.dataComponentType;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
-import com.chen1335.ultimateEnchantment.dataComponentType.dataComponentTypes.ItemFishedCount;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
@@ -21,6 +20,6 @@ public class UEDataComponentTypes {
 
     public static DeferredHolder<DataComponentType<?>, DataComponentType<Float>> ADDITION_SHOOT_CHANCE = AEA_DATA.register("addition_shoot_chance", () -> DataComponentType.<Float>builder().networkSynchronized(ByteBufCodecs.FLOAT).persistent(Codec.FLOAT).build());
 
-    public static DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> LETHAL_TEMPO_TIME_LEFT = AEA_DATA.register("lethal_tempo_time_left", () -> DataComponentType.<Integer>builder().networkSynchronized(ByteBufCodecs.INT).persistent(Codec.INT).build());
+    public static DeferredHolder<DataComponentType<?>, DataComponentType<Long>> LETHAL_TEMPO_TIME_RECORD = AEA_DATA.register("lethal_tempo_time_record", () -> DataComponentType.<Long>builder().networkSynchronized(null).persistent(Codec.LONG).build());
 
 }

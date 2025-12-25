@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-@EventBusSubscriber(modid = UltimateEnchantment.MODID, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = UltimateEnchantment.MODID)
 public class SimpleSchedule {
     @SubscribeEvent
     public static void serverSchedule(ServerTickEvent.Post event) {

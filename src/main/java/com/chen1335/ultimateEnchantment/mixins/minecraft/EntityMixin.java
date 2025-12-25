@@ -42,18 +42,13 @@ public abstract class EntityMixin implements IEntityMixin {
 
     @Inject(method = "onBelowWorld", at = @At("HEAD"), cancellable = true)
     private void onBelowWorld(CallbackInfo ci) {
-        if ((Entity) (Object) this instanceof ItemEntity itemEntity && itemEntity.getItem().getEnchantmentLevel(level().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(UEEnchantments.ETERNAL)) > 0) {
-            this.setNoGravity(true);
-            this.setDeltaMovement(0, 1.5, 0);
-            this.setGlowingTag(true);
-            ci.cancel();
-        }
-    }
-
-    @Inject(method = {"discard", "kill"}, at = @At("HEAD"), cancellable = true)
-    private void discard(CallbackInfo ci) {
-        if ((Entity) (Object) this instanceof ItemEntity itemEntity && itemEntity.getItem().getEnchantmentLevel(level().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(UEEnchantments.ETERNAL)) > 0) {
-            ci.cancel();
-        }
+        level().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolder(UEEnchantments.ETERNAL).ifPresent(holder -> {
+            if ((Entity) (Object) this instanceof ItemEntity itemEntity && itemEntity.getItem().getEnchantmentLevel(holder) > 0) {
+                this.setNoGravity(true);
+                this.setDeltaMovement(0, 1.5, 0);
+                this.setGlowingTag(true);
+                ci.cancel();
+            }
+        });
     }
 }

@@ -55,7 +55,6 @@ neoForge {
 
         server {
             server()
-            programArgument '--nogui'
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
 
@@ -119,6 +118,13 @@ dependencies {
     implementation fileTree(dir: 'libs')
     implementation "curse.maven:enchantment-descriptions-250419:6910375"
     implementation "curse.maven:cloth-config-348521:5729127"
+//    implementation "curse.maven:apotheosis-313970:6926309"
+    implementation "curse.maven:apothic-attributes-898963:6751650"
+    implementation "curse.maven:apothic-enchanting-1063926:6926290"
+    implementation "curse.maven:apothic-spawners-986583:6751589"
+    implementation "curse.maven:placebo-283644:6926281"
+    implementation "curse.maven:patchouli-306770:6842247"
+    implementation "curse.maven:curios-309927:6529130"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

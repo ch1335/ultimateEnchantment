@@ -14,6 +14,7 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.EmptyLootItem;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.entries.LootPoolEntries;
 import net.minecraft.world.level.storage.loot.functions.SetEnchantmentsFunction;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
@@ -43,15 +44,15 @@ public class UELootTableProvider extends LootTableProvider {
 
         @Override
         public void generate(@NotNull BiConsumer<ResourceKey<LootTable>, LootTable.Builder> output) {
-            output.accept(END_CITY_TREASURE_MODIFIER,
-                    LootTable.lootTable().withPool(
-                            LootPool.lootPool().setRolls(new ConstantValue(1))
-                                    .add(EmptyLootItem.emptyItem().setWeight(30))
-                                    .add(LootItem.lootTableItem(Items.BOOK).setWeight(10).apply(new SetEnchantmentsFunction.Builder().withEnchantment(provider.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(UEEnchantments.LETHAL_TEMPO), UniformGenerator.between(1, 2))))
-                                    .add(LootItem.lootTableItem(Items.BOOK).setWeight(10).apply(new SetEnchantmentsFunction.Builder().withEnchantment(provider.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(UEEnchantments.VANQUISHER), UniformGenerator.between(1, 2))))
-                                    .add(LootItem.lootTableItem(Items.BOOK).setWeight(10).apply(new SetEnchantmentsFunction.Builder().withEnchantment(provider.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(UEEnchantments.TEAR), UniformGenerator.between(1, 2))))
-                    )
-            );
+//            output.accept(END_CITY_TREASURE_MODIFIER,
+//                    LootTable.lootTable().withPool(
+//                            LootPool.lootPool().setRolls(new ConstantValue(1))
+//                                    .add(EmptyLootItem.emptyItem().setWeight(30))
+//                                    .add(LootItem.lootTableItem(Items.BOOK).setWeight(10).apply(new SetEnchantmentsFunction.Builder().withEnchantment(provider.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(UEEnchantments.LETHAL_TEMPO), UniformGenerator.between(1, 2))))
+//                                    .add(LootItem.lootTableItem(Items.BOOK).setWeight(10).apply(new SetEnchantmentsFunction.Builder().withEnchantment(provider.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(UEEnchantments.VANQUISHER), UniformGenerator.between(1, 2))))
+//                                    .add(LootItem.lootTableItem(Items.BOOK).setWeight(10).apply(new SetEnchantmentsFunction.Builder().withEnchantment(provider.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(UEEnchantments.TEAR), UniformGenerator.between(1, 2))))
+//                    )
+//            );
 
 
         }

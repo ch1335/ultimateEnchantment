@@ -1,17 +1,32 @@
 {
-  "values": [
-    "ultimate_enchantment:cut_down",
-    "ultimate_enchantment:over_grow",
-    "ultimate_enchantment:kinetic_energy",
-    "ultimate_enchantment:double_hook",
-    "ultimate_enchantment:quick_bait",
-    {
-      "id": "ultimate_enchantment:scabbing",
-      "required": false
-    },
-    {
-      "id": "ultimate_enchantment:quick_shooting",
-      "required": false
-    }
-  ]
+    "values": [
+        {
+            "id": "ultimate_enchantment:cut_down",
+            "required": false
+        },
+        {
+            "id": "ultimate_enchantment:over_grow",
+            "required": false
+        },
+        {
+            "id": "ultimate_enchantment:kinetic_energy",
+            "required": false
+        },
+        {
+            "id": "ultimate_enchantment:double_hook",
+            "required": false
+        },
+        {
+            "id": "ultimate_enchantment:quick_bait",
+            "required": false
+        },
+        {
+            "id": "ultimate_enchantment:scabbing",
+            "required": false
+        },
+        {
+            "id": "ultimate_enchantment:quick_shooting",
+            "required": false
+        }
+    ]
 }

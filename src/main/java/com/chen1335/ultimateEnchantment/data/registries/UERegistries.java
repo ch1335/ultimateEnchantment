@@ -8,6 +8,7 @@ import com.chen1335.ultimateEnchantment.data.tags.DamageTypeTagProvider;
 import com.chen1335.ultimateEnchantment.data.tags.UEEnchantmentTagsProvider;
 import com.chen1335.ultimateEnchantment.data.tags.UEItemTagsProvider;
 import com.chen1335.ultimateEnchantment.enchantment.enchatments.ApothicEnchantingEnchantments;
+import com.chen1335.ultimateEnchantment.enchantment.enchatments.ApothicEnchantments;
 import com.chen1335.ultimateEnchantment.enchantment.enchatments.IronsSpellBooksEnchantments;
 import com.chen1335.ultimateEnchantment.enchantment.enchatments.UEEnchantments;
 import net.minecraft.core.HolderLookup;
@@ -28,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@EventBusSubscriber(modid = UltimateEnchantment.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = UltimateEnchantment.MODID)
 public class UERegistries {
 
     private static final Map<ResourceKey<?>, List<ICondition>> conditions = new HashMap<>();
@@ -45,10 +46,12 @@ public class UERegistries {
                             UEEnchantments.bootstrap(bootstrapContext);
                             ApothicEnchantingEnchantments.bootstrap(bootstrapContext);
                             IronsSpellBooksEnchantments.bootstrap(bootstrapContext);
+                            ApothicEnchantments.bootstrap(bootstrapContext);
 
                             conditions.putAll(UEEnchantments.conditions);
                             conditions.putAll(ApothicEnchantingEnchantments.conditions);
                             conditions.putAll(IronsSpellBooksEnchantments.conditions);
+                            conditions.putAll(ApothicEnchantments.conditions);
                         })
                         .add(Registries.DAMAGE_TYPE, UEDamageType::bootstrapContext)
                 ,

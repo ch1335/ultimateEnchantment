@@ -2,25 +2,7 @@
   "required": true,
   "package": "com.chen1335.ultimateEnchantment.mixins.minecraft",
   "compatibilityLevel": "JAVA_21",
-  "mixins": [
-    "CommonHooksMixin",
-    "DamageSourceMixin",
-    "EnchantmentHelperMixin",
-    "EnchantmentMixin",
-    "EntityMixin",
-    "FishingHookMixin",
-    "ItemEnchantmentsMixin",
-    "ItemEntityMixin",
-    "ItemFishedEventMixin",
-    "ItemStackMixin",
-    "LivingEntityMixin",
-    "MobMixin",
-    "PlayerMixin",
-    "ProjectileMixin",
-    "ProjectileWeaponItemMixin",
-    "ServerLevelMixin",
-    "TagLoaderMixin"
-  ],
+  "mixins": ["CommonHooksMixin", "DamageSourceMixin", "EnchantmentHelperMixin", "EnchantmentMixin", "EntityMixin", "FishingHookMixin", "ItemEnchantmentsMixin", "ItemEntityMixin", "ItemFishedEventMixin", "ItemStackMixin", "LivingEntityMixin", "MobMixin", "PlayerMixin", "ProjectileMixin", "ProjectileWeaponItemMixin", "RegistryDataLoaderMixin", "ServerLevelMixin", "TagLoaderMixin", "WorldLoaderMixin"],
   "client": [
     "GuiMixin"
   ],

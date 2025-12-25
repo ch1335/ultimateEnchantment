@@ -30,6 +30,8 @@ public interface UEEnchantmentTags {
 
     TagKey<Enchantment> IGNORE_ULTIMATE = create("ignore_ultimate");
 
+    TagKey<Enchantment> END_CITY_LOOTABLE = create("end_city_lootable");
+
     private static TagKey<Enchantment> create(String pName) {
         return TagKey.create(Registries.ENCHANTMENT, ResourceLocation.fromNamespaceAndPath(UltimateEnchantment.MODID,pName));
     }

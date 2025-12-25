@@ -1,9 +1,9 @@
 {
-  "entries": [
-    "ultimate_enchantment:ender_dragon_loot_modifier",
-    "ultimate_enchantment:warden_loot_modifier",
-    "ultimate_enchantment:end_city_treasure_modifier",
-    "ultimate_enchantment:wither_loot_modifier"
-  ],
-  "replace": false
+    "entries": [
+        "ultimate_enchantment:wither_loot_modifier",
+        "ultimate_enchantment:ender_dragon_loot_modifier",
+        "ultimate_enchantment:warden_loot_modifier",
+        "ultimate_enchantment:end_city_treasure_modifier"
+    ],
+    "replace": false
 }

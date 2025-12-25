@@ -16,8 +16,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
+import net.neoforged.neoforge.common.conditions.TrueCondition;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,9 +64,7 @@ public class IronsSpellBooksEnchantments {
     }
 
     private static void register(BootstrapContext<Enchantment> pContext, ResourceKey<Enchantment> pKey, Enchantment.Builder pBuilder) {
-        ArrayList<ICondition> arrayList = new ArrayList<>();
-        arrayList.add(new ModLoadedCondition(IronsSpellbooks.MODID));
-        conditions.put(pKey, arrayList);
+        conditions.put(pKey, List.of(new ModLoadedCondition(IronsSpellbooks.MODID)));
         pContext.register(pKey, pBuilder.build(pKey.location()));
     }
 

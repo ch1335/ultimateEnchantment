@@ -23,8 +23,8 @@ import net.minecraft.world.item.enchantment.effects.EnchantmentAttributeEffect;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
+import net.neoforged.neoforge.common.conditions.TrueCondition;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -348,10 +348,7 @@ public class UEEnchantments {
     }
 
     private static void register(BootstrapContext<Enchantment> pContext, ResourceKey<Enchantment> pKey, Enchantment.Builder pBuilder) {
-
-        ArrayList<ICondition> arrayList = new ArrayList<>();
-        arrayList.add(new ModLoadedCondition(UltimateEnchantment.MODID));
-        conditions.put(pKey, arrayList);
+        conditions.put(pKey, List.of(new ModLoadedCondition(UltimateEnchantment.MODID)));
         pContext.register(pKey, pBuilder.build(pKey.location()));
     }
 

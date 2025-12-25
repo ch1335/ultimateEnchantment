@@ -1,15 +1,24 @@
 {
-  "values": [
-    "ultimate_enchantment:life_steal",
-    "ultimate_enchantment:smelting",
-    "ultimate_enchantment:quick_latch",
-    {
-      "id": "ultimate_enchantment:hardened_mana",
-      "required": false
-    },
-    {
-      "id": "ultimate_enchantment:mana_steal",
-      "required": false
-    }
-  ]
+    "values": [
+        {
+            "id": "ultimate_enchantment:life_steal",
+            "required": false
+        },
+        {
+            "id": "ultimate_enchantment:smelting",
+            "required": false
+        },
+        {
+            "id": "ultimate_enchantment:quick_latch",
+            "required": false
+        },
+        {
+            "id": "ultimate_enchantment:hardened_mana",
+            "required": false
+        },
+        {
+            "id": "ultimate_enchantment:mana_steal",
+            "required": false
+        }
+    ]
 }

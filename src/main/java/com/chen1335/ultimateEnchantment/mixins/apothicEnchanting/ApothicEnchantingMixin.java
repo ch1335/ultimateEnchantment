@@ -1,16 +1,21 @@
 package com.chen1335.ultimateEnchantment.mixins.apothicEnchanting;
 
 import com.chen1335.ultimateEnchantment.enchantment.enchatments.UEEnchantments;
+import com.chen1335.ultimateEnchantment.tags.UEEnchantmentTags;
 import dev.shadowsoffire.apothic_enchanting.ApothicEnchanting;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.neoforged.neoforge.common.CommonHooks;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
+import java.util.Optional;
 
 @Mixin(ApothicEnchanting.class)
 public class ApothicEnchantingMixin {
@@ -25,7 +30,6 @@ public class ApothicEnchantingMixin {
                 UEEnchantments.TEAR,
                 UEEnchantments.LETHAL_TEMPO
         );
-
         if (list.stream().anyMatch(ench.getKey()::equals)) {
             cir.setReturnValue(ench.value().getMaxLevel());
         }

@@ -1,5 +1,8 @@
 {
-  "values": [
-    "ultimate_enchantment:thunder_bolt"
-  ]
+    "values": [
+        {
+            "id": "ultimate_enchantment:thunder_bolt",
+            "required": false
+        }
+    ]
 }

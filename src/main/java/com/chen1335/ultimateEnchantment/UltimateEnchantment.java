@@ -2,6 +2,7 @@ package com.chen1335.ultimateEnchantment;
 
 import com.chen1335.ultimateEnchantment.API.AttachmentTypes;
 import com.chen1335.ultimateEnchantment.common.EventHandler;
+import com.chen1335.ultimateEnchantment.config.CommonConfig;
 import com.chen1335.ultimateEnchantment.dataComponentType.UEDataComponentTypes;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
 import com.chen1335.ultimateEnchantment.enchantment.effects.UEEnchantmentEffects;
@@ -90,7 +91,7 @@ public class UltimateEnchantment {
 
 
     public void setUp(FMLCommonSetupEvent event) {
-        UEConfig.loadConfig();
+        CommonConfig.staticLoad();
     }
 
     public static boolean isIronsSpellBooksLoaded() {
