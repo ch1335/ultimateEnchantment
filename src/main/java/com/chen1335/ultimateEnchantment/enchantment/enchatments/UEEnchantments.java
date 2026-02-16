@@ -1,6 +1,7 @@
 package com.chen1335.ultimateEnchantment.enchantment.enchatments;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
+import com.chen1335.ultimateEnchantment.common.conditions.EnchantmentEnableCondition;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.*;
 import com.chen1335.ultimateEnchantment.enchantment.effects.UltimateEnchantment.LastStandEffect;
@@ -23,7 +24,6 @@ import net.minecraft.world.item.enchantment.effects.EnchantmentAttributeEffect;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
-import net.neoforged.neoforge.common.conditions.TrueCondition;
 
 import java.util.HashMap;
 import java.util.List;
@@ -348,7 +348,7 @@ public class UEEnchantments {
     }
 
     private static void register(BootstrapContext<Enchantment> pContext, ResourceKey<Enchantment> pKey, Enchantment.Builder pBuilder) {
-        conditions.put(pKey, List.of(new ModLoadedCondition(UltimateEnchantment.MODID)));
+        conditions.put(pKey, List.of(new ModLoadedCondition(UltimateEnchantment.MODID),new EnchantmentEnableCondition(pKey.location())));
         pContext.register(pKey, pBuilder.build(pKey.location()));
     }
 

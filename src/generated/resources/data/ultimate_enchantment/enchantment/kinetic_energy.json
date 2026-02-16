@@ -1,0 +1,34 @@
+{
+    "neoforge:conditions": [
+        {
+            "type": "neoforge:mod_loaded",
+            "modid": "ultimate_enchantment"
+        },
+        {
+            "type": "ultimate_enchantment:enchantment_enable_condition",
+            "id": "ultimate_enchantment:kinetic_energy"
+        }
+    ],
+    "anvil_cost": 1,
+    "description": {
+        "translate": "enchantment.ultimate_enchantment.kinetic_energy"
+    },
+    "effects": {
+        "ultimate_enchantment:kinetic_energy": {
+            "breakSpeedMultiplierPerBlock": 0.01,
+            "maxSpeedPerLevel": 0.1
+        }
+    },
+    "max_cost": {
+        "base": 60,
+        "per_level_above_first": 10
+    },
+    "max_level": 5,
+    "min_cost": {
+        "base": 20,
+        "per_level_above_first": 5
+    },
+    "slots": [],
+    "supported_items": "#minecraft:enchantable/mining",
+    "weight": 3
+}

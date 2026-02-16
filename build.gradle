@@ -115,8 +115,6 @@ configurations {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs')
-    implementation "curse.maven:enchantment-descriptions-250419:6910375"
     implementation "curse.maven:cloth-config-348521:5729127"
 //    implementation "curse.maven:apotheosis-313970:6926309"
     implementation "curse.maven:apothic-attributes-898963:6751650"
@@ -125,6 +123,17 @@ dependencies {
     implementation "curse.maven:placebo-283644:6926281"
     implementation "curse.maven:patchouli-306770:6842247"
     implementation "curse.maven:curios-309927:6529130"
+    implementation "curse.maven:the-twilight-forest-227639:7398100"
+    implementation "curse.maven:advanced-loot-info-1205426:7600918"
+    implementation "curse.maven:jei-238222:7420587"
+
+    implementation "curse.maven:geckolib-388172:7023453"
+    implementation "curse.maven:irons-spells-n-spellbooks-855414:7271541"
+    implementation "curse.maven:playeranimator-658587:6024462"
+
+    implementation "curse.maven:tide-884685:7586281"
+    implementation "curse.maven:aquaculture-60028:7521541"
+    implementation "curse.maven:nether-depths-upgrade-670011:6430271"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

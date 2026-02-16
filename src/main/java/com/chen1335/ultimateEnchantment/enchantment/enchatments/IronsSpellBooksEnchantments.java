@@ -1,6 +1,7 @@
 package com.chen1335.ultimateEnchantment.enchantment.enchatments;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
+import com.chen1335.ultimateEnchantment.common.conditions.EnchantmentEnableCondition;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.HardenedManaComponent;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.ManaStealComponent;
@@ -64,7 +65,7 @@ public class IronsSpellBooksEnchantments {
     }
 
     private static void register(BootstrapContext<Enchantment> pContext, ResourceKey<Enchantment> pKey, Enchantment.Builder pBuilder) {
-        conditions.put(pKey, List.of(new ModLoadedCondition(IronsSpellbooks.MODID)));
+        conditions.put(pKey, List.of(new ModLoadedCondition(IronsSpellbooks.MODID),new EnchantmentEnableCondition(pKey.location())));
         pContext.register(pKey, pBuilder.build(pKey.location()));
     }
 

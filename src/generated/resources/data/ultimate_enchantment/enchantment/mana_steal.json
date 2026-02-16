@@ -1,0 +1,35 @@
+{
+    "neoforge:conditions": [
+        {
+            "type": "neoforge:mod_loaded",
+            "modid": "irons_spellbooks"
+        },
+        {
+            "type": "ultimate_enchantment:enchantment_enable_condition",
+            "id": "ultimate_enchantment:mana_steal"
+        }
+    ],
+    "anvil_cost": 1,
+    "description": {
+        "translate": "enchantment.ultimate_enchantment.mana_steal"
+    },
+    "effects": {
+        "ultimate_enchantment:mana_steal": {
+            "ManaRegainPercentPerLevel": 0.1,
+            "maxPercent": 0.06
+        }
+    },
+    "exclusive_set": "#ultimate_enchantment:life_steal_enchantment",
+    "max_cost": {
+        "base": 60,
+        "per_level_above_first": 10
+    },
+    "max_level": 4,
+    "min_cost": {
+        "base": 15,
+        "per_level_above_first": 10
+    },
+    "slots": [],
+    "supported_items": "#minecraft:enchantable/sharp_weapon",
+    "weight": 3
+}

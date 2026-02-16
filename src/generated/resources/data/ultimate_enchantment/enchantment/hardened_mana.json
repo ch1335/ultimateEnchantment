@@ -1,0 +1,34 @@
+{
+    "neoforge:conditions": [
+        {
+            "type": "neoforge:mod_loaded",
+            "modid": "irons_spellbooks"
+        },
+        {
+            "type": "ultimate_enchantment:enchantment_enable_condition",
+            "id": "ultimate_enchantment:hardened_mana"
+        }
+    ],
+    "anvil_cost": 1,
+    "description": {
+        "translate": "enchantment.ultimate_enchantment.hardened_mana"
+    },
+    "effects": {
+        "ultimate_enchantment:hardened_mana": {
+            "manaCostPercent": 0.01,
+            "maxArmorPerLevel": 1.0
+        }
+    },
+    "max_cost": {
+        "base": 50,
+        "per_level_above_first": 10
+    },
+    "max_level": 4,
+    "min_cost": {
+        "base": 15,
+        "per_level_above_first": 8
+    },
+    "slots": [],
+    "supported_items": "#minecraft:enchantable/chest_armor",
+    "weight": 3
+}

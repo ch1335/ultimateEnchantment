@@ -1,0 +1,7 @@
+{
+    "values": [
+        "minecraft:mob_attack",
+        "ultimate_enchantment:tear",
+        "#minecraft:is_player_attack"
+    ]
+}

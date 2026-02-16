@@ -1,0 +1,37 @@
+{
+    "neoforge:conditions": [
+        {
+            "type": "neoforge:mod_loaded",
+            "modid": "ultimate_enchantment"
+        },
+        {
+            "type": "ultimate_enchantment:enchantment_enable_condition",
+            "id": "ultimate_enchantment:lethal_tempo"
+        }
+    ],
+    "anvil_cost": 1,
+    "description": {
+        "translate": "enchantment.ultimate_enchantment.lethal_tempo"
+    },
+    "effects": {
+        "ultimate_enchantment:lethal_tempo": {
+            "addChanceOnHit": 0.2,
+            "additionHitDamage": 0.2,
+            "keepTime": 200,
+            "maxChancePerLevel": 0.4
+        }
+    },
+    "exclusive_set": "#ultimate_enchantment:ultimate_enchantment_exclusive",
+    "max_cost": {
+        "base": 150,
+        "per_level_above_first": 0
+    },
+    "max_level": 5,
+    "min_cost": {
+        "base": 80,
+        "per_level_above_first": 0
+    },
+    "slots": [],
+    "supported_items": "#minecraft:enchantable/bow",
+    "weight": 3
+}

@@ -1,0 +1,16 @@
+{
+    "values": [
+        {
+            "id": "ultimate_enchantment:tear",
+            "required": false
+        },
+        {
+            "id": "ultimate_enchantment:lethal_tempo",
+            "required": false
+        },
+        {
+            "id": "ultimate_enchantment:vanquisher",
+            "required": false
+        }
+    ]
+}

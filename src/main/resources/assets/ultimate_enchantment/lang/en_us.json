@@ -52,5 +52,6 @@
   "enchantment.ultimate_enchantment.quick_bait.specialDesc": "The speed of the fish swimming towards your buoy increases by %d%%",
   "enchantment.ultimate_enchantment.eternal.specialDesc": "§dThis item becomes indestructible and will not be destroyed by explosions, flames, etc. When it falls into the void, it will float above the void and its dropped objects will not disappear",
   "enchantment.ultimate_enchantment.vanquisher.specialDesc": "§dWhen conducting §eeffective attacks§d, a vanquisher effect will be added for 20 seconds, with a maximum of 10 layers. Each layer provides you with a 5% §efinal damage bonus§d and 10% attack speed. When the layer is full, make this §eeffective attack§d ignore invincible frames",
-  "enchantment.ultimate_enchantment.quick_latch.specialDesc": "Automatically release bow"
+  "enchantment.ultimate_enchantment.quick_latch.specialDesc": "Automatically release bow",
+  "ultimate_enchantment.type.condition.creeper_is_powered": "Creeper is powered"
 }

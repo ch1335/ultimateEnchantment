@@ -10,9 +10,11 @@ import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IProjectileMixin;
 import com.chen1335.ultimateEnchantment.utils.ItemEnchantmentHelper;
 import com.chen1335.ultimateEnchantment.utils.SimpleSchedule;
 import com.chen1335.ultimateEnchantment.utils.UEEnchantmentHelper;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
@@ -63,25 +65,24 @@ public class LethalTempoEffect {
     public static void onArrowHit(LivingIncomingDamageEvent event) {
         if (event.getSource().getDirectEntity() instanceof Projectile projectile && projectile.getOwner() instanceof LivingEntity living) {
             ItemStack weapon = living.getWeaponItem();
-            UEEnchantmentHelper.runIfEnchantmentExist(UEEnchantments.LETHAL_TEMPO, holder -> {
-                ItemEnchantmentHelper.runIfItemStackHaveEnchant(weapon, holder, level -> {
-                    UEEnchantmentHelper.runIfComponentExist(holder, UEEnchantmentEffectComponents.LETHAL_TEMPO, lethalTempoComponent -> {
-                        IProjectileMixin projectileMixin = ((IProjectileMixin) projectile);
+            Pair<LethalTempoComponent, Integer> highestLevel = EnchantmentHelper.getHighestLevel(weapon, UEEnchantmentEffectComponents.LETHAL_TEMPO.value());
+            if (highestLevel != null) {
+                LethalTempoComponent lethalTempoComponent = highestLevel.getFirst();
+                Integer level = highestLevel.getSecond();
+                IProjectileMixin projectileMixin = ((IProjectileMixin) projectile);
 
-                        if (!projectileMixin.ue$isLethalTempoAdditionArrow()) {
-                            float oldChance = weapon.getOrDefault(UEDataComponentTypes.ADDITION_SHOOT_CHANCE, 0).floatValue();
-                            weapon.set(UEDataComponentTypes.ADDITION_SHOOT_CHANCE, Math.min(lethalTempoComponent.maxChancePerLevel() * level, oldChance + lethalTempoComponent.addChanceOnHit()));
-                            weapon.set(UEDataComponentTypes.LETHAL_TEMPO_TIME_RECORD, event.getEntity().level().getGameTime());
-                        }
+                if (!projectileMixin.ue$isLethalTempoAdditionArrow()) {
+                    float oldChance = weapon.getOrDefault(UEDataComponentTypes.ADDITION_SHOOT_CHANCE, 0).floatValue();
+                    weapon.set(UEDataComponentTypes.ADDITION_SHOOT_CHANCE, Math.min(lethalTempoComponent.maxChancePerLevel() * level, oldChance + lethalTempoComponent.addChanceOnHit()));
+                    weapon.set(UEDataComponentTypes.LETHAL_TEMPO_TIME_RECORD, event.getEntity().level().getGameTime());
+                }
 
 
-                        if (projectileMixin.ue$isLethalTempoAdditionArrow()) {
-                            event.getEntity().invulnerableTime = 0;
-                            event.setAmount(event.getAmount() * lethalTempoComponent.additionHitDamage());
-                        }
-                    });
-                });
-            });
+                if (projectileMixin.ue$isLethalTempoAdditionArrow()) {
+                    event.getEntity().invulnerableTime = 0;
+                    event.setAmount(event.getAmount() * lethalTempoComponent.additionHitDamage());
+                }
+            }
         }
     }
 }

@@ -37,8 +37,6 @@ public class UEEnchantmentEffectComponents {
 
     public static DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> SMELTING = TYPES.register("smelting", () -> DataComponentType.<Unit>builder().persistent(Unit.CODEC).build());
 
-    public static DeferredHolder<DataComponentType<?>, DataComponentType<List<ConditionalEffect<EnchantmentValueEffect>>>> EXTRA_SHOOT_COUNT = TYPES.register("extra_shoot_count", () -> DataComponentType.<List<ConditionalEffect<EnchantmentValueEffect>>>builder().persistent(ConditionalEffect.codec(EnchantmentValueEffect.CODEC, LootContextParamSets.ENCHANTED_ENTITY).listOf()).build());
-
     public static DeferredHolder<DataComponentType<?>, DataComponentType<LifeStealComponent>> LIFE_STEAL = TYPES.register("life_steal", () -> DataComponentType.<LifeStealComponent>builder().persistent(LifeStealComponent.CODEC).build());
 
     public static DeferredHolder<DataComponentType<?>, DataComponentType<ManaStealComponent>> MANA_STEAL = TYPES.register("mana_steal", () -> DataComponentType.<ManaStealComponent>builder().persistent(ManaStealComponent.CODEC).build());

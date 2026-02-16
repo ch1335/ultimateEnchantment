@@ -1,0 +1,4 @@
+@MethodsReturnNonnullByDefault
+package com.chen1335.ultimateEnchantment.loot.predicates;
+
+import net.minecraft.MethodsReturnNonnullByDefault;

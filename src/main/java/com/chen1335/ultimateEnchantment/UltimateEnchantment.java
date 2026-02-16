@@ -1,6 +1,8 @@
 package com.chen1335.ultimateEnchantment;
 
 import com.chen1335.ultimateEnchantment.API.AttachmentTypes;
+import com.chen1335.ultimateEnchantment.API.objects.Conditions;
+import com.chen1335.ultimateEnchantment.API.objects.LootItemConditions;
 import com.chen1335.ultimateEnchantment.common.EventHandler;
 import com.chen1335.ultimateEnchantment.config.CommonConfig;
 import com.chen1335.ultimateEnchantment.dataComponentType.UEDataComponentTypes;
@@ -66,6 +68,8 @@ public class UltimateEnchantment {
 
     public UltimateEnchantment(IEventBus modEventBus, ModContainer modContainer) {
         CREATIVE_MODE_TABS.register(modEventBus);
+        Conditions.CONDITION_CODECS.register(modEventBus);
+        LootItemConditions.LOOT_ITEM_CONDITION_TYPES.register(modEventBus);
         UEDataComponentTypes.AEA_DATA.register(modEventBus);
         UEEnchantmentEffects.ENCHANTMENT_ENTITY_EFFECT.register(modEventBus);
         UEEnchantmentEffects.ENCHANTMENT_LOCATION_BASED_EFFECT.register(modEventBus);
