@@ -111,7 +111,7 @@ public class UEEnchantments {
                                         Enchantment.constantCost(150),
                                         1
                                 )
-                        ).withSpecialEffect(UEEnchantmentEffectComponents.TEAR.get(), new TearComponent(0.2f, 0.001f))
+                        ).withSpecialEffect(UEEnchantmentEffectComponents.TEAR.get(), new TearComponent(0.2f, 0.005f))
                         .exclusiveWith(enchantmentHolderGetter.getOrThrow(UEEnchantmentTags.ULTIMATE_ENCHANTMENT_EXCLUSIVE))
         );
 

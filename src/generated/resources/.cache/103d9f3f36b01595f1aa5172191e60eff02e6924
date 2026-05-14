@@ -1,4 +1,4 @@
-// 1.21.1	2026-02-16T21:55:30.8490566	Registries
+// 1.21.1	2026-02-20T20:48:56.4214734	Registries
 826973df28d1d8b5f0b0fcfe79919fd15c31ab80 data/ultimate_enchantment/damage_type/tear.json
 138af8c3257515ebd8a05d98c914ff029eaa777c data/ultimate_enchantment/enchantment/cut_down.json
 0ff126416cdb610c7042f460907e7b8f56bc9399 data/ultimate_enchantment/enchantment/double_hook.json
@@ -16,7 +16,7 @@ e43ee4c0d39d1e952f3d8c3aea6d881a57d81e67 data/ultimate_enchantment/enchantment/o
 c02ae0194fd96902451fe374736c68a682f9b056 data/ultimate_enchantment/enchantment/quick_shooting.json
 61d8c8604662a3d4710457f4f51b38981b805091 data/ultimate_enchantment/enchantment/scabbing.json
 be872700d08be6a158ec2e4b16a27cfd99449e22 data/ultimate_enchantment/enchantment/smelting.json
-33bfa99445d9cb01333ce175a0d42a9c3c55ec9d data/ultimate_enchantment/enchantment/tear.json
+3de6fc6616c92f33ab0a336683e0785ac03d02fe data/ultimate_enchantment/enchantment/tear.json
 829075b667100155db19dcb8ace7a08d319955c0 data/ultimate_enchantment/enchantment/thunder_bolt.json
 f04e4744baacca0bb3b21ebf75196090b1085f00 data/ultimate_enchantment/enchantment/ultimate.json
 86472bc98e3f6ca42f3eaeca19ad8751d9ab8a83 data/ultimate_enchantment/enchantment/vanquisher.json

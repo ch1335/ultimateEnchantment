@@ -1,7 +1,7 @@
 package com.chen1335.ultimateEnchantment.mixins.minecraft;
 
 import com.chen1335.ultimateEnchantment.enchantment.enchatments.UEEnchantments;
-import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IEntityMixin;
+import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IUEEntityExtension;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements IEntityMixin {
+public abstract class EntityMixin implements IUEEntityExtension {
     @Unique
     public boolean ue$isLethalTempoShooting = false;
 

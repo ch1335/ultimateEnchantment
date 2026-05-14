@@ -4,7 +4,6 @@ import com.chen1335.ultimateEnchantment.API.UEDamageTypeTags;
 import com.chen1335.ultimateEnchantment.dataComponentType.UEDataComponentTypes;
 import com.chen1335.ultimateEnchantment.enchantment.specialEnchantEffects.TearEffect;
 import com.chen1335.ultimateEnchantment.enchantment.specialEnchantEffects.ThunderBolt;
-import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IDamageSourceMixin;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.ILivingEntityMixin;
 import com.chen1335.ultimateEnchantment.mobEffect.MobEffects;
 import com.chen1335.ultimateEnchantment.utils.Util;
@@ -59,7 +58,7 @@ public abstract class LivingEntityMixin implements ILivingEntityMixin {
     @Inject(method = "actuallyHurt", at = @At("HEAD"))
     private void actuallyHurt(DamageSource damageSource, float damageAmount, CallbackInfo ci) {
         LivingEntity living = (LivingEntity) (Object) this;
-        if (((IDamageSourceMixin) damageSource).isDirectAttackedEntity(living) && damageSource.getEntity() instanceof LivingEntity attacker && damageSource.is(UEDamageTypeTags.IS_ATTACK)) {
+        if (damageSource.getEntity() instanceof LivingEntity attacker && damageSource.is(UEDamageTypeTags.IS_ATTACK)) {
             Util.addAttackedCount(attacker);
         }
         TearEffect.onAttack(damageSource, this.damageContainers, living);

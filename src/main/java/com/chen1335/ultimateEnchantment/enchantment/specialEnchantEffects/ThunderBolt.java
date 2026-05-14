@@ -2,7 +2,6 @@ package com.chen1335.ultimateEnchantment.enchantment.specialEnchantEffects;
 
 import com.chen1335.ultimateEnchantment.API.UEDamageTypeTags;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
-import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IDamageSourceMixin;
 import com.chen1335.ultimateEnchantment.utils.ItemEnchantmentHelper;
 import com.chen1335.ultimateEnchantment.utils.Util;
 import net.minecraft.core.registries.Registries;
@@ -21,7 +20,6 @@ public class ThunderBolt {
     public static void onAttack(DamageSource damageSource, Stack<DamageContainer> damageContainers, LivingEntity target) {
         if (damageSource.getEntity() instanceof LivingEntity attacker
                 && damageSource.is(UEDamageTypeTags.IS_ATTACK)
-                && ((IDamageSourceMixin) damageSource).isDirectAttackedEntity(target)
                 && Util.getAttackedCount(attacker) % 3 == 0
         ) {
             ItemEnchantmentHelper.runIfItemStackHaveEnchantComponent(attacker.getWeaponItem(), UEEnchantmentEffectComponents.THUNDER_BOLT, (thunderBoltComponent, level) -> {

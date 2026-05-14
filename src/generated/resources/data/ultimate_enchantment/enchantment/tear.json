@@ -16,7 +16,7 @@
     "effects": {
         "ultimate_enchantment:tear": {
             "damageAdd": 0.2,
-            "totalHealthDamage": 0.001
+            "totalHealthDamage": 0.005
         }
     },
     "exclusive_set": "#ultimate_enchantment:ultimate_enchantment_exclusive",

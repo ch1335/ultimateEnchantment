@@ -1,12 +1,13 @@
 package com.chen1335.ultimateEnchantment.enchantment.specialEnchantEffects;
 
+import com.chen1335.ultimateEnchantment.API.AttachmentTypes;
+import com.chen1335.ultimateEnchantment.AttachmentDatas.UEProjectileData;
 import com.chen1335.ultimateEnchantment.dataComponentType.UEDataComponentTypes;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.LethalTempoComponent;
 import com.chen1335.ultimateEnchantment.enchantment.enchatments.UEEnchantments;
-import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IEntityMixin;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IItemStackMixin;
-import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IProjectileMixin;
+import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IUEEntityExtension;
 import com.chen1335.ultimateEnchantment.utils.ItemEnchantmentHelper;
 import com.chen1335.ultimateEnchantment.utils.SimpleSchedule;
 import com.chen1335.ultimateEnchantment.utils.UEEnchantmentHelper;
@@ -34,7 +35,7 @@ public class LethalTempoEffect {
                     return;
                 }
                 IItemStackMixin iItemStackMixin = (IItemStackMixin) (Object) itemStack;
-                IEntityMixin iEntityMixin = (IEntityMixin) event.getEntity();
+                IUEEntityExtension iEntityMixin = (IUEEntityExtension) event.getEntity();
                 float additionShootChance = itemStack.getOrDefault(UEDataComponentTypes.ADDITION_SHOOT_CHANCE, 0).floatValue();
 
                 long timeRecord = itemStack.getOrDefault(UEDataComponentTypes.LETHAL_TEMPO_TIME_RECORD, 0L);
@@ -69,16 +70,16 @@ public class LethalTempoEffect {
             if (highestLevel != null) {
                 LethalTempoComponent lethalTempoComponent = highestLevel.getFirst();
                 Integer level = highestLevel.getSecond();
-                IProjectileMixin projectileMixin = ((IProjectileMixin) projectile);
+                UEProjectileData data = projectile.getData(AttachmentTypes.PROJECTILE_DATA);
 
-                if (!projectileMixin.ue$isLethalTempoAdditionArrow()) {
+                if (!data.isLethalTempoAdditionArrow) {
                     float oldChance = weapon.getOrDefault(UEDataComponentTypes.ADDITION_SHOOT_CHANCE, 0).floatValue();
                     weapon.set(UEDataComponentTypes.ADDITION_SHOOT_CHANCE, Math.min(lethalTempoComponent.maxChancePerLevel() * level, oldChance + lethalTempoComponent.addChanceOnHit()));
                     weapon.set(UEDataComponentTypes.LETHAL_TEMPO_TIME_RECORD, event.getEntity().level().getGameTime());
                 }
 
 
-                if (projectileMixin.ue$isLethalTempoAdditionArrow()) {
+                if (data.isLethalTempoAdditionArrow) {
                     event.getEntity().invulnerableTime = 0;
                     event.setAmount(event.getAmount() * lethalTempoComponent.additionHitDamage());
                 }

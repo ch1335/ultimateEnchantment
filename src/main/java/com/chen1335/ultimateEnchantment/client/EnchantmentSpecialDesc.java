@@ -143,7 +143,7 @@ public class EnchantmentSpecialDesc {
         DESC.put(IronsSpellBooksEnchantments.HARDENED_MANA, (holder, level) -> {
             HardenedManaComponent hardenedManaComponent = Objects.requireNonNull(holder.value().effects().get(UEEnchantmentEffectComponents.HARDENED_MANA.get()));
 
-            return Component.translatable("enchantment.ultimate_enchantment.hardened_mana.specialDesc", format(hardenedManaComponent.maxArmorPerLevel() * 100), format(level * hardenedManaComponent.maxArmorPerLevel()));
+            return Component.translatable("enchantment.ultimate_enchantment.hardened_mana.specialDesc", format(hardenedManaComponent.maxArmorPerLevel()), format(level * hardenedManaComponent.maxArmorPerLevel()));
         });
         DESC.put(UEEnchantments.KINETIC_ENERGY, (holder, level) -> {
             KineticEnergyComponent component = Objects.requireNonNull(holder.value().effects().get(UEEnchantmentEffectComponents.KINETIC_ENERGY.get()));

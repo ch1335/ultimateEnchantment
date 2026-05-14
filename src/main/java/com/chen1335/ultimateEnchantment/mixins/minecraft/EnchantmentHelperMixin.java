@@ -11,8 +11,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EnchantmentHelper.class)
 public class EnchantmentHelperMixin {
-
-
     @Inject(method = "processAmmoUse", at = @At("RETURN"), cancellable = true)
     private static void processAmmoUse(ServerLevel level, ItemStack weapon, ItemStack ammo, int count, CallbackInfoReturnable<Integer> cir) {
         IItemStackMixin iItemStackMixin = (IItemStackMixin) (Object) weapon;

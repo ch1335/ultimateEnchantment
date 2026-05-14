@@ -4,13 +4,9 @@ import com.chen1335.ultimateEnchantment.API.UEDamageTypeTags;
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.data.registries.UEDamageType;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
-import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.TearComponent;
-import com.chen1335.ultimateEnchantment.enchantment.enchatments.UEEnchantments;
-import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IDamageSourceMixin;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.ILivingEntityMixin;
 import com.chen1335.ultimateEnchantment.utils.ItemEnchantmentHelper;
 import com.chen1335.ultimateEnchantment.utils.SimpleSchedule;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,7 +14,6 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.common.damagesource.DamageContainer;
 import twilightforest.entity.boss.Hydra;
 
-import java.util.Objects;
 import java.util.Stack;
 
 public class TearEffect {
@@ -44,7 +39,6 @@ public class TearEffect {
         }
         DamageSource damageSource1 = attacker.level().damageSources().source(UEDamageType.TEAR_DAMAGE, attacker);
         target.playSound(SoundEvents.ZOMBIE_BREAK_WOODEN_DOOR, 0.3F, 1.7F);
-        ((IDamageSourceMixin) damageSource1).ue$setDirectAttackedEntity(target);
         ((ILivingEntityMixin) target).ue$setDisableHurtSound(true);
         float lastHurt = target.lastHurt;
         int invulnerableTime = target.invulnerableTime;
