@@ -25,6 +25,7 @@ public class Legend extends CommonEnchantmentBase {
     }
 
     public static void buildBlackList(List<String> legendBlackList) {
+        BLACK_LIST.clear();
         legendBlackList.forEach(s -> {
             ForgeRegistries.ATTRIBUTES.getHolder(ResourceLocation.tryParse(s)).ifPresent(attributeHolder -> {
                 BLACK_LIST.add(attributeHolder.value());

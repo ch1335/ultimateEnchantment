@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:entity",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "enchantments": {
+                "ultimate_enchantment:last_stand": 1.0
+              },
+              "function": "minecraft:set_enchantments"
+            }
+          ],
+          "name": "minecraft:enchanted_book"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "ultimate_enchantment:warden_loot_addition"
+}

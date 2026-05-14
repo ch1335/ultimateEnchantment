@@ -122,6 +122,13 @@ public class UltimateEnchantment {
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         AttributeTypeInfo.init();
+        loadConfig();
+    }
+
+    public static void loadConfig() {
+        commonConfig = new Configuration(new File(configDir, "common.cfg"));
+        config = new Configuration(new File(configDir, "enchantments.cfg"));
+
         EnchantmentConfig.load(config);
         canBoosDropEnchantmentBook = commonConfig.getBoolean("canBoosDropEnchantmentBook", "common", true, "can Boos Drop Enchantment Book");
 

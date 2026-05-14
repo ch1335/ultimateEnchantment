@@ -14,6 +14,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -84,10 +85,11 @@ public class EventHandler {
 
             if (!from.isEmpty()) {
                 livingEntity.getAttributes().supplier.instances.forEach((attribute, attributeInstance) -> {
-                    if (!Legend.BLACK_LIST.contains(attribute)) {
-                        livingEntity.getAttributes().getInstance(attribute).getModifiers().forEach(attributeModifier -> {
+                    AttributeInstance instance = livingEntity.getAttributes().getInstance(attribute);
+                    if (instance != null) {
+                        instance.getModifiers().forEach(attributeModifier -> {
                             if (attributeModifier.getName().equals("ue:legendModifier_" + slot.getName())) {
-                                livingEntity.getAttributes().getInstance(attribute).removeModifier(attributeModifier.getId());
+                                instance.removeModifier(attributeModifier.getId());
                             }
                         });
                     }
@@ -97,15 +99,17 @@ public class EventHandler {
             if (!to.isEmpty() && slotCorrect) {
                 int legendLevel = to.getEnchantmentLevel(Enchantments.LEGEND.get());
                 livingEntity.getAttributes().supplier.instances.forEach((attribute, attributeInstance) -> {
-                    IAttributeExtension attributeExtension = (IAttributeExtension) attribute;
-                    if (attributeExtension.ue$getSentiment() == AttributeTypeInfo.Sentiment.POSITIVE) {
-                        livingEntity.getAttributes().getInstance(attribute).addTransientModifier(new AttributeModifier("ue:legendModifier_" + slot.getName(), Enchantments.LEGEND.get().getAttributeBonus(legendLevel), AttributeModifier.Operation.MULTIPLY_BASE));
-                    } else if (attributeExtension.ue$getSentiment() == AttributeTypeInfo.Sentiment.NEGATIVE) {
-                        livingEntity.getAttributes().getInstance(attribute).addTransientModifier(new AttributeModifier("ue:legendModifier_" + slot.getName(), -Enchantments.LEGEND.get().getAttributeBonus(legendLevel), AttributeModifier.Operation.MULTIPLY_TOTAL));
+                    AttributeInstance instance = livingEntity.getAttributes().getInstance(attribute);
+                    if (instance != null) {
+                        if (!Legend.BLACK_LIST.contains(attribute)) {
+                            IAttributeExtension attributeExtension = (IAttributeExtension) attribute;
+                            if (attributeExtension.ue$getSentiment() == AttributeTypeInfo.Sentiment.POSITIVE) {
+                                instance.addTransientModifier(new AttributeModifier("ue:legendModifier_" + slot.getName(), Enchantments.LEGEND.get().getAttributeBonus(legendLevel), AttributeModifier.Operation.MULTIPLY_BASE));
+                            }
+                        }
                     }
                 });
             }
-
             event.getEntity().setHealth(event.getEntity().getHealth());
         }
 

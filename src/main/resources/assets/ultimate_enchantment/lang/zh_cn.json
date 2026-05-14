@@ -4,7 +4,6 @@
   "itemGroup.ultimate_enchantment": "终极附魔",
   "enchantment.ultimate_enchantment.eternal": "永恒",
   "enchantment.ultimate_enchantment.eternal.desc": "§d这件物品变的无法破坏，并且不会被爆炸，火焰等摧毁，掉落在虚空时会漂浮在虚空上方，它的掉落物也不会消失",
-
   "enchantment.ultimate_enchantment.last_stand": "背水一战",
   "enchantment.ultimate_enchantment.last_stand.desc": "§d生命值低于三分之一时，为你提供每级5%的护甲值与护甲韧性,§e这个增益相互乘算",
   "enchantment.ultimate_enchantment.over_grow": "过度生长",
@@ -38,5 +37,6 @@
   "enchantment.ultimate_enchantment.vanquisher": "征服者",
   "enchantment.ultimate_enchantment.vanquisher.desc": "§d进行§e有效攻击§r§d时会叠加一层征服者效果,持续20秒,最高10层,每层为你提供5%的§e最终伤害加成§r§d以及10%的攻击速度,满层时你还会获得20%的生命窃取,并且使这次§e有效攻击§r§d无视无敌帧",
   "effect.ultimate_enchantment.active_vanquisher": "征服者",
-  "effect.ultimate_enchantment.un_active_vanquisher": "征服者"
+  "effect.ultimate_enchantment.un_active_vanquisher": "征服者",
+  "commands.ultimate_enchantment.reload_config.success": "§a配置已重新加载！"
 }
