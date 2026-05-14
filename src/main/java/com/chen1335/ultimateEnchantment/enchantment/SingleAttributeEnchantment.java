@@ -14,16 +14,16 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 public class SingleAttributeEnchantment extends CommonEnchantmentBase implements IAttributeEnchantment {
 
     private int attributeModifierHolderCount = 0;
 
-    public Set<AttributeModifierHolder> attributeModifierHolders = new HashSet<>();
+    public List<AttributeModifierHolder> attributeModifierHolders = new ArrayList<>();
 
     public final EnumMap<EquipmentSlot, UUID> modifierUuidPerSlot;
 
@@ -36,10 +36,7 @@ public class SingleAttributeEnchantment extends CommonEnchantmentBase implements
         });
         this.addAttributeModifierHolder(new AttributeModifierHolder(attribute, bonusPerLevel, operation));
     }
-
-    public int getAttributeModifierHolderId() {
-        return ++attributeModifierHolderCount;
-    }
+    
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifier(EquipmentSlot slot, int level) {
@@ -61,14 +58,14 @@ public class SingleAttributeEnchantment extends CommonEnchantmentBase implements
     @Override
     public void loadConfig(Configuration config) {
         super.loadConfig(config);
-        this.attributeModifierHolders.forEach(attributeModifierHolder -> {
-            attributeModifierHolder.loadFromConfig(this, config);
-        });
+
+        for (int i = 0; i < this.attributeModifierHolders.size(); i++) {
+            attributeModifierHolders.get(i).loadFromConfig(i, this, config);
+        }
     }
 
     public static class AttributeModifierHolder {
 
-        public int id;
 
         public float bonusPerLevel;
 
@@ -82,11 +79,13 @@ public class SingleAttributeEnchantment extends CommonEnchantmentBase implements
             this.operation = operation;
         }
 
-        public void loadFromConfig(SingleAttributeEnchantment enchantment, Configuration config) {
-            this.id = enchantment.getAttributeModifierHolderId();
-            attribute = ForgeRegistries.ATTRIBUTES.getValue(ResourceLocation.tryParse(config.getString("attribute", enchantment.getSimpleName() + ".AttributeModifierHolders." + id, ForgeRegistries.ATTRIBUTES.getKey(attribute).toString(), "the attribute")));
-            bonusPerLevel = config.getFloat("bonusPerLevel", enchantment.getSimpleName() + ".AttributeModifierHolders." + id, bonusPerLevel, -100, 100, "the bonusPerLevel");
-            operation = AttributeModifier.Operation.valueOf(config.getString("operation", enchantment.getSimpleName() + ".AttributeModifierHolders." + id, operation.toString(), "the operation:ADDITION,MULTIPLY_BASE,MULTIPLY_TOTAL"));
+        public void loadFromConfig(int id, SingleAttributeEnchantment enchantment, Configuration config) {
+            ResourceLocation key = ForgeRegistries.ATTRIBUTES.getKey(attribute);
+            if (key != null) {
+                attribute = ForgeRegistries.ATTRIBUTES.getValue(ResourceLocation.tryParse(config.getString("attribute", enchantment.getSimpleName() + ".AttributeModifierHolders." + id, key.toString(), "the attribute")));
+                bonusPerLevel = config.getFloat("bonusPerLevel", enchantment.getSimpleName() + ".AttributeModifierHolders." + id, bonusPerLevel, -100, 100, "the bonusPerLevel");
+                operation = AttributeModifier.Operation.valueOf(config.getString("operation", enchantment.getSimpleName() + ".AttributeModifierHolders." + id, operation.toString(), "the operation:ADDITION,MULTIPLY_BASE,MULTIPLY_TOTAL"));
+            }
         }
     }
 }
