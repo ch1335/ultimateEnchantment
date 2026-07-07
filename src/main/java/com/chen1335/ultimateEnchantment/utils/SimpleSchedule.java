@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @EventBusSubscriber(modid = UltimateEnchantment.MODID)
 public class SimpleSchedule {
@@ -33,6 +34,7 @@ public class SimpleSchedule {
     );
 
     public static void addSchedule(Level level, Schedule schedule) {
+
         if (level.isClientSide) {
             DIST_SCHEDULES.get(Dist.CLIENT).add(schedule);
         } else {
