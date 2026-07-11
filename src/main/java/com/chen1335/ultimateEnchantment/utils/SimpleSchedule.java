@@ -1,7 +1,9 @@
 package com.chen1335.ultimateEnchantment.utils;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
+import com.chen1335.ultimateEnchantment.client.UEClient;
 import com.google.common.collect.ImmutableMap;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -34,16 +36,14 @@ public class SimpleSchedule {
     );
 
     public static void addSchedule(Level level, Schedule schedule) {
-
         if (level.isClientSide) {
-            DIST_SCHEDULES.get(Dist.CLIENT).add(schedule);
+            UEClient.submit(() -> DIST_SCHEDULES.get(Dist.CLIENT).add(schedule));
         } else {
-            DIST_SCHEDULES.get(Dist.DEDICATED_SERVER).add(schedule);
+            MinecraftServer server = level.getServer();
+            if (server != null) {
+                server.submit(() -> DIST_SCHEDULES.get(Dist.DEDICATED_SERVER).add(schedule));
+            }
         }
-    }
-
-    public static void addSchedule(Dist dist, Schedule schedule) {
-        DIST_SCHEDULES.get(dist).add(schedule);
     }
 
     private static void update(Dist dist) {

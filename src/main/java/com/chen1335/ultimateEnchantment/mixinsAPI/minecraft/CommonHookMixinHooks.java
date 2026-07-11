@@ -18,16 +18,18 @@ public class CommonHookMixinHooks {
     public static void modifyLoot(ResourceLocation lootTableId, ObjectArrayList<ItemStack> generatedLoot, LootContext context, CallbackInfoReturnable<ObjectArrayList<ItemStack>> cir) {
         LootContextParamSet lootContextParamSet = ((ILootParamsExtension) context.params).ue$getParamSet();
         if (lootContextParamSet == LootContextParamSets.FISHING) {
-            Entity entity = context.getParam(LootContextParams.THIS_ENTITY);
-            ItemStack rod = context.getParam(LootContextParams.TOOL);
-            ItemEnchantmentHelper.runIfItemStackHaveEnchantComponent(rod, UEEnchantmentEffectComponents.DOUBLE_HOOK, (doubleHookComponent, level) -> {
-                if (entity.getRandom().nextFloat() < level * doubleHookComponent.chancePerLevel()) {
-                    List<ItemStack> old = List.copyOf(generatedLoot);
-                    for (ItemStack itemStack : old) {
-                        generatedLoot.add(itemStack.copy());
+            Entity entity = context.getParamOrNull(LootContextParams.THIS_ENTITY);
+            ItemStack rod = context.getParamOrNull(LootContextParams.TOOL);
+            if (entity != null && rod != null) {
+                ItemEnchantmentHelper.runIfItemStackHaveEnchantComponent(rod, UEEnchantmentEffectComponents.DOUBLE_HOOK, (doubleHookComponent, level) -> {
+                    if (entity.getRandom().nextFloat() < level * doubleHookComponent.chancePerLevel()) {
+                        List<ItemStack> old = List.copyOf(generatedLoot);
+                        for (ItemStack itemStack : old) {
+                            generatedLoot.add(itemStack.copy());
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     }
 }
