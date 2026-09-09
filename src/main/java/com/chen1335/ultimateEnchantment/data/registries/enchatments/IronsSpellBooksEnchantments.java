@@ -1,4 +1,4 @@
-package com.chen1335.ultimateEnchantment.enchantment.enchatments;
+package com.chen1335.ultimateEnchantment.data.registries.enchatments;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.common.conditions.EnchantmentEnableCondition;

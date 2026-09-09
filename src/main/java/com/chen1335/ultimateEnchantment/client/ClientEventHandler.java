@@ -1,7 +1,7 @@
 package com.chen1335.ultimateEnchantment.client;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
-import com.chen1335.ultimateEnchantment.enchantment.enchatments.UEEnchantments;
+import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantments;
 import com.chen1335.ultimateEnchantment.utils.UEEnchantmentHelper;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;

@@ -1,6 +1,6 @@
 package com.chen1335.ultimateEnchantment.mixins.minecraft;
 
-import com.chen1335.ultimateEnchantment.enchantment.enchatments.UEEnchantments;
+import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantments;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IUEEntityExtension;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.Entity;

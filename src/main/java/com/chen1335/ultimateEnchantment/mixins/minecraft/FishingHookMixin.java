@@ -1,7 +1,7 @@
 package com.chen1335.ultimateEnchantment.mixins.minecraft;
 
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
-import com.chen1335.ultimateEnchantment.enchantment.enchatments.UEEnchantments;
+import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantments;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.registries.Registries;

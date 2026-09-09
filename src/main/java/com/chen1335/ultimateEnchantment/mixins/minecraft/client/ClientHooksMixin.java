@@ -1,6 +1,6 @@
 package com.chen1335.ultimateEnchantment.mixins.minecraft.client;
 
-import com.chen1335.ultimateEnchantment.enchantment.enchatments.UEEnchantments;
+import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantments;
 import com.chen1335.ultimateEnchantment.utils.UEEnchantmentHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;

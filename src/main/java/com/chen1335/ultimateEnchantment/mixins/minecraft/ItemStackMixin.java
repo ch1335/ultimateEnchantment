@@ -2,7 +2,7 @@ package com.chen1335.ultimateEnchantment.mixins.minecraft;
 
 import com.chen1335.ultimateEnchantment.client.EnchantmentSpecialDesc;
 import com.chen1335.ultimateEnchantment.dataComponentType.UEDataComponentTypes;
-import com.chen1335.ultimateEnchantment.enchantment.enchatments.UEEnchantments;
+import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantments;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IItemStackMixin;
 import com.chen1335.ultimateEnchantment.utils.ItemEnchantmentHelper;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;

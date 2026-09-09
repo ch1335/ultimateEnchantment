@@ -11,7 +11,7 @@ import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantme
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.LegendComponent;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.VanquisherComponent;
 import com.chen1335.ultimateEnchantment.enchantment.effects.UltimateEnchantment.LastStandEffect;
-import com.chen1335.ultimateEnchantment.enchantment.enchatments.UEEnchantments;
+import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantments;
 import com.chen1335.ultimateEnchantment.loot.predicates.CreeperIsPoweredCondition;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IItemStackMixin;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IUEEntityExtension;

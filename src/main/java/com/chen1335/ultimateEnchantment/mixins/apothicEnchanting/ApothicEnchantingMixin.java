@@ -1,6 +1,6 @@
 package com.chen1335.ultimateEnchantment.mixins.apothicEnchanting;
 
-import com.chen1335.ultimateEnchantment.enchantment.enchatments.UEEnchantments;
+import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantments;
 import dev.shadowsoffire.apothic_enchanting.ApothicEnchanting;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;

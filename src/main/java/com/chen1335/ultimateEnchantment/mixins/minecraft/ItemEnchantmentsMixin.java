@@ -1,7 +1,7 @@
 package com.chen1335.ultimateEnchantment.mixins.minecraft;
 
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
-import com.chen1335.ultimateEnchantment.enchantment.enchatments.UEEnchantments;
+import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantments;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.enchantment.Enchantment;

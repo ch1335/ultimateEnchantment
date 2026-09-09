@@ -1,9 +1,9 @@
 package com.chen1335.ultimateEnchantment.data.tags;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
-import com.chen1335.ultimateEnchantment.enchantment.enchatments.ApothicEnchantingEnchantments;
-import com.chen1335.ultimateEnchantment.enchantment.enchatments.IronsSpellBooksEnchantments;
-import com.chen1335.ultimateEnchantment.enchantment.enchatments.UEEnchantments;
+import com.chen1335.ultimateEnchantment.data.registries.enchatments.ApothicEnchantingEnchantments;
+import com.chen1335.ultimateEnchantment.data.registries.enchatments.IronsSpellBooksEnchantments;
+import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantments;
 import com.chen1335.ultimateEnchantment.tags.UEEnchantmentTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
