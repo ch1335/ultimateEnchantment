@@ -1,4 +1,4 @@
-package com.chen1335.ultimateEnchantment.dynamicData;
+package com.chen1335.ultimateEnchantment.dynamicDataPack;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.resources.ResourceLocation;

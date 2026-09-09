@@ -6,9 +6,11 @@ import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantme
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.*;
 import com.chen1335.ultimateEnchantment.enchantment.effects.UltimateEnchantment.LastStandEffect;
 import com.chen1335.ultimateEnchantment.tags.UEEnchantmentTags;
+import net.minecraft.Util;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -159,7 +161,11 @@ public class UEEnchantments {
                                 Enchantment.constantCost(200),
                                 1
                         )
-                )
+                ).withSpecialEffect(UEEnchantmentEffectComponents.FORMULA.value(), Util.make(() -> {
+                    CompoundTag compoundTag = new CompoundTag();
+                    compoundTag.putString("a","a");
+                    return compoundTag;
+                }))
         );
 
         register(
@@ -348,7 +354,7 @@ public class UEEnchantments {
     }
 
     private static void register(BootstrapContext<Enchantment> pContext, ResourceKey<Enchantment> pKey, Enchantment.Builder pBuilder) {
-        conditions.put(pKey, List.of(new ModLoadedCondition(UltimateEnchantment.MODID),new EnchantmentEnableCondition(pKey.location())));
+        conditions.put(pKey, List.of(new ModLoadedCondition(UltimateEnchantment.MODID), new EnchantmentEnableCondition(pKey.location())));
         pContext.register(pKey, pBuilder.build(pKey.location()));
     }
 

@@ -5,6 +5,7 @@ import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnc
 import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.enchantment.ConditionalEffect;
 import net.minecraft.world.item.enchantment.LevelBasedValue;
@@ -56,5 +57,7 @@ public class UEEnchantmentEffectComponents {
     public static DeferredHolder<DataComponentType<?>, DataComponentType<QuickBaitComponent>> QUICK_BAIT = TYPES.register("quick_bait", () -> DataComponentType.<QuickBaitComponent>builder().persistent(QuickBaitComponent.CODEC).build());
 
     public static DeferredHolder<DataComponentType<?>, DataComponentType<HardenedManaComponent>> HARDENED_MANA = TYPES.register("hardened_mana", () -> DataComponentType.<HardenedManaComponent>builder().persistent(HardenedManaComponent.CODEC).build());
+
+    public static DeferredHolder<DataComponentType<?>, DataComponentType<CompoundTag>> FORMULA = TYPES.register("formula", () -> DataComponentType.<CompoundTag>builder().persistent(CompoundTag.CODEC).build());
 
 }

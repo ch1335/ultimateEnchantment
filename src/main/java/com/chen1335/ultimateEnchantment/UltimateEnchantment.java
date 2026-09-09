@@ -5,6 +5,7 @@ import com.chen1335.ultimateEnchantment.API.objects.Conditions;
 import com.chen1335.ultimateEnchantment.API.objects.LootItemConditions;
 import com.chen1335.ultimateEnchantment.common.EventHandler;
 import com.chen1335.ultimateEnchantment.config.CommonConfig;
+import com.chen1335.ultimateEnchantment.config.ServerConfig;
 import com.chen1335.ultimateEnchantment.dataComponentType.UEDataComponentTypes;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
 import com.chen1335.ultimateEnchantment.enchantment.effects.UEEnchantmentEffects;
@@ -14,6 +15,7 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
@@ -21,6 +23,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -80,6 +83,7 @@ public class UltimateEnchantment {
         AttachmentTypes.ATTACHMENT_TYPES.register(modEventBus);
         MobEffects.MOB_EFFECT_DEFERRED_REGISTER.register(modEventBus);
         modEventBus.addListener(this::setUp);
+        modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.CONFIG_SPEC);
         if (ModList.get().isLoaded("irons_spellbooks")) {
             IRONS_SPELL_BOOKS_LOADED = true;
             NeoForge.EVENT_BUS.register(EventHandler.Game.IronsSpellBooksEvents.class);
@@ -97,6 +101,9 @@ public class UltimateEnchantment {
 
     }
 
+    public static ResourceLocation id(String id) {
+        return ResourceLocation.fromNamespaceAndPath(MODID, id);
+    }
 
     public void setUp(FMLCommonSetupEvent event) {
         CommonConfig.staticLoad();
