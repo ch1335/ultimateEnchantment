@@ -9,6 +9,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
@@ -21,6 +22,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.common.MutableDataComponentHolder;
 import net.neoforged.neoforge.common.extensions.IItemStackExtension;
 import org.jetbrains.annotations.NotNull;
@@ -84,7 +86,7 @@ public abstract class ItemStackMixin implements IItemStackExtension, MutableData
 
     @Inject(method = "setDamageValue", at = @At("HEAD"), cancellable = true)
     private void setDamageValue(int damage, CallbackInfo ci) {
-        if (ItemEnchantmentHelper.getEnchantmentLevel((ItemStack) (Object) this, UEEnchantments.ETERNAL.getKey()) > 0) {
+        if (UEEnchantments.ETERNAL.getEnchantmentLevel((ItemStack) (Object) this, CommonHooks.resolveLookup(Registries.ENCHANTMENT)) > 0) {
             this.getItem().setDamage(ItemStack.class.cast(this), 0);
             ci.cancel();
         }
@@ -92,7 +94,7 @@ public abstract class ItemStackMixin implements IItemStackExtension, MutableData
 
     @Inject(method = "hurtAndBreak(ILnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;Ljava/util/function/Consumer;)V", at = @At("HEAD"), cancellable = true)
     private void hurtAndBreak(int p_220158_, ServerLevel p_346256_, LivingEntity p_220160_, Consumer<Item> p_348596_, CallbackInfo ci) {
-        if (ItemEnchantmentHelper.getEnchantmentLevel((ItemStack) (Object) this, UEEnchantments.ETERNAL.getKey()) > 0) {
+        if (UEEnchantments.ETERNAL.getEnchantmentLevel((ItemStack) (Object) this, CommonHooks.resolveLookup(Registries.ENCHANTMENT)) > 0) {
             this.getItem().setDamage(ItemStack.class.cast(this), 0);
             ci.cancel();
         }

@@ -74,6 +74,7 @@ public class EnchantmentBasic {
         effects = effectMapBuilder.build();
     }
 
+
     public int getEnchantmentLevel(ItemStack itemStack, Level level) {
         return getEnchantmentLevel(itemStack, level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT));
     }

@@ -15,7 +15,11 @@ import java.util.function.Supplier;
 
 public interface UEEnchantmentHelper {
     static Optional<Holder.Reference<Enchantment>> getEnchantment(ResourceKey<Enchantment> resourceKey) {
-        return Objects.requireNonNull(CommonHooks.resolveLookup(Registries.ENCHANTMENT)).get(resourceKey);
+        HolderLookup.RegistryLookup<Enchantment> lookup = CommonHooks.resolveLookup(Registries.ENCHANTMENT);
+        if (lookup == null) {
+            return Optional.empty();
+        }
+        return lookup.get(resourceKey);
     }
 
     static Optional<Holder.Reference<Enchantment>> getEnchantment(HolderLookup.Provider provider, ResourceKey<Enchantment> resourceKey) {
