@@ -58,6 +58,6 @@ public class UEEnchantmentEffectComponents {
 
     public static DeferredHolder<DataComponentType<?>, DataComponentType<HardenedManaComponent>> HARDENED_MANA = TYPES.register("hardened_mana", () -> DataComponentType.<HardenedManaComponent>builder().persistent(HardenedManaComponent.CODEC).build());
 
-    public static DeferredHolder<DataComponentType<?>, DataComponentType<CompoundTag>> FORMULA = TYPES.register("formula", () -> DataComponentType.<CompoundTag>builder().persistent(CompoundTag.CODEC).build());
+    public static DeferredHolder<DataComponentType<?>, DataComponentType<FormulaComponent>> FORMULA = TYPES.register("formula", () -> DataComponentType.<FormulaComponent>builder().persistent(FormulaComponent.CODEC).build());
 
 }

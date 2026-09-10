@@ -7,6 +7,7 @@ import com.chen1335.ultimateEnchantment.common.EventHandler;
 import com.chen1335.ultimateEnchantment.config.CommonConfig;
 import com.chen1335.ultimateEnchantment.config.ServerConfig;
 import com.chen1335.ultimateEnchantment.dataComponentType.UEDataComponentTypes;
+import com.chen1335.ultimateEnchantment.enchantment.Enchantments;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
 import com.chen1335.ultimateEnchantment.enchantment.effects.UEEnchantmentEffects;
 import com.chen1335.ultimateEnchantment.mobEffect.MobEffects;
@@ -26,6 +27,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforgespi.Environment;
@@ -83,6 +85,7 @@ public class UltimateEnchantment {
         AttachmentTypes.ATTACHMENT_TYPES.register(modEventBus);
         MobEffects.MOB_EFFECT_DEFERRED_REGISTER.register(modEventBus);
         modEventBus.addListener(this::setUp);
+        NeoForge.EVENT_BUS.addListener(this::ServerStartedEvent);
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.CONFIG_SPEC);
         if (ModList.get().isLoaded("irons_spellbooks")) {
             IRONS_SPELL_BOOKS_LOADED = true;
@@ -106,7 +109,16 @@ public class UltimateEnchantment {
     }
 
     public void setUp(FMLCommonSetupEvent event) {
+        Enchantments.init();
         CommonConfig.staticLoad();
+    }
+
+    public void ServerStartedEvent(ServerStartedEvent event) {
+        event.getServer().registryAccess().lookupOrThrow(Registries.ENCHANTMENT).listElements().forEach(r -> {
+            if (r.key().location().getNamespace().equals(MODID)) {
+
+            }
+        });
     }
 
     public static boolean isIronsSpellBooksLoaded() {

@@ -14,8 +14,8 @@
         "translate": "enchantment.ultimate_enchantment.eternal"
     },
     "effects": {
-        "ultimate_enchantment:parameter": {
-            "a": "a"
+        "ultimate_enchantment:formula": {
+            "a": "return a+b"
         }
     },
     "max_cost": {

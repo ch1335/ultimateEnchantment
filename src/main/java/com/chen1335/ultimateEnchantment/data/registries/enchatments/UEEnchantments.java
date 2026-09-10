@@ -163,8 +163,8 @@ public class UEEnchantments {
                         )
                 ).withSpecialEffect(UEEnchantmentEffectComponents.FORMULA.value(), Util.make(() -> {
                     CompoundTag compoundTag = new CompoundTag();
-                    compoundTag.putString("a","a");
-                    return compoundTag;
+                    compoundTag.putString("a", "return a+b");
+                    return FormulaComponent.fromTag(compoundTag);
                 }))
         );
 
