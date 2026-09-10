@@ -2,33 +2,39 @@ package com.chen1335.ultimateEnchantment.enchantment;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.common.Formula;
+import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
+import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.FormulaComponent;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.Encoder;
 import com.mojang.serialization.JsonOps;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.conditions.ICondition;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.script.SimpleBindings;
+import java.util.*;
 
 public class EnchantmentBasic {
     private final List<ICondition> conditions = new ArrayList<>();
-
+    private CapturedEnchantment captured = null;
     public final Map<String, Formula> formulas = new HashMap<>();
     protected final ResourceLocation id;
-
+    protected DataComponentMap effects;
     protected int anvil_cost = 1;
     protected int max_level = 1;
     protected final Component description;
@@ -39,6 +45,11 @@ public class EnchantmentBasic {
     protected Type<Item> primary_items = null;
     protected int weight = 1;
     protected Type<Enchantment> exclusive_set = null;
+
+    protected Object[] emptyArgs = new Object[]{};
+
+    protected final String descId;
+
     public EnchantmentBasic(String name) {
         this(UltimateEnchantment.id(name));
     }
@@ -46,10 +57,43 @@ public class EnchantmentBasic {
     public EnchantmentBasic(ResourceLocation id) {
         this.id = id;
         description = Component.translatable("enchantment.%s.%s".formatted(id.getNamespace(), id.getPath()));
+        DataComponentMap.Builder effectMapBuilder = DataComponentMap.builder();
+        registerFormula(formulas);
+        effectMapBuilder.set(UEEnchantmentEffectComponents.FORMULA, new FormulaComponent(formulas));
+        descId = "enchantment.%s.%s.specialDesc".formatted(id.getPath(), id.getNamespace());
+        effects = effectMapBuilder.build();
     }
 
-    protected void registerArg(String name, Formula formula) {
-        formulas.put(name, formula);
+    public boolean hasEnchantment(ItemStack itemStack, Level level) {
+        Optional<Holder.Reference<Enchantment>> enchantment = getEnchantment(level);
+        return enchantment.filter(reference -> itemStack.getEnchantmentLevel(reference) > 0).isPresent();
+    }
+
+    public int getEnchantmentLevel(ItemStack itemStack, Level level) {
+        Optional<Holder.Reference<Enchantment>> enchantment = getEnchantment(level);
+        return enchantment.map(itemStack::getEnchantmentLevel).orElse(0);
+    }
+
+    public Optional<Holder.Reference<Enchantment>> getEnchantment(Level level) {
+        if (captured != null) {
+            return captured.optional;
+        }
+        Optional<Holder.Reference<Enchantment>> orThrow = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).get(createKey());
+        captured = new CapturedEnchantment(orThrow);
+        return orThrow;
+    }
+
+    public static SimpleBindings buildBindings(int lvl) {
+        SimpleBindings bindings = new SimpleBindings();
+        bindings.put("lvl", lvl);
+        return bindings;
+    }
+
+    protected void registerFormula(Map<String, Formula> formulas) {
+
+    }
+
+    protected void registerEffect(DataComponentMap.Builder builder) {
 
     }
 
@@ -62,6 +106,9 @@ public class EnchantmentBasic {
         JsonObject object = new JsonObject();
         object.addProperty("anvil_cost", anvil_cost);
         object.add("description", ComponentSerialization.CODEC.encodeStart(ops, description).getOrThrow());
+
+        object.add("effects", EnchantmentEffectComponents.CODEC.encodeStart(ops, effects).getOrThrow());
+
         if (exclusive_set != null) {
             object.add("exclusive_set", Type.ENCODER.encodeStart(ops, exclusive_set).getOrThrow());
         }
@@ -78,6 +125,18 @@ public class EnchantmentBasic {
         }
         object.addProperty("weight", weight);
         return object;
+    }
+
+    public MutableComponent getDesc(int level) {
+        return Component.translatable(getDescId());
+    }
+
+    public String getDescId() {
+        return descId;
+    }
+
+    public ResourceLocation getId() {
+        return id;
     }
 
     public static abstract class Type<S> {
@@ -112,5 +171,9 @@ public class EnchantmentBasic {
                 list = List.of(items);
             }
         }
+    }
+
+    private record CapturedEnchantment(Optional<Holder.Reference<Enchantment>> optional) {
+        public static final CapturedEnchantment EMPTY = new CapturedEnchantment(Optional.empty());
     }
 }

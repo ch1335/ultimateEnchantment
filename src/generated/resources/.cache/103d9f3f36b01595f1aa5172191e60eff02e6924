@@ -1,4 +1,4 @@
-// 1.21.1	2026-09-10T01:41:14.2720878	Registries
+// 1.21.1	2026-09-10T17:13:40.8102311	Registries
 826973df28d1d8b5f0b0fcfe79919fd15c31ab80 data/ultimate_enchantment/damage_type/tear.json
 138af8c3257515ebd8a05d98c914ff029eaa777c data/ultimate_enchantment/enchantment/cut_down.json
 0ff126416cdb610c7042f460907e7b8f56bc9399 data/ultimate_enchantment/enchantment/double_hook.json
@@ -7,7 +7,6 @@
 976a1f12932f2e838cfa363e2a98971fed3ca180 data/ultimate_enchantment/enchantment/kinetic_energy.json
 0348d51d91e2c09d30ecf5c46b3172878ee34052 data/ultimate_enchantment/enchantment/last_stand.json
 89558ef04a084fe20dca4b30149b1c4a75bef116 data/ultimate_enchantment/enchantment/legend.json
-cffd92f0496cc51e9ad0cafc914b498314d81d71 data/ultimate_enchantment/enchantment/lethal_tempo.json
 e60d17a9b0fcd2ba85e9ed6a09dd717c58871407 data/ultimate_enchantment/enchantment/life_steal.json
 065dce08d3d399f020750a8f42415c6b8c50bc92 data/ultimate_enchantment/enchantment/mana_steal.json
 e43ee4c0d39d1e952f3d8c3aea6d881a57d81e67 data/ultimate_enchantment/enchantment/over_grow.json

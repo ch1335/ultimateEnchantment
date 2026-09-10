@@ -132,21 +132,21 @@ public class UEEnchantments {
                 ).withSpecialEffect(UEEnchantmentEffectComponents.THUNDER_BOLT.get(), new ThunderBoltComponent(0.1f, 0.05f, 2))
         );
 
-        register(
-                pContext,
-                LETHAL_TEMPO,
-                Enchantment.enchantment(
-                                Enchantment.definition(
-                                        itemHolderGetter.getOrThrow(ItemTags.BOW_ENCHANTABLE),
-                                        3,
-                                        5,
-                                        Enchantment.constantCost(80),
-                                        Enchantment.constantCost(150),
-                                        1
-                                )
-                        ).withSpecialEffect(UEEnchantmentEffectComponents.LETHAL_TEMPO.get(), new LethalTempoComponent(0.2f, 0.2f, 0.4f, 200))
-                        .exclusiveWith(enchantmentHolderGetter.getOrThrow(UEEnchantmentTags.ULTIMATE_ENCHANTMENT_EXCLUSIVE))
-        );
+//        register(
+//                pContext,
+//                LETHAL_TEMPO,
+//                Enchantment.enchantment(
+//                                Enchantment.definition(
+//                                        itemHolderGetter.getOrThrow(ItemTags.BOW_ENCHANTABLE),
+//                                        3,
+//                                        5,
+//                                        Enchantment.constantCost(80),
+//                                        Enchantment.constantCost(150),
+//                                        1
+//                                )
+//                        ).withSpecialEffect(UEEnchantmentEffectComponents.LETHAL_TEMPO.get(), new LethalTempoComponent(0.2f, 0.2f, 0.4f, 200))
+//                        .exclusiveWith(enchantmentHolderGetter.getOrThrow(UEEnchantmentTags.ULTIMATE_ENCHANTMENT_EXCLUSIVE))
+//        );
 
 
         register(

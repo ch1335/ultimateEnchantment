@@ -1,11 +1,14 @@
 package com.chen1335.ultimateEnchantment.client;
 
-import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
-import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.*;
-import com.chen1335.ultimateEnchantment.enchantment.effects.UltimateEnchantment.LastStandEffect;
 import com.chen1335.ultimateEnchantment.data.registries.enchatments.ApothicEnchantingEnchantments;
 import com.chen1335.ultimateEnchantment.data.registries.enchatments.IronsSpellBooksEnchantments;
 import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantments;
+import com.chen1335.ultimateEnchantment.enchantment.EnchantmentBasic;
+import com.chen1335.ultimateEnchantment.enchantment.Enchantments;
+import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
+import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.*;
+import com.chen1335.ultimateEnchantment.enchantment.effects.UltimateEnchantment.LastStandEffect;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.LethalTempo;
 import dev.shadowsoffire.apothic_attributes.api.ALObjects;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -27,6 +30,8 @@ import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 
+import javax.script.SimpleBindings;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,13 +47,14 @@ public class EnchantmentSpecialDesc {
             return null;
         }
 
-        for (Map.Entry<ResourceKey<Enchantment>, BiFunction<Holder<Enchantment>, Integer, MutableComponent>> entry : DESC.entrySet()) {
+        for (Map.Entry<ResourceKey<Enchantment>, EnchantmentBasic> entry : Enchantments.MAP.entrySet()) {
             if (entry.getKey().equals(resourceKey)) {
-                MutableComponent component = entry.getValue().apply(holder, level);
+                MutableComponent component = entry.getValue().getDesc(level);
                 ComponentUtils.mergeStyles(component, Style.EMPTY.withColor(ChatFormatting.DARK_GRAY));
                 return component;
             }
         }
+
 
         return null;
     }
@@ -156,9 +162,13 @@ public class EnchantmentSpecialDesc {
             return Component.translatable("enchantment.ultimate_enchantment.tear.specialDesc", 1 + level, component.damageAdd() * 100, component.totalHealthDamage() * 100).withStyle(ChatFormatting.LIGHT_PURPLE);
         });
         DESC.put(UEEnchantments.LETHAL_TEMPO, (holder, level) -> {
-            LethalTempoComponent component = Objects.requireNonNull(holder.value().effects().get(UEEnchantmentEffectComponents.LETHAL_TEMPO.get()));
-
-            return Component.translatable("enchantment.ultimate_enchantment.lethal_tempo.specialDesc", component.additionHitDamage() * 100, component.addChanceOnHit() * 100, level * component.maxChancePerLevel() * 100, format((float) component.keepTime() / 20, 1)).withStyle(ChatFormatting.LIGHT_PURPLE);
+            SimpleBindings simpleBindings = new SimpleBindings();
+            simpleBindings.put("lvl", level);
+            return Component.translatable("enchantment.ultimate_enchantment.lethal_tempo.specialDesc",
+                    LethalTempo.DAMAGE_MUL.toComponent(simpleBindings, 100),
+                    LethalTempo.CHANCE_PER_HIT.toComponent(simpleBindings, 100),
+                    LethalTempo.MAX_CHANCE.toComponent(simpleBindings, 100),
+                    LethalTempo.KEEP_TIME.toComponent(simpleBindings, 0.05F)).withStyle(ChatFormatting.LIGHT_PURPLE);
         });
 
         DESC.put(UEEnchantments.QUICK_BAIT, (holder, level) -> {
@@ -183,10 +193,10 @@ public class EnchantmentSpecialDesc {
     }
 
     private static String format(float f) {
-        return String.format("%.1f", f);
+        return format(f, 1);
     }
 
-    private static String format(float f, int index) {
-        return String.format("%." + index + "f", f);
+    private static String format(float value, int i) {
+        return new BigDecimal(String.format("%." + i + "f", value)).stripTrailingZeros().toPlainString();
     }
 }

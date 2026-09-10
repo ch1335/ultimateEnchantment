@@ -4,11 +4,13 @@ import com.chen1335.ultimateEnchantment.API.AttachmentTypes;
 import com.chen1335.ultimateEnchantment.API.objects.Conditions;
 import com.chen1335.ultimateEnchantment.API.objects.LootItemConditions;
 import com.chen1335.ultimateEnchantment.common.EventHandler;
+import com.chen1335.ultimateEnchantment.common.Formula;
 import com.chen1335.ultimateEnchantment.config.CommonConfig;
 import com.chen1335.ultimateEnchantment.config.ServerConfig;
 import com.chen1335.ultimateEnchantment.dataComponentType.UEDataComponentTypes;
 import com.chen1335.ultimateEnchantment.enchantment.Enchantments;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
+import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.FormulaComponent;
 import com.chen1335.ultimateEnchantment.enchantment.effects.UEEnchantmentEffects;
 import com.chen1335.ultimateEnchantment.mobEffect.MobEffects;
 import com.chen1335.ultimateEnchantment.tags.UEEnchantmentTags;
@@ -35,6 +37,8 @@ import org.slf4j.Logger;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+import java.util.Map;
 
 @Mod(UltimateEnchantment.MODID)
 public class UltimateEnchantment {
@@ -116,7 +120,19 @@ public class UltimateEnchantment {
     public void ServerStartedEvent(ServerStartedEvent event) {
         event.getServer().registryAccess().lookupOrThrow(Registries.ENCHANTMENT).listElements().forEach(r -> {
             if (r.key().location().getNamespace().equals(MODID)) {
-
+                Enchantments.getEnchantment(r.key()).ifPresent(old -> {
+                    FormulaComponent loaded = r.value().effects().get(UEEnchantmentEffectComponents.FORMULA.value());
+                    if (loaded != null) {
+                        Map<String, Formula> formulas = loaded.formulas();
+                        old.formulas.forEach((s, formula) -> {
+                            try {
+                                formula.compile(formulas.getOrDefault(s, formula).getFormula());
+                            } catch (ScriptException e) {
+                                throw new RuntimeException(e);
+                            }
+                        });
+                    }
+                });
             }
         });
     }

@@ -3,11 +3,13 @@ package com.chen1335.ultimateEnchantment.common;
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import net.minecraft.network.chat.Component;
 
 import javax.script.Bindings;
 import javax.script.Compilable;
 import javax.script.CompiledScript;
 import javax.script.ScriptException;
+import java.math.BigDecimal;
 
 public class Formula {
     private String formula;
@@ -24,7 +26,6 @@ public class Formula {
     );
 
     public Formula(String formula) {
-        this.formula = formula;
         try {
             compile(formula);
         } catch (ScriptException e) {
@@ -50,11 +51,30 @@ public class Formula {
         return formula;
     }
 
-    public double calculate(Bindings bindings) throws ScriptException {
-        Object result = compile.eval(bindings);
-        if (result == null) {
-            throw new ScriptException("公式没有返回值(缺少 return 且不是表达式): " + formula);
+    public float calculate(Bindings bindings) {
+        Object result = null;
+        try {
+            result = compile.eval(bindings);
+            if (result == null) {
+                throw new ScriptException("公式没有返回值(缺少 return 且不是表达式): " + formula);
+            }
+        } catch (ScriptException e) {
+            throw new RuntimeException(e);
         }
-        return ((Number) result).doubleValue();
+
+        return ((Number) result).floatValue();
+    }
+
+    public Component toComponent(Bindings bindings, float scale) {
+        float v = calculate(bindings) * scale;
+        return Component.literal(format(v));
+    }
+
+    private static String format(float f) {
+        return format(f, 1);
+    }
+
+    private static String format(float value, int i) {
+        return new BigDecimal(String.format("%." + i + "f", value)).stripTrailingZeros().toPlainString();
     }
 }
