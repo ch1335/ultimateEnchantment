@@ -1,6 +1,7 @@
 package com.chen1335.ultimateEnchantment.enchantment;
 
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.LethalTempo;
+import com.google.gson.JsonObject;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.enchantment.Enchantment;
 
@@ -14,7 +15,9 @@ public class Enchantments {
 
     private static <T extends EnchantmentBasic> T register(T enchantment) {
         MAP.put(enchantment.createKey(), enchantment);
-        return null;
+        JsonObject json = enchantment.toJson();
+
+        return enchantment;
     }
 
     public static void init() {
