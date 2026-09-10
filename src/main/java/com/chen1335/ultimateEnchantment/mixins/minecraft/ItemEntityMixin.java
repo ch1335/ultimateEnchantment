@@ -1,6 +1,6 @@
 package com.chen1335.ultimateEnchantment.mixins.minecraft;
 
-import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantments;
+import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantmentsDataGen;
 import com.chen1335.ultimateEnchantment.utils.UEEnchantmentHelper;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -32,7 +32,7 @@ public abstract class ItemEntityMixin extends Entity {
 
     @Inject(method = "<init>(Lnet/minecraft/world/level/Level;DDDLnet/minecraft/world/item/ItemStack;DDD)V", at = @At("RETURN"))
     private void init(Level pLevel, double pPosX, double pPosY, double pPosZ, ItemStack pItemStack, double pDeltaX, double pDeltaY, double pDeltaZ, CallbackInfo ci) {
-        UEEnchantmentHelper.getEnchantment(UEEnchantments.ETERNAL).ifPresent(holder -> {
+        UEEnchantmentHelper.getEnchantment(UEEnchantmentsDataGen.ETERNAL).ifPresent(holder -> {
             if (pItemStack.getEnchantmentLevel(holder) > 0) {
                 this.lifespan = Integer.MAX_VALUE;
                 this.health = Integer.MAX_VALUE;
@@ -42,7 +42,7 @@ public abstract class ItemEntityMixin extends Entity {
 
     @Inject(method = "hurt", at = @At("HEAD"), cancellable = true)
     private void hurt(DamageSource pSource, float pAmount, CallbackInfoReturnable<Boolean> cir) {
-        UEEnchantmentHelper.getEnchantment(UEEnchantments.ETERNAL).ifPresent(holder -> {
+        UEEnchantmentHelper.getEnchantment(UEEnchantmentsDataGen.ETERNAL).ifPresent(holder -> {
             if (getItem().getEnchantmentLevel(holder) > 0) {
                 cir.setReturnValue(false);
             }

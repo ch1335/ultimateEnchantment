@@ -3,7 +3,7 @@ package com.chen1335.ultimateEnchantment.data.tags;
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.data.registries.enchatments.ApothicEnchantingEnchantments;
 import com.chen1335.ultimateEnchantment.data.registries.enchatments.IronsSpellBooksEnchantments;
-import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantments;
+import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantmentsDataGen;
 import com.chen1335.ultimateEnchantment.tags.UEEnchantmentTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -36,7 +36,7 @@ public class UEEnchantmentTagsProvider extends EnchantmentTagsProvider {
 
         tag(EnchantmentTags.IN_ENCHANTING_TABLE)
                 .addTag(UEEnchantmentTags.TRADEABLE_LEGENDARY_ENCHANTMENT)
-                .addOptional(UEEnchantments.VANQUISHER.location());
+                .addOptional(UEEnchantmentsDataGen.VANQUISHER.location());
 
         tag(EnchantmentTags.DOUBLE_TRADE_PRICE)
                 .addTag(UEEnchantmentTags.TRADEABLE_LEGENDARY_ENCHANTMENT);
@@ -51,16 +51,16 @@ public class UEEnchantmentTagsProvider extends EnchantmentTagsProvider {
                 .addTag(UEEnchantmentTags.COMMON_ENCHANTMENT);
 
         tag(UEEnchantmentTags.LIFE_STEAL_ENCHANTMENT)
-                .addOptional(UEEnchantments.LIFE_STEAL.location());
+                .addOptional(UEEnchantmentsDataGen.LIFE_STEAL.location());
 
         tag(UEEnchantmentTags.ULTIMATE_ENCHANTMENT)
-                .addOptional(UEEnchantments.ULTIMATE.location())
-                .addOptional(UEEnchantments.LEGEND.location())
-                .addOptional(UEEnchantments.VANQUISHER.location())
-                .addOptional(UEEnchantments.LAST_STAND.location())
-                .addOptional(UEEnchantments.ETERNAL.location())
-                .addOptional(UEEnchantments.TEAR.location())
-                .addOptional(UEEnchantments.LETHAL_TEMPO.location());
+                .addOptional(UEEnchantmentsDataGen.ULTIMATE.location())
+                .addOptional(UEEnchantmentsDataGen.LEGEND.location())
+                .addOptional(UEEnchantmentsDataGen.VANQUISHER.location())
+                .addOptional(UEEnchantmentsDataGen.LAST_STAND.location())
+                .addOptional(UEEnchantmentsDataGen.ETERNAL.location())
+                .addOptional(UEEnchantmentsDataGen.TEAR.location())
+                .addOptional(UEEnchantmentsDataGen.LETHAL_TEMPO.location());
 
         tag(UEEnchantmentTags.ULTIMATE_ENCHANTMENT_EXCLUSIVE)
                 .addTag(UEEnchantmentTags.ULTIMATE_ENCHANTMENT);
@@ -71,20 +71,20 @@ public class UEEnchantmentTagsProvider extends EnchantmentTagsProvider {
                 .addTag(UEEnchantmentTags.UN_TRADEABLE_LEGENDARY_ENCHANTMENT);
 
         tag(UEEnchantmentTags.TRADEABLE_LEGENDARY_ENCHANTMENT)
-                .addOptional(UEEnchantments.CUT_DOWN.location())
-                .addOptional(UEEnchantments.OVER_GROW.location())
-                .addOptional(UEEnchantments.KINETIC_ENERGY.location())
-                .addOptional(UEEnchantments.DOUBLE_HOOK.location())
-                .addOptional(UEEnchantments.QUICK_BAIT.location());
+                .addOptional(UEEnchantmentsDataGen.CUT_DOWN.location())
+                .addOptional(UEEnchantmentsDataGen.OVER_GROW.location())
+                .addOptional(UEEnchantmentsDataGen.KINETIC_ENERGY.location())
+                .addOptional(UEEnchantmentsDataGen.DOUBLE_HOOK.location())
+                .addOptional(UEEnchantmentsDataGen.QUICK_BAIT.location());
 
 
         tag(UEEnchantmentTags.UN_TRADEABLE_LEGENDARY_ENCHANTMENT)
-                .addOptional(UEEnchantments.THUNDER_BOLT.location());
+                .addOptional(UEEnchantmentsDataGen.THUNDER_BOLT.location());
 
         tag(UEEnchantmentTags.COMMON_ENCHANTMENT)
-                .addOptional(UEEnchantments.LIFE_STEAL.location())
-                .addOptional(UEEnchantments.SMELTING.location())
-                .addOptional(UEEnchantments.QUICK_LATCH.location());
+                .addOptional(UEEnchantmentsDataGen.LIFE_STEAL.location())
+                .addOptional(UEEnchantmentsDataGen.SMELTING.location())
+                .addOptional(UEEnchantmentsDataGen.QUICK_LATCH.location());
 
         tag(UEEnchantmentTags.ENCHANTMENTS)
                 .addTag(UEEnchantmentTags.ULTIMATE_ENCHANTMENT)
@@ -96,9 +96,9 @@ public class UEEnchantmentTagsProvider extends EnchantmentTagsProvider {
                 .addTag(UEEnchantmentTags.LEGENDARY_ENCHANTMENT);
 
         tag(UEEnchantmentTags.END_CITY_LOOTABLE)
-                .addOptional(UEEnchantments.TEAR.location())
-                .addOptional(UEEnchantments.LETHAL_TEMPO.location())
-                .addOptional(UEEnchantments.VANQUISHER.location());
+                .addOptional(UEEnchantmentsDataGen.TEAR.location())
+                .addOptional(UEEnchantmentsDataGen.LETHAL_TEMPO.location())
+                .addOptional(UEEnchantmentsDataGen.VANQUISHER.location());
 
         this.addApothicEnchantingAdditionTag(pProvider);
         this.addIronsSpellBooksTag(pProvider);

@@ -10,6 +10,7 @@ import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.Encoder;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -31,6 +32,7 @@ import java.util.*;
 
 public class EnchantmentBasic {
     private final List<ICondition> conditions = new ArrayList<>();
+    private final ResourceKey<Enchantment> key;
     private CapturedEnchantment captured = null;
     public final Map<String, Formula> formulas = new HashMap<>();
     protected final ResourceLocation id;
@@ -57,28 +59,37 @@ public class EnchantmentBasic {
     public EnchantmentBasic(ResourceLocation id) {
         this.id = id;
         description = Component.translatable("enchantment.%s.%s".formatted(id.getNamespace(), id.getPath()));
+        descId = "enchantment.%s.%s.specialDesc".formatted(id.getNamespace(), id.getPath());
+        key = ResourceKey.create(Registries.ENCHANTMENT, id);
         DataComponentMap.Builder effectMapBuilder = DataComponentMap.builder();
         registerFormula(formulas);
-        effectMapBuilder.set(UEEnchantmentEffectComponents.FORMULA, new FormulaComponent(formulas));
-        descId = "enchantment.%s.%s.specialDesc".formatted(id.getPath(), id.getNamespace());
+        if (!formulas.isEmpty()) {
+            effectMapBuilder.set(UEEnchantmentEffectComponents.FORMULA, new FormulaComponent(formulas));
+        }
+        registerEffect(effectMapBuilder);
         effects = effectMapBuilder.build();
     }
 
-    public boolean hasEnchantment(ItemStack itemStack, Level level) {
-        Optional<Holder.Reference<Enchantment>> enchantment = getEnchantment(level);
-        return enchantment.filter(reference -> itemStack.getEnchantmentLevel(reference) > 0).isPresent();
-    }
-
     public int getEnchantmentLevel(ItemStack itemStack, Level level) {
-        Optional<Holder.Reference<Enchantment>> enchantment = getEnchantment(level);
+        Optional<Holder.Reference<Enchantment>> enchantment;
+        if (captured == null) {
+            enchantment = getEnchantment(level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT));
+        } else {
+            enchantment = captured.optional();
+        }
         return enchantment.map(itemStack::getEnchantmentLevel).orElse(0);
     }
 
-    public Optional<Holder.Reference<Enchantment>> getEnchantment(Level level) {
+    public int getEnchantmentLevel(ItemStack itemStack, HolderLookup.RegistryLookup<Enchantment> lookup) {
+        Optional<Holder.Reference<Enchantment>> enchantment = getEnchantment(lookup);
+        return enchantment.map(itemStack::getEnchantmentLevel).orElse(0);
+    }
+
+    public Optional<Holder.Reference<Enchantment>> getEnchantment(HolderLookup.RegistryLookup<Enchantment> lookup) {
         if (captured != null) {
             return captured.optional;
         }
-        Optional<Holder.Reference<Enchantment>> orThrow = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).get(createKey());
+        Optional<Holder.Reference<Enchantment>> orThrow = lookup.get(getKey());
         captured = new CapturedEnchantment(orThrow);
         return orThrow;
     }
@@ -97,8 +108,8 @@ public class EnchantmentBasic {
 
     }
 
-    public ResourceKey<Enchantment> createKey() {
-        return ResourceKey.create(Registries.ENCHANTMENT, id);
+    public ResourceKey<Enchantment> getKey() {
+        return key;
     }
 
     public JsonObject toJson() {
@@ -138,6 +149,7 @@ public class EnchantmentBasic {
     public ResourceLocation getId() {
         return id;
     }
+
 
     public static abstract class Type<S> {
         protected static final Encoder<Type<?>> ENCODER = new Encoder<>() {

@@ -32,8 +32,6 @@ public class UEEnchantmentEffectComponents {
 
     public static DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> QUICK_LATCH = TYPES.register("quick_latch", () -> DataComponentType.<Unit>builder().persistent(Unit.CODEC).build());
 
-    public static DeferredHolder<DataComponentType<?>, DataComponentType<LevelBasedValue>> ULTIMATE = TYPES.register("ultimate", () -> DataComponentType.<LevelBasedValue>builder().persistent(LevelBasedValue.CODEC).build());
-
     public static DeferredHolder<DataComponentType<?>, DataComponentType<LegendComponent>> LEGEND = TYPES.register("legend", () -> DataComponentType.<LegendComponent>builder().persistent(LegendComponent.CODEC).build());
 
     public static DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> SMELTING = TYPES.register("smelting", () -> DataComponentType.<Unit>builder().persistent(Unit.CODEC).build());
@@ -42,9 +40,6 @@ public class UEEnchantmentEffectComponents {
 
     public static DeferredHolder<DataComponentType<?>, DataComponentType<ManaStealComponent>> MANA_STEAL = TYPES.register("mana_steal", () -> DataComponentType.<ManaStealComponent>builder().persistent(ManaStealComponent.CODEC).build());
 
-    public static DeferredHolder<DataComponentType<?>, DataComponentType<CutDownComponent>> CUT_DOWN = TYPES.register("cut_down", () -> DataComponentType.<CutDownComponent>builder().persistent(CutDownComponent.CODEC).build());
-
-    public static DeferredHolder<DataComponentType<?>, DataComponentType<LethalTempoComponent>> LETHAL_TEMPO = TYPES.register("lethal_tempo", () -> DataComponentType.<LethalTempoComponent>builder().persistent(LethalTempoComponent.CODEC).build());
 
     public static DeferredHolder<DataComponentType<?>, DataComponentType<ThunderBoltComponent>> THUNDER_BOLT = TYPES.register("thunder_bolt", () -> DataComponentType.<ThunderBoltComponent>builder().persistent(ThunderBoltComponent.CODEC).build());
 

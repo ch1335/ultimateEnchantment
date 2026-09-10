@@ -1,6 +1,6 @@
 package com.chen1335.ultimateEnchantment.mixins.minecraft;
 
-import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantments;
+import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantmentsDataGen;
 import com.chen1335.ultimateEnchantment.mixins.MinecraftMixinUtils;
 import com.chen1335.ultimateEnchantment.utils.UEEnchantmentHelper;
 import net.minecraft.core.Holder;
@@ -23,7 +23,7 @@ public class EnchantmentMixin {
 
     @Inject(method = "isSupportedItem", at = @At("RETURN"), cancellable = true)
     private void isSupportedItem(ItemStack item, CallbackInfoReturnable<Boolean> cir) {
-        UEEnchantmentHelper.getEnchantment(UEEnchantments.ETERNAL).ifPresent(holder -> {
+        UEEnchantmentHelper.getEnchantment(UEEnchantmentsDataGen.ETERNAL).ifPresent(holder -> {
             if (holder.value() == (Object) this) {
                 cir.setReturnValue(true);
             }

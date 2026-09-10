@@ -8,7 +8,7 @@ import com.chen1335.ultimateEnchantment.common.Formula;
 import com.chen1335.ultimateEnchantment.config.CommonConfig;
 import com.chen1335.ultimateEnchantment.config.ServerConfig;
 import com.chen1335.ultimateEnchantment.dataComponentType.UEDataComponentTypes;
-import com.chen1335.ultimateEnchantment.enchantment.Enchantments;
+import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.FormulaComponent;
 import com.chen1335.ultimateEnchantment.enchantment.effects.UEEnchantmentEffects;
@@ -113,14 +113,14 @@ public class UltimateEnchantment {
     }
 
     public void setUp(FMLCommonSetupEvent event) {
-        Enchantments.init();
+        UEEnchantments.init();
         CommonConfig.staticLoad();
     }
 
     public void ServerStartedEvent(ServerStartedEvent event) {
         event.getServer().registryAccess().lookupOrThrow(Registries.ENCHANTMENT).listElements().forEach(r -> {
             if (r.key().location().getNamespace().equals(MODID)) {
-                Enchantments.getEnchantment(r.key()).ifPresent(old -> {
+                UEEnchantments.getEnchantment(r.key()).ifPresent(old -> {
                     FormulaComponent loaded = r.value().effects().get(UEEnchantmentEffectComponents.FORMULA.value());
                     if (loaded != null) {
                         Map<String, Formula> formulas = loaded.formulas();

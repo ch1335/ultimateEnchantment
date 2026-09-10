@@ -39,9 +39,9 @@ public class UELootTableProvider extends LootTableProvider {
 //                    LootTable.lootTable().withPool(
 //                            LootPool.lootPool().setRolls(new ConstantValue(1))
 //                                    .add(EmptyLootItem.emptyItem().setWeight(30))
-//                                    .add(LootItem.lootTableItem(Items.BOOK).setWeight(10).apply(new SetEnchantmentsFunction.Builder().withEnchantment(provider.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(UEEnchantments.LETHAL_TEMPO), UniformGenerator.between(1, 2))))
-//                                    .add(LootItem.lootTableItem(Items.BOOK).setWeight(10).apply(new SetEnchantmentsFunction.Builder().withEnchantment(provider.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(UEEnchantments.VANQUISHER), UniformGenerator.between(1, 2))))
-//                                    .add(LootItem.lootTableItem(Items.BOOK).setWeight(10).apply(new SetEnchantmentsFunction.Builder().withEnchantment(provider.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(UEEnchantments.TEAR), UniformGenerator.between(1, 2))))
+//                                    .add(LootItem.lootTableItem(Items.BOOK).setWeight(10).apply(new SetEnchantmentsFunction.Builder().withEnchantment(provider.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(UEEnchantmentsDataGen.LETHAL_TEMPO), UniformGenerator.between(1, 2))))
+//                                    .add(LootItem.lootTableItem(Items.BOOK).setWeight(10).apply(new SetEnchantmentsFunction.Builder().withEnchantment(provider.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(UEEnchantmentsDataGen.VANQUISHER), UniformGenerator.between(1, 2))))
+//                                    .add(LootItem.lootTableItem(Items.BOOK).setWeight(10).apply(new SetEnchantmentsFunction.Builder().withEnchantment(provider.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(UEEnchantmentsDataGen.TEAR), UniformGenerator.between(1, 2))))
 //                    )
 //            );
 

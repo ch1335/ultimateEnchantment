@@ -1,7 +1,7 @@
 package com.chen1335.ultimateEnchantment.mixins.minecraft;
 
-import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
-import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantments;
+import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.Ultimate;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -22,9 +22,9 @@ public class ItemEnchantmentsMixin {
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void init(Object2IntOpenHashMap<Holder<Enchantment>> enchantments, boolean showInTooltip, CallbackInfo ci) {
-        enchantments.forEach((enchantmentHolder, integer) -> {
-            if (enchantmentHolder != null && enchantmentHolder.is(UEEnchantments.ULTIMATE)) {
-                ue$addLevel = (int) enchantmentHolder.value().effects().get(UEEnchantmentEffectComponents.ULTIMATE.get()).calculate(integer);
+        enchantments.forEach((enchantmentHolder, lvl) -> {
+            if (enchantmentHolder != null && enchantmentHolder.is(UEEnchantments.ULTIMATE.getKey())) {
+                ue$addLevel = Math.round(Ultimate.LEVEL_ADD.calculate(Ultimate.buildBindings(lvl)));
             }
         });
     }
@@ -32,7 +32,7 @@ public class ItemEnchantmentsMixin {
     @ModifyArgs(method = "addToTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/Enchantment;getFullname(Lnet/minecraft/core/Holder;I)Lnet/minecraft/network/chat/Component;"))
     private void addToTooltip(Args args) {
         Holder<Enchantment> holder = args.get(0);
-        if (!holder.value().effects().has(UEEnchantmentEffectComponents.ULTIMATE.value()) && (int) args.get(1) > 0 && holder.value().getMaxLevel() > 1) {
+        if (!holder.is(UEEnchantments.ULTIMATE.getKey()) && (int) args.get(1) > 0 && holder.value().getMaxLevel() > 1) {
             args.set(1, (int) args.get(1) + ue$addLevel);
         }
     }

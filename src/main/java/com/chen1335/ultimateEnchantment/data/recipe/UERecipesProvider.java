@@ -18,8 +18,8 @@ public class UERecipesProvider extends VanillaRecipeProvider {
 
     @Override
     protected void buildRecipes(@NotNull RecipeOutput recipeOutput, HolderLookup.@NotNull Provider holderLookup) {
-//        Holder<Enchantment> eternal = holderLookup.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(UEEnchantments.ETERNAL);
-//        Holder<Enchantment> mending = holderLookup.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.MENDING);
+//        Holder<Enchantment> eternal = holderLookup.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(UEEnchantmentsDataGen.ETERNAL);
+//        Holder<Enchantment> mending = holderLookup.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(UEEnchantmentsDataGen.MENDING);
 //
 //        ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
 //        mutable.upgrade(mending, 1);

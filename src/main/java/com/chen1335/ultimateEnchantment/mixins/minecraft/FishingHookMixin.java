@@ -1,7 +1,7 @@
 package com.chen1335.ultimateEnchantment.mixins.minecraft;
 
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
-import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantments;
+import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantmentsDataGen;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.registries.Registries;
@@ -34,7 +34,7 @@ public abstract class FishingHookMixin {
     private void init(Player player, Level level, int luck, int lureSpeed, CallbackInfo ci) {
 
         if (player != null) {
-            player.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolder(UEEnchantments.QUICK_BAIT).ifPresent(holder -> {
+            player.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolder(UEEnchantmentsDataGen.QUICK_BAIT).ifPresent(holder -> {
                 ItemStack rod = null;
                 if (player.getMainHandItem().is(ItemTags.FISHING_ENCHANTABLE)) {
                     rod = player.getMainHandItem();

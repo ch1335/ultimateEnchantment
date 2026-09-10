@@ -1,7 +1,7 @@
 package com.chen1335.ultimateEnchantment.client;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
-import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantments;
+import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantmentsDataGen;
 import com.chen1335.ultimateEnchantment.utils.UEEnchantmentHelper;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
@@ -21,7 +21,7 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public static void LivingEntityUseItemEvent$Start(LivingEntityUseItemEvent.Start event) {
-        UEEnchantmentHelper.runIfEnchantmentExist(UEEnchantments.QUICK_LATCH, holder -> {
+        UEEnchantmentHelper.runIfEnchantmentExist(UEEnchantmentsDataGen.QUICK_LATCH, holder -> {
             if (event.getItem().getEnchantmentLevel(holder) > 0) {
                 Minecraft.getInstance().rightClickDelay = 0;
             }

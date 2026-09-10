@@ -66,8 +66,12 @@ public class Formula {
     }
 
     public Component toComponent(Bindings bindings, float scale) {
+        return toComponent(bindings, scale, 1);
+    }
+
+    public Component toComponent(Bindings bindings, float scale, int i) {
         float v = calculate(bindings) * scale;
-        return Component.literal(format(v));
+        return Component.literal(format(v, i));
     }
 
     private static String format(float f) {

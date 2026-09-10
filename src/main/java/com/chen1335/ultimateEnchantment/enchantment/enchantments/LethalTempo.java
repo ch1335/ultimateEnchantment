@@ -5,11 +5,12 @@ import com.chen1335.ultimateEnchantment.AttachmentDatas.UEProjectileData;
 import com.chen1335.ultimateEnchantment.common.Formula;
 import com.chen1335.ultimateEnchantment.dataComponentType.UEDataComponentTypes;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentBasic;
-import com.chen1335.ultimateEnchantment.enchantment.Enchantments;
+import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IItemStackMixin;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IUEEntityExtension;
 import com.chen1335.ultimateEnchantment.tags.UEEnchantmentTags;
 import com.chen1335.ultimateEnchantment.utils.SimpleSchedule;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.tags.ItemTags;
@@ -57,17 +58,18 @@ public class LethalTempo extends EnchantmentBasic {
     public MutableComponent getDesc(int level) {
         SimpleBindings simpleBindings = buildBindings(level);
         return Component.translatable(getDescId(),
-                LethalTempo.DAMAGE_MUL.toComponent(simpleBindings, 100),
-                LethalTempo.CHANCE_PER_HIT.toComponent(simpleBindings, 100),
-                LethalTempo.MAX_CHANCE.toComponent(simpleBindings, 100),
-                LethalTempo.KEEP_TIME.toComponent(simpleBindings, 0.05F));
+                        LethalTempo.DAMAGE_MUL.toComponent(simpleBindings, 100),
+                        LethalTempo.CHANCE_PER_HIT.toComponent(simpleBindings, 100),
+                        LethalTempo.MAX_CHANCE.toComponent(simpleBindings, 100),
+                        LethalTempo.KEEP_TIME.toComponent(simpleBindings, 0.05F))
+                .withStyle(ChatFormatting.LIGHT_PURPLE);
     }
 
     @SubscribeEvent
     public static void onShoot(LivingEntityUseItemEvent.Stop event) {
 
         ItemStack itemStack = event.getItem();
-        int lvl = Enchantments.LETHAL_TEMPO.getEnchantmentLevel(itemStack, event.getEntity().level());
+        int lvl = UEEnchantments.LETHAL_TEMPO.getEnchantmentLevel(itemStack, event.getEntity().level());
         if (lvl > 0) {
             SimpleBindings bindings = LethalTempo.buildBindings(lvl);
             IItemStackMixin iItemStackMixin = (IItemStackMixin) (Object) itemStack;
@@ -99,7 +101,7 @@ public class LethalTempo extends EnchantmentBasic {
     public static void onArrowHit(LivingIncomingDamageEvent event) {
         if (event.getSource().getDirectEntity() instanceof Projectile projectile && projectile.getOwner() instanceof LivingEntity living) {
             ItemStack weapon = living.getWeaponItem();
-            int lvl = Enchantments.LETHAL_TEMPO.getEnchantmentLevel(weapon, event.getEntity().level());
+            int lvl = UEEnchantments.LETHAL_TEMPO.getEnchantmentLevel(weapon, event.getEntity().level());
             if (lvl > 0) {
                 SimpleBindings bindings = LethalTempo.buildBindings(lvl);
                 UEProjectileData data = projectile.getData(AttachmentTypes.PROJECTILE_DATA);

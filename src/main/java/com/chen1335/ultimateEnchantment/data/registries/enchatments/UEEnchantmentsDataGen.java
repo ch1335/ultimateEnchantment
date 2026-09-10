@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class UEEnchantments {
+public class UEEnchantmentsDataGen {
     public static final Map<ResourceKey<?>, List<ICondition>> conditions = new HashMap<>();
     public static final ResourceKey<Enchantment> LAST_STAND = key("last_stand");
     public static final ResourceKey<Enchantment> OVER_GROW = key("over_grow");
@@ -170,21 +170,6 @@ public class UEEnchantments {
 
         register(
                 pContext,
-                CUT_DOWN,
-                Enchantment.enchantment(
-                        Enchantment.definition(
-                                itemHolderGetter.getOrThrow(ItemTags.SHARP_WEAPON_ENCHANTABLE),
-                                3,
-                                5,
-                                Enchantment.dynamicCost(20, 5),
-                                Enchantment.dynamicCost(60, 10),
-                                1,
-                                EquipmentSlotGroup.HAND
-                        )
-                ).withSpecialEffect(UEEnchantmentEffectComponents.CUT_DOWN.get(), new CutDownComponent(0.0002F, 0.1f))
-        );
-        register(
-                pContext,
                 SMELTING,
                 Enchantment.enchantment(
                                 Enchantment.definition(
@@ -311,25 +296,6 @@ public class UEEnchantments {
                         )
                         .withSpecialEffect(UEEnchantmentEffectComponents.LIFE_STEAL.get(), new LifeStealComponent(0.025f, 0.04f))
                         .exclusiveWith(enchantmentHolderGetter.getOrThrow(UEEnchantmentTags.LIFE_STEAL_ENCHANTMENT))
-        );
-
-        register(
-                pContext,
-                ULTIMATE,
-                Enchantment.enchantment(
-                                Enchantment.definition(
-                                        itemHolderGetter.getOrThrow(Tags.Items.ENCHANTABLES),
-                                        itemHolderGetter.getOrThrow(Tags.Items.ENCHANTABLES),
-                                        2,
-                                        5,
-                                        Enchantment.constantCost(999),
-                                        Enchantment.constantCost(999),
-                                        1,
-                                        EquipmentSlotGroup.ANY
-                                )
-                        )
-                        .exclusiveWith(enchantmentHolderGetter.getOrThrow(UEEnchantmentTags.ULTIMATE_ENCHANTMENT_EXCLUSIVE))
-                        .withSpecialEffect(UEEnchantmentEffectComponents.ULTIMATE.value(), LevelBasedValue.perLevel(1))
         );
 
         register(

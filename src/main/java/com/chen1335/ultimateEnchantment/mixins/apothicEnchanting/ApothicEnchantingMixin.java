@@ -1,6 +1,6 @@
 package com.chen1335.ultimateEnchantment.mixins.apothicEnchanting;
 
-import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantments;
+import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantmentsDataGen;
 import dev.shadowsoffire.apothic_enchanting.ApothicEnchanting;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
@@ -17,13 +17,13 @@ public class ApothicEnchantingMixin {
     @Inject(method = "getDefaultMaxLevel", at = @At("RETURN"), cancellable = true)
     private static void getDefaultMaxLevel(Holder<Enchantment> ench, CallbackInfoReturnable<Integer> cir) {
         List<ResourceKey<Enchantment>> list = List.of(
-                UEEnchantments.ULTIMATE,
-                UEEnchantments.LEGEND,
-                UEEnchantments.VANQUISHER,
-                UEEnchantments.LAST_STAND,
-                UEEnchantments.ETERNAL,
-                UEEnchantments.TEAR,
-                UEEnchantments.LETHAL_TEMPO
+                UEEnchantmentsDataGen.ULTIMATE,
+                UEEnchantmentsDataGen.LEGEND,
+                UEEnchantmentsDataGen.VANQUISHER,
+                UEEnchantmentsDataGen.LAST_STAND,
+                UEEnchantmentsDataGen.ETERNAL,
+                UEEnchantmentsDataGen.TEAR,
+                UEEnchantmentsDataGen.LETHAL_TEMPO
         );
         if (list.stream().anyMatch(ench.getKey()::equals)) {
             cir.setReturnValue(ench.value().getMaxLevel());

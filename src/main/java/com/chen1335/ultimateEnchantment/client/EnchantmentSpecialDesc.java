@@ -2,13 +2,12 @@ package com.chen1335.ultimateEnchantment.client;
 
 import com.chen1335.ultimateEnchantment.data.registries.enchatments.ApothicEnchantingEnchantments;
 import com.chen1335.ultimateEnchantment.data.registries.enchatments.IronsSpellBooksEnchantments;
-import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantments;
+import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantmentsDataGen;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentBasic;
-import com.chen1335.ultimateEnchantment.enchantment.Enchantments;
+import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.*;
 import com.chen1335.ultimateEnchantment.enchantment.effects.UltimateEnchantment.LastStandEffect;
-import com.chen1335.ultimateEnchantment.enchantment.enchantments.LethalTempo;
 import dev.shadowsoffire.apothic_attributes.api.ALObjects;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -30,7 +29,6 @@ import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 
-import javax.script.SimpleBindings;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +45,7 @@ public class EnchantmentSpecialDesc {
             return null;
         }
 
-        for (Map.Entry<ResourceKey<Enchantment>, EnchantmentBasic> entry : Enchantments.MAP.entrySet()) {
+        for (Map.Entry<ResourceKey<Enchantment>, EnchantmentBasic> entry : UEEnchantments.MAP.entrySet()) {
             if (entry.getKey().equals(resourceKey)) {
                 MutableComponent component = entry.getValue().getDesc(level);
                 ComponentUtils.mergeStyles(component, Style.EMPTY.withColor(ChatFormatting.DARK_GRAY));
@@ -60,44 +58,23 @@ public class EnchantmentSpecialDesc {
     }
 
     static {
-        DESC.put(UEEnchantments.THUNDER_BOLT, (holder, level) -> {
+        DESC.put(UEEnchantmentsDataGen.THUNDER_BOLT, (holder, level) -> {
             ThunderBoltComponent thunderBoltComponent = Objects.requireNonNull(holder.value().effects().get(UEEnchantmentEffectComponents.THUNDER_BOLT.get()));
             return Component.translatable("enchantment.ultimate_enchantment.thunder_bolt.specialDesc", format(level * thunderBoltComponent.mainTargetDamage() * 100), format(level * thunderBoltComponent.otherTargetDamage() * 100), thunderBoltComponent.range());
         });
-        DESC.put(UEEnchantments.LIFE_STEAL, (holder, level) -> {
+        DESC.put(UEEnchantmentsDataGen.LIFE_STEAL, (holder, level) -> {
             LifeStealComponent lifeStealComponent = Objects.requireNonNull(holder.value().effects().get(UEEnchantmentEffectComponents.LIFE_STEAL.get()));
 
             return Component.translatable("enchantment.ultimate_enchantment.life_steal.specialDesc", format(lifeStealComponent.healPercentPerLevel() * level * 100), format(lifeStealComponent.maxPercent() * 100));
         });
 
-        DESC.put(UEEnchantments.CUT_DOWN, (holder, level) -> {
-            if (Minecraft.getInstance().hitResult instanceof EntityHitResult entityHitResult && entityHitResult.getEntity() instanceof LivingEntity target && Minecraft.getInstance().player != null) {
-                float playerMaxHealth = Minecraft.getInstance().player.getMaxHealth();
-                float percentage = ((target.getHealth() - playerMaxHealth) / playerMaxHealth) * 100;
-
-                CutDownComponent cutDownComponent = Objects.requireNonNull(holder.value().effects().get(UEEnchantmentEffectComponents.CUT_DOWN.get()));
-                float damageMultiplier = Math.clamp(percentage * cutDownComponent.damageMultiplierPerLevel(), 0, level * cutDownComponent.maxDamageMultiplierPerLevel());
-                return Component.translatable("enchantment.ultimate_enchantment.cut_down.specialDesc.1", format(damageMultiplier * 100, 2));
-            } else {
-                CutDownComponent cutDownComponent = Objects.requireNonNull(holder.value().effects().get(UEEnchantmentEffectComponents.CUT_DOWN.get()));
-
-                return Component.translatable("enchantment.ultimate_enchantment.cut_down.specialDesc", format(cutDownComponent.damageMultiplierPerLevel() * 100, 2), format(cutDownComponent.maxDamageMultiplierPerLevel() * level * 100));
-            }
-        });
-
-        DESC.put(UEEnchantments.LEGEND, (holder, level) -> {
+        DESC.put(UEEnchantmentsDataGen.LEGEND, (holder, level) -> {
             LegendComponent component = Objects.requireNonNull(holder.value().effects().get(UEEnchantmentEffectComponents.LEGEND.get()));
 
             return Component.translatable("enchantment.ultimate_enchantment.legend.specialDesc", format(level * component.attributeMultiplePerLevel() * 100)).withStyle(ChatFormatting.LIGHT_PURPLE);
         });
 
-        DESC.put(UEEnchantments.ULTIMATE, (holder, level) -> {
-            LevelBasedValue component = Objects.requireNonNull(holder.value().effects().get(UEEnchantmentEffectComponents.ULTIMATE.get()));
-
-            return Component.translatable("enchantment.ultimate_enchantment.ultimate.specialDesc", format(component.calculate(level))).withStyle(ChatFormatting.LIGHT_PURPLE);
-        });
-
-        DESC.put(UEEnchantments.LAST_STAND, (holder, level) -> {
+        DESC.put(UEEnchantmentsDataGen.LAST_STAND, (holder, level) -> {
             float value = 0;
             List<ConditionalEffect<EnchantmentEntityEffect>> list = holder.value().getEffects(UEEnchantmentEffectComponents.LAST_STAND.value());
             for (ConditionalEffect<EnchantmentEntityEffect> enchantmentEntityEffectConditionalEffect : list) {
@@ -108,7 +85,7 @@ public class EnchantmentSpecialDesc {
             return Component.translatable("enchantment.ultimate_enchantment.last_stand.specialDesc", format(value * 100)).withStyle(ChatFormatting.LIGHT_PURPLE);
         });
 
-        DESC.put(UEEnchantments.OVER_GROW, (holder, level) -> {
+        DESC.put(UEEnchantmentsDataGen.OVER_GROW, (holder, level) -> {
             float value = 0;
             List<EnchantmentAttributeEffect> list = holder.value().getEffects(EnchantmentEffectComponents.ATTRIBUTES);
             for (EnchantmentAttributeEffect effect : list) {
@@ -151,43 +128,34 @@ public class EnchantmentSpecialDesc {
 
             return Component.translatable("enchantment.ultimate_enchantment.hardened_mana.specialDesc", format(hardenedManaComponent.maxArmorPerLevel()), format(level * hardenedManaComponent.maxArmorPerLevel()));
         });
-        DESC.put(UEEnchantments.KINETIC_ENERGY, (holder, level) -> {
+        DESC.put(UEEnchantmentsDataGen.KINETIC_ENERGY, (holder, level) -> {
             KineticEnergyComponent component = Objects.requireNonNull(holder.value().effects().get(UEEnchantmentEffectComponents.KINETIC_ENERGY.get()));
 
             return Component.translatable("enchantment.ultimate_enchantment.kinetic_energy.specialDesc", format(component.breakSpeedMultiplierPerBlock() * 100, 1), format(level * component.maxSpeedPerLevel() * 100));
         });
-        DESC.put(UEEnchantments.TEAR, (holder, level) -> {
+        DESC.put(UEEnchantmentsDataGen.TEAR, (holder, level) -> {
             TearComponent component = Objects.requireNonNull(holder.value().effects().get(UEEnchantmentEffectComponents.TEAR.get()));
 
             return Component.translatable("enchantment.ultimate_enchantment.tear.specialDesc", 1 + level, component.damageAdd() * 100, component.totalHealthDamage() * 100).withStyle(ChatFormatting.LIGHT_PURPLE);
         });
-        DESC.put(UEEnchantments.LETHAL_TEMPO, (holder, level) -> {
-            SimpleBindings simpleBindings = new SimpleBindings();
-            simpleBindings.put("lvl", level);
-            return Component.translatable("enchantment.ultimate_enchantment.lethal_tempo.specialDesc",
-                    LethalTempo.DAMAGE_MUL.toComponent(simpleBindings, 100),
-                    LethalTempo.CHANCE_PER_HIT.toComponent(simpleBindings, 100),
-                    LethalTempo.MAX_CHANCE.toComponent(simpleBindings, 100),
-                    LethalTempo.KEEP_TIME.toComponent(simpleBindings, 0.05F)).withStyle(ChatFormatting.LIGHT_PURPLE);
-        });
 
-        DESC.put(UEEnchantments.QUICK_BAIT, (holder, level) -> {
+        DESC.put(UEEnchantmentsDataGen.QUICK_BAIT, (holder, level) -> {
             QuickBaitComponent component = Objects.requireNonNull(holder.value().effects().get(UEEnchantmentEffectComponents.QUICK_BAIT.get()));
 
             return Component.translatable("enchantment.ultimate_enchantment.quick_bait.specialDesc", level * component.speedPerLevel() * 100);
         });
-        DESC.put(UEEnchantments.DOUBLE_HOOK, (holder, level) -> {
+        DESC.put(UEEnchantmentsDataGen.DOUBLE_HOOK, (holder, level) -> {
             DoubleHookComponent component = Objects.requireNonNull(holder.value().effects().get(UEEnchantmentEffectComponents.DOUBLE_HOOK.get()));
             return Component.translatable("enchantment.ultimate_enchantment.double_hook.specialDesc", level * component.chancePerLevel() * 100);
         });
 
-        DESC.put(UEEnchantments.VANQUISHER, (holder, level) -> {
+        DESC.put(UEEnchantmentsDataGen.VANQUISHER, (holder, level) -> {
             VanquisherComponent component = Objects.requireNonNull(holder.value().effects().get(UEEnchantmentEffectComponents.VANQUISHER.get()));
 
             return Component.translatable("enchantment.ultimate_enchantment.vanquisher.specialDesc");
         });
 
-        DESC.put(UEEnchantments.ETERNAL, (holder, level) -> {
+        DESC.put(UEEnchantmentsDataGen.ETERNAL, (holder, level) -> {
             return Component.translatable("enchantment.ultimate_enchantment.eternal.specialDesc");
         });
     }

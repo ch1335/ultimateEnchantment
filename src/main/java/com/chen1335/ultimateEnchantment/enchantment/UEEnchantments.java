@@ -1,7 +1,9 @@
 package com.chen1335.ultimateEnchantment.enchantment;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.CutDown;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.LethalTempo;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.Ultimate;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.minecraft.resources.ResourceKey;
@@ -10,28 +12,25 @@ import net.neoforged.fml.loading.FMLPaths;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class Enchantments {
+public class UEEnchantments {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     public static final Map<ResourceKey<Enchantment>, EnchantmentBasic> MAP = new HashMap<>();
     public static final LethalTempo LETHAL_TEMPO = register(new LethalTempo());
+    public static final Ultimate ULTIMATE = register(new Ultimate());
+    public static final CutDown CUT_DOWN = register(new CutDown());
 
-    public static Optional<EnchantmentBasic> getEnchantment(ResourceKey<Enchantment> key){
+    public static Optional<EnchantmentBasic> getEnchantment(ResourceKey<Enchantment> key) {
         return Optional.ofNullable(MAP.get(key));
     }
 
 
-
     private static <T extends EnchantmentBasic> T register(T enchantment) {
-        ResourceKey<Enchantment> key = enchantment.createKey();
+        ResourceKey<Enchantment> key = enchantment.getKey();
         MAP.put(key, enchantment);
         Path directory = FMLPaths.CONFIGDIR.get()
                 .resolve(UltimateEnchantment.MODID)

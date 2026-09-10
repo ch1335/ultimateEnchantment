@@ -2,7 +2,7 @@ package com.chen1335.ultimateEnchantment.mixins.minecraft;
 
 import com.chen1335.ultimateEnchantment.client.EnchantmentSpecialDesc;
 import com.chen1335.ultimateEnchantment.dataComponentType.UEDataComponentTypes;
-import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantments;
+import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantmentsDataGen;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IItemStackMixin;
 import com.chen1335.ultimateEnchantment.utils.ItemEnchantmentHelper;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -84,7 +84,7 @@ public abstract class ItemStackMixin implements IItemStackExtension, MutableData
 
     @Inject(method = "setDamageValue", at = @At("HEAD"), cancellable = true)
     private void setDamageValue(int damage, CallbackInfo ci) {
-        if (ItemEnchantmentHelper.getEnchantmentLevel((ItemStack) (Object) this, UEEnchantments.ETERNAL) > 0) {
+        if (ItemEnchantmentHelper.getEnchantmentLevel((ItemStack) (Object) this, UEEnchantmentsDataGen.ETERNAL) > 0) {
             this.getItem().setDamage(ItemStack.class.cast(this), 0);
             ci.cancel();
         }
@@ -92,7 +92,7 @@ public abstract class ItemStackMixin implements IItemStackExtension, MutableData
 
     @Inject(method = "hurtAndBreak(ILnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;Ljava/util/function/Consumer;)V", at = @At("HEAD"), cancellable = true)
     private void hurtAndBreak(int p_220158_, ServerLevel p_346256_, LivingEntity p_220160_, Consumer<Item> p_348596_, CallbackInfo ci) {
-        if (ItemEnchantmentHelper.getEnchantmentLevel((ItemStack) (Object) this, UEEnchantments.ETERNAL) > 0) {
+        if (ItemEnchantmentHelper.getEnchantmentLevel((ItemStack) (Object) this, UEEnchantmentsDataGen.ETERNAL) > 0) {
             this.getItem().setDamage(ItemStack.class.cast(this), 0);
             ci.cancel();
         }
