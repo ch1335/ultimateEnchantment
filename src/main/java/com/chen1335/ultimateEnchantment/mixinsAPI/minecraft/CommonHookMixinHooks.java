@@ -1,7 +1,9 @@
 package com.chen1335.ultimateEnchantment.mixinsAPI.minecraft;
 
-import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
-import com.chen1335.ultimateEnchantment.utils.ItemEnchantmentHelper;
+import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
+import javax.script.SimpleBindings;
+
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.DoubleHook;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -21,14 +23,17 @@ public class CommonHookMixinHooks {
             Entity entity = context.getParamOrNull(LootContextParams.THIS_ENTITY);
             ItemStack rod = context.getParamOrNull(LootContextParams.TOOL);
             if (entity != null && rod != null) {
-                ItemEnchantmentHelper.runIfItemStackHaveEnchantComponent(rod, UEEnchantmentEffectComponents.DOUBLE_HOOK, (doubleHookComponent, level) -> {
-                    if (entity.getRandom().nextFloat() < level * doubleHookComponent.chancePerLevel()) {
+                int level = UEEnchantments.DOUBLE_HOOK.getEnchantmentLevel(rod, entity.level());
+                if (level > 0) {
+                    SimpleBindings bindings = UEEnchantments.buildBindings(level);
+                    float chance = DoubleHook.CHANCE.calculate( bindings);
+                    if (entity.getRandom().nextFloat() < chance) {
                         List<ItemStack> old = List.copyOf(generatedLoot);
                         for (ItemStack itemStack : old) {
                             generatedLoot.add(itemStack.copy());
                         }
                     }
-                });
+                }
             }
         }
     }

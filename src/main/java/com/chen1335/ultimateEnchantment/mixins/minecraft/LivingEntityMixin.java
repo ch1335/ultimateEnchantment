@@ -3,7 +3,7 @@ package com.chen1335.ultimateEnchantment.mixins.minecraft;
 import com.chen1335.ultimateEnchantment.API.UEDamageTypeTags;
 import com.chen1335.ultimateEnchantment.dataComponentType.UEDataComponentTypes;
 import com.chen1335.ultimateEnchantment.enchantment.specialEnchantEffects.TearEffect;
-import com.chen1335.ultimateEnchantment.enchantment.specialEnchantEffects.ThunderBolt;
+import com.chen1335.ultimateEnchantment.enchantment.specialEnchantEffects.ThunderBoltEffect;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.ILivingEntityMixin;
 import com.chen1335.ultimateEnchantment.mobEffect.MobEffects;
 import com.chen1335.ultimateEnchantment.utils.Util;
@@ -62,7 +62,7 @@ public abstract class LivingEntityMixin implements ILivingEntityMixin {
             Util.addAttackedCount(attacker);
         }
         TearEffect.onAttack(damageSource, this.damageContainers, living);
-        ThunderBolt.onAttack(damageSource, this.damageContainers, living);
+        ThunderBoltEffect.onAttack(damageSource, this.damageContainers, living);
 
     }
 

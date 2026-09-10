@@ -26,15 +26,15 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.conditions.ICondition;
+import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 
 import javax.script.SimpleBindings;
 import java.util.*;
 
 public class EnchantmentBasic {
-    private final List<ICondition> conditions = new ArrayList<>();
+    protected String requiredMod = UltimateEnchantment.MODID;
     private final ResourceKey<Enchantment> key;
-    private CapturedEnchantment captured = null;
-    public final Map<String, Formula> formulas = new HashMap<>();
+    public final Map<String, Formula> formulas = new LinkedHashMap<>();
     protected final ResourceLocation id;
     protected DataComponentMap effects;
     protected int anvil_cost = 1;
@@ -47,13 +47,17 @@ public class EnchantmentBasic {
     protected Type<Item> primary_items = null;
     protected int weight = 1;
     protected Type<Enchantment> exclusive_set = null;
-
-    protected Object[] emptyArgs = new Object[]{};
-
+    protected List<ICondition> conditions = new ArrayList<>();
     protected final String descId;
 
     public EnchantmentBasic(String name) {
+        this(name, UltimateEnchantment.MODID);
+    }
+
+    protected EnchantmentBasic(String name, String requiredMod) {
         this(UltimateEnchantment.id(name));
+        this.requiredMod = requiredMod;
+        conditions.add(new ModLoadedCondition(requiredMod));
     }
 
     public EnchantmentBasic(ResourceLocation id) {
@@ -71,13 +75,7 @@ public class EnchantmentBasic {
     }
 
     public int getEnchantmentLevel(ItemStack itemStack, Level level) {
-        Optional<Holder.Reference<Enchantment>> enchantment;
-        if (captured == null) {
-            enchantment = getEnchantment(level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT));
-        } else {
-            enchantment = captured.optional();
-        }
-        return enchantment.map(itemStack::getEnchantmentLevel).orElse(0);
+        return getEnchantmentLevel(itemStack, level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT));
     }
 
     public int getEnchantmentLevel(ItemStack itemStack, HolderLookup.RegistryLookup<Enchantment> lookup) {
@@ -86,12 +84,7 @@ public class EnchantmentBasic {
     }
 
     public Optional<Holder.Reference<Enchantment>> getEnchantment(HolderLookup.RegistryLookup<Enchantment> lookup) {
-        if (captured != null) {
-            return captured.optional;
-        }
-        Optional<Holder.Reference<Enchantment>> orThrow = lookup.get(getKey());
-        captured = new CapturedEnchantment(orThrow);
-        return orThrow;
+        return lookup.get(getKey());
     }
 
     public static SimpleBindings buildBindings(int lvl) {
@@ -115,8 +108,10 @@ public class EnchantmentBasic {
     public JsonObject toJson() {
         JsonOps ops = JsonOps.INSTANCE;
         JsonObject object = new JsonObject();
+        object.add("neoforge:conditions", ICondition.LIST_CODEC.encodeStart(ops, conditions).getOrThrow());
         object.addProperty("anvil_cost", anvil_cost);
         object.add("description", ComponentSerialization.CODEC.encodeStart(ops, description).getOrThrow());
+
 
         object.add("effects", EnchantmentEffectComponents.CODEC.encodeStart(ops, effects).getOrThrow());
 
@@ -159,8 +154,7 @@ public class EnchantmentBasic {
                     return ops.mergeToPrimitive(prefix, ops.createString("#" + tag.key.location()));
                 }
                 if (input instanceof ItemType<?> item) {
-                    T list = ops.createList(item.list.stream().map(key -> ops.createString(key.location().toString())));
-                    return ops.mergeToList(prefix, list);
+                    return ops.mergeToList(prefix, item.list.stream().map(key -> ops.createString(key.location().toString())).toList());
                 }
                 return DataResult.error(() -> "未知的 Type 子类: " + input.getClass().getName());
             }

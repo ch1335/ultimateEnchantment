@@ -1,10 +1,9 @@
 package com.chen1335.ultimateEnchantment.mixins.minecraft;
 
-import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
-import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantmentsDataGen;
+import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.QuickBait;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.FishingHook;
@@ -18,7 +17,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
-import java.util.Objects;
+
+import javax.script.SimpleBindings;
 
 @Mixin(FishingHook.class)
 public abstract class FishingHookMixin {
@@ -34,18 +34,19 @@ public abstract class FishingHookMixin {
     private void init(Player player, Level level, int luck, int lureSpeed, CallbackInfo ci) {
 
         if (player != null) {
-            player.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolder(UEEnchantmentsDataGen.QUICK_BAIT).ifPresent(holder -> {
-                ItemStack rod = null;
-                if (player.getMainHandItem().is(ItemTags.FISHING_ENCHANTABLE)) {
-                    rod = player.getMainHandItem();
-                } else if (player.getOffhandItem().is(ItemTags.FISHING_ENCHANTABLE)) {
-                    rod = player.getOffhandItem();
+            ItemStack rod = null;
+            if (player.getMainHandItem().is(ItemTags.FISHING_ENCHANTABLE)) {
+                rod = player.getMainHandItem();
+            } else if (player.getOffhandItem().is(ItemTags.FISHING_ENCHANTABLE)) {
+                rod = player.getOffhandItem();
+            }
+            if (rod != null) {
+                int enchantmentLevel = UEEnchantments.QUICK_BAIT.getEnchantmentLevel(rod, player.level());
+                if (enchantmentLevel > 0) {
+                    SimpleBindings bindings = UEEnchantments.buildBindings(enchantmentLevel);
+                    ue$fishSpeedMultiplier += QuickBait.SPEED.calculate( bindings);
                 }
-                if (rod != null) {
-                    int quickBait = rod.getEnchantmentValue();
-                    ue$fishSpeedMultiplier = ue$fishSpeedMultiplier + quickBait * Objects.requireNonNull(holder.value().effects().get(UEEnchantmentEffectComponents.QUICK_BAIT.get())).speedPerLevel();
-                }
-            });
+            }
         }
     }
 

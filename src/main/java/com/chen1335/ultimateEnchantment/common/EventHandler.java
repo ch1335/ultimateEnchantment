@@ -7,7 +7,6 @@ import com.chen1335.ultimateEnchantment.AttachmentDatas.PlayerData;
 import com.chen1335.ultimateEnchantment.AttachmentDatas.UEProjectileData;
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.config.CommonConfig;
-import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantmentsDataGen;
 import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.LegendComponent;
@@ -311,14 +310,14 @@ public class EventHandler {
             List<LootPool> pools = event.getTable().pools;
             if (lootTableId.equals(BuiltInLootTables.END_CITY_TREASURE.location()) && CommonConfig.willEndCityTreasureLootUltimateEnchant) {
                 List<Holder<Enchantment>> holders = new ArrayList<>();
-                UEEnchantmentHelper.getEnchantment(registries, UEEnchantmentsDataGen.LETHAL_TEMPO).ifPresent(holders::add);
-                UEEnchantmentHelper.getEnchantment(registries, UEEnchantmentsDataGen.VANQUISHER).ifPresent(holders::add);
-                UEEnchantmentHelper.getEnchantment(registries, UEEnchantmentsDataGen.TEAR).ifPresent(holders::add);
+                UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.LETHAL_TEMPO.getKey()).ifPresent(holders::add);
+                UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.VANQUISHER.getKey()).ifPresent(holders::add);
+                UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.TEAR.getKey()).ifPresent(holders::add);
                 LootPool.Builder builder = LootPool.lootPool();
                 for (Holder<Enchantment> holder : holders) {
                     LootPoolSingletonContainer.Builder<?> item = LootItem.lootTableItem(Items.ENCHANTED_BOOK);
 
-                    if (holder.is(UEEnchantmentsDataGen.VANQUISHER)) {
+                    if (holder.is(UEEnchantments.VANQUISHER.getKey())) {
                         item.apply(new SetEnchantmentsFunction.Builder().withEnchantment(holder, ConstantValue.exactly(1))).setWeight(3);
                     } else {
                         item.apply(new SetEnchantmentsFunction.Builder().withEnchantment(holder, UniformGenerator.between(2, 3))).setWeight(10);
@@ -331,7 +330,7 @@ public class EventHandler {
                     pools.add(builder.build());
                 }
             } else if (lootTableId.equals(EntityType.ENDER_DRAGON.getDefaultLootTable().location())) {
-                UEEnchantmentHelper.getEnchantment(registries, UEEnchantmentsDataGen.ULTIMATE).ifPresent(holder -> {
+                UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.ULTIMATE.getKey()).ifPresent(holder -> {
                     LootPool.Builder builder = LootPool.lootPool();
                     LootPoolSingletonContainer.Builder<?> item = LootItem.lootTableItem(Items.ENCHANTED_BOOK);
                     item.apply(new SetEnchantmentsFunction.Builder().withEnchantment(holder, ConstantValue.exactly(2))).apply(EnchantedCountIncreaseFunction.lootingMultiplier(registries, UniformGenerator.between(0, 0.2F)));
@@ -339,7 +338,7 @@ public class EventHandler {
                     pools.add(builder.build());
                 });
             } else if (lootTableId.equals(EntityType.WITHER.getDefaultLootTable().location())) {
-                UEEnchantmentHelper.getEnchantment(registries, UEEnchantmentsDataGen.LEGEND).ifPresent(holder -> {
+                UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.LEGEND.getKey()).ifPresent(holder -> {
                     LootPool.Builder builder = LootPool.lootPool();
                     LootPoolSingletonContainer.Builder<?> item = LootItem.lootTableItem(Items.ENCHANTED_BOOK);
                     item.apply(new SetEnchantmentsFunction.Builder().withEnchantment(holder, ConstantValue.exactly(1))).apply(EnchantedCountIncreaseFunction.lootingMultiplier(registries, UniformGenerator.between(0, 0.2F)));
@@ -347,7 +346,7 @@ public class EventHandler {
                     pools.add(builder.build());
                 });
             } else if (lootTableId.equals(EntityType.WARDEN.getDefaultLootTable().location())) {
-                UEEnchantmentHelper.getEnchantment(registries, UEEnchantmentsDataGen.LAST_STAND).ifPresent(holder -> {
+                UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.LAST_STAND.getKey()).ifPresent(holder -> {
                     LootPool.Builder builder = LootPool.lootPool();
                     LootPoolSingletonContainer.Builder<?> item = LootItem.lootTableItem(Items.ENCHANTED_BOOK);
                     item.apply(new SetEnchantmentsFunction.Builder().withEnchantment(holder, ConstantValue.exactly(1))).apply(EnchantedCountIncreaseFunction.lootingMultiplier(registries, UniformGenerator.between(0, 0.2F)));
@@ -355,7 +354,7 @@ public class EventHandler {
                     pools.add(builder.build());
                 });
             } else if (lootTableId.equals(EntityType.CREEPER.getDefaultLootTable().location())) {
-                UEEnchantmentHelper.getEnchantment(registries, UEEnchantmentsDataGen.THUNDER_BOLT).ifPresent(holder -> {
+                UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.THUNDER_BOLT.getKey()).ifPresent(holder -> {
                     LootPool.Builder builder = LootPool.lootPool();
                     LootPoolSingletonContainer.Builder<?> item = LootItem.lootTableItem(Items.ENCHANTED_BOOK);
                     item.apply(new SetEnchantmentsFunction.Builder().withEnchantment(holder, ConstantValue.exactly(1))).when(CreeperIsPoweredCondition.creeperIsPowered());

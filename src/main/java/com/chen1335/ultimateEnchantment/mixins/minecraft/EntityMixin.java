@@ -1,6 +1,6 @@
 package com.chen1335.ultimateEnchantment.mixins.minecraft;
 
-import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantmentsDataGen;
+import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IUEEntityExtension;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.Entity;
@@ -42,7 +42,7 @@ public abstract class EntityMixin implements IUEEntityExtension {
 
     @Inject(method = "onBelowWorld", at = @At("HEAD"), cancellable = true)
     private void onBelowWorld(CallbackInfo ci) {
-        level().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolder(UEEnchantmentsDataGen.ETERNAL).ifPresent(holder -> {
+        level().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolder(UEEnchantments.ETERNAL.getKey()).ifPresent(holder -> {
             if ((Entity) (Object) this instanceof ItemEntity itemEntity && itemEntity.getItem().getEnchantmentLevel(holder) > 0) {
                 this.setNoGravity(true);
                 this.setDeltaMovement(0, 1.5, 0);

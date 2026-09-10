@@ -3,10 +3,12 @@ package com.chen1335.ultimateEnchantment.enchantment.specialEnchantEffects;
 import com.chen1335.ultimateEnchantment.API.UEDamageTypeTags;
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.data.registries.UEDamageType;
-import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
+import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.Tear;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.ILivingEntityMixin;
-import com.chen1335.ultimateEnchantment.utils.ItemEnchantmentHelper;
 import com.chen1335.ultimateEnchantment.utils.SimpleSchedule;
+
+import javax.script.SimpleBindings;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,17 +21,23 @@ import java.util.Stack;
 public class TearEffect {
     public static void onAttack(DamageSource damageSource, Stack<DamageContainer> damageContainers, LivingEntity target) {
         if (damageSource.getEntity() instanceof Player attacker && damageSource.is(UEDamageTypeTags.IS_ATTACK) && !damageSource.is(UEDamageType.TEAR_DAMAGE)) {
-            ItemEnchantmentHelper.runIfItemStackHaveEnchantComponent(attacker.getWeaponItem(), UEEnchantmentEffectComponents.TEAR, (tearComponent, level) -> {
+            int level = UEEnchantments.TEAR.getEnchantmentLevel(attacker.getWeaponItem(), attacker.level());
+            if (level > 0) {
+                SimpleBindings bindings = UEEnchantments.buildBindings(level);
+                int hitCount = Math.max(1, Math.round(Tear.HIT_COUNT.calculate(bindings)));
+                float duration = Math.max(0, Tear.DURATION.calculate( bindings));
+                float damageAdd = Tear.DAMAGE_ADD.calculate( bindings);
+                float healthDamage = Tear.HEALTH_DAMAGE.calculate( bindings);
                 float finalDamage = damageContainers.peek().getNewDamage();
                 damageContainers.peek().setNewDamage(0);
-                float damagePerHit = finalDamage / (level + 1) * (1 + tearComponent.damageAdd()) + target.getHealth() * tearComponent.totalHealthDamage();
-                float tickPerHit = 60F / (level + 1);
-                for (int i = 0; i < level + 1; i++) {
+                float damagePerHit = finalDamage / hitCount * (1 + damageAdd) + target.getHealth() * healthDamage;
+                float tickPerHit = hitCount <= 1 ? 0 : duration / (hitCount - 1);
+                for (int i = 0; i < hitCount; i++) {
                     SimpleSchedule.addSchedule(attacker.level(), new SimpleSchedule.Wait(() -> {
                         perHit(attacker, damageSource, damageContainers, target, damagePerHit);
-                    }, (int) (tickPerHit * i)));
+                    }, Math.round(tickPerHit * i)));
                 }
-            });
+            }
         }
     }
 

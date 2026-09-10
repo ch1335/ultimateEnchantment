@@ -2,8 +2,25 @@ package com.chen1335.ultimateEnchantment.enchantment;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.CutDown;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.DoubleHook;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.HardenedMana;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.KineticEnergy;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.LethalTempo;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.LifeSteal;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.ManaSteal;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.QuickBait;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.Tear;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.ThunderBolt;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.Vanquisher;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.Ultimate;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.LastStand;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.Legend;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.OverGrow;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.QuickShooting;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.Scabbing;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.QuickLatch;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.Smelting;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.Eternal;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.minecraft.resources.ResourceKey;
@@ -16,6 +33,7 @@ import java.nio.file.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import javax.script.SimpleBindings;
 
 public class UEEnchantments {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
@@ -23,6 +41,27 @@ public class UEEnchantments {
     public static final LethalTempo LETHAL_TEMPO = register(new LethalTempo());
     public static final Ultimate ULTIMATE = register(new Ultimate());
     public static final CutDown CUT_DOWN = register(new CutDown());
+    public static final DoubleHook DOUBLE_HOOK = register(new DoubleHook());
+    public static final HardenedMana HARDENED_MANA = register(new HardenedMana());
+    public static final KineticEnergy KINETIC_ENERGY = register(new KineticEnergy());
+    public static final LifeSteal LIFE_STEAL = register(new LifeSteal());
+    public static final ManaSteal MANA_STEAL = register(new ManaSteal());
+    public static final QuickBait QUICK_BAIT = register(new QuickBait());
+    public static final Tear TEAR = register(new Tear());
+    public static final ThunderBolt THUNDER_BOLT = register(new ThunderBolt());
+    public static final Vanquisher VANQUISHER = register(new Vanquisher());
+    public static final LastStand LAST_STAND = register(new LastStand());
+    public static final Legend LEGEND = register(new Legend());
+    public static final OverGrow OVER_GROW = register(new OverGrow());
+    public static final QuickShooting QUICK_SHOOTING = register(new QuickShooting());
+    public static final Scabbing SCABBING = register(new Scabbing());
+    public static final QuickLatch QUICK_LATCH = register(new QuickLatch());
+    public static final Smelting SMELTING = register(new Smelting());
+    public static final Eternal ETERNAL = register(new Eternal());
+
+    public static SimpleBindings buildBindings(int level) {
+        return EnchantmentBasic.buildBindings(level);
+    }
 
     public static Optional<EnchantmentBasic> getEnchantment(ResourceKey<Enchantment> key) {
         return Optional.ofNullable(MAP.get(key));

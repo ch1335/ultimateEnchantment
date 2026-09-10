@@ -4,13 +4,9 @@ import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.data.lootTable.UELootTableProvider;
 import com.chen1335.ultimateEnchantment.data.lootTableModifier.EntityLootModifierProvider;
 import com.chen1335.ultimateEnchantment.data.recipe.UERecipesProvider;
-import com.chen1335.ultimateEnchantment.data.registries.enchatments.UEEnchantmentsDataGen;
 import com.chen1335.ultimateEnchantment.data.tags.DamageTypeTagProvider;
 import com.chen1335.ultimateEnchantment.data.tags.UEEnchantmentTagsProvider;
 import com.chen1335.ultimateEnchantment.data.tags.UEItemTagsProvider;
-import com.chen1335.ultimateEnchantment.data.registries.enchatments.ApothicEnchantingEnchantments;
-import com.chen1335.ultimateEnchantment.data.registries.enchatments.ApothicEnchantments;
-import com.chen1335.ultimateEnchantment.data.registries.enchatments.IronsSpellBooksEnchantments;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
@@ -42,17 +38,6 @@ public class UERegistries {
                 generator.getPackOutput(),
                 event.getLookupProvider(),
                 new RegistrySetBuilder()
-                        .add(Registries.ENCHANTMENT, bootstrapContext -> {
-                            UEEnchantmentsDataGen.bootstrap(bootstrapContext);
-                            ApothicEnchantingEnchantments.bootstrap(bootstrapContext);
-                            IronsSpellBooksEnchantments.bootstrap(bootstrapContext);
-                            ApothicEnchantments.bootstrap(bootstrapContext);
-
-                            conditions.putAll(UEEnchantmentsDataGen.conditions);
-                            conditions.putAll(ApothicEnchantingEnchantments.conditions);
-                            conditions.putAll(IronsSpellBooksEnchantments.conditions);
-                            conditions.putAll(ApothicEnchantments.conditions);
-                        })
                         .add(Registries.DAMAGE_TYPE, UEDamageType::bootstrapContext)
                 ,
                 conditions,
