@@ -1,4 +1,4 @@
-package com.chen1335.ultimateEnchantment.mixins.apothicEnchanting;
+package com.chen1335.ultimateEnchantment.mixins.apothic_enchanting;
 
 import com.chen1335.ultimateEnchantment.tags.UEEnchantmentTags;
 import dev.shadowsoffire.apothic_enchanting.util.TooltipUtil;

@@ -1,4 +1,4 @@
-package com.chen1335.ultimateEnchantment.mixins.minecraft.client;
+package com.chen1335.ultimateEnchantment.mixins.ultimate_enchantment.client;
 
 import com.chen1335.ultimateEnchantment.mobEffect.MobEffects;
 import com.chen1335.ultimateEnchantment.mobEffect.effects.UnActiveVanquisher;

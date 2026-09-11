@@ -1,4 +1,4 @@
-package com.chen1335.ultimateEnchantment.mixins.minecraft;
+package com.chen1335.ultimateEnchantment.mixins.ultimate_enchantment;
 
 import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
 import com.chen1335.ultimateEnchantment.utils.UEEnchantmentHelper;

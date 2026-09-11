@@ -1,4 +1,4 @@
-package com.chen1335.ultimateEnchantment.mixins.apothicEnchanting;
+package com.chen1335.ultimateEnchantment.mixins.apothic_enchanting;
 
 import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
 import dev.shadowsoffire.apothic_enchanting.ApothicEnchanting;

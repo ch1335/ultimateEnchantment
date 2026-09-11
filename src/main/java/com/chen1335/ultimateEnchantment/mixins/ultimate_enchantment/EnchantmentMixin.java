@@ -1,14 +1,12 @@
-package com.chen1335.ultimateEnchantment.mixins.minecraft;
+package com.chen1335.ultimateEnchantment.mixins.ultimate_enchantment;
 
 import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
 import com.chen1335.ultimateEnchantment.mixins.MinecraftMixinUtils;
 import com.chen1335.ultimateEnchantment.utils.UEEnchantmentHelper;
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.neoforged.neoforge.common.CommonHooks;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

@@ -1,10 +1,11 @@
 {
   "required": true,
-  "package": "com.chen1335.ultimateEnchantment.mixins.minecraft",
+  "package": "com.chen1335.ultimateEnchantment.mixins",
+  "plugin": "com.chen1335.ultimateEnchantment.mixins.MainMixinPlugin",
   "compatibilityLevel": "JAVA_21",
-  "mixins": ["CommonHooksMixin", "EnchantmentHelperMixin", "EnchantmentMixin", "EnchantRandomlyFunctionMixin", "EntityMixin", "FishingHookMixin", "ItemEnchantmentsMixin", "ItemEntityMixin", "ItemStackMixin", "LivingEntityMixin", "LootParams$BuilderMixin", "LootParamsMixin", "RegistryDataLoaderMixin", "TagLoaderMixin", "WorldLoaderMixin", "client.ClientHooksMixin"],
+  "mixins": ["apothic_enchanting.ApothicEnchantingMixin", "apothic_enchanting.TooltipUtilMixin", "ultimate_enchantment.CommonHooksMixin", "ultimate_enchantment.EnchantmentHelperMixin", "ultimate_enchantment.EnchantmentMixin", "ultimate_enchantment.EnchantRandomlyFunctionMixin", "ultimate_enchantment.EntityMixin", "ultimate_enchantment.FishingHookMixin", "ultimate_enchantment.ItemEnchantmentsMixin", "ultimate_enchantment.ItemEntityMixin", "ultimate_enchantment.ItemStackMixin", "ultimate_enchantment.LivingEntityMixin", "ultimate_enchantment.LootParams$BuilderMixin", "ultimate_enchantment.LootParamsMixin", "ultimate_enchantment.TagLoaderMixin", "ultimate_enchantment.client.ClientHooksMixin"],
   "client": [
-    "client.GuiMixin"
+    "ultimate_enchantment.client.GuiMixin"
   ],
   "minVersion": "0.8"
 }
