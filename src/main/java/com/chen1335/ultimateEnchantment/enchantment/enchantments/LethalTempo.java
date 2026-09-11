@@ -1,7 +1,7 @@
 package com.chen1335.ultimateEnchantment.enchantment.enchantments;
 
 import com.chen1335.ultimateEnchantment.API.AttachmentTypes;
-import com.chen1335.ultimateEnchantment.AttachmentDatas.UEProjectileData;
+import com.chen1335.ultimateEnchantment.attachmentDatas.UEProjectileData;
 import com.chen1335.ultimateEnchantment.common.Formula;
 import com.chen1335.ultimateEnchantment.dataComponentType.UEDataComponentTypes;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentBasic;

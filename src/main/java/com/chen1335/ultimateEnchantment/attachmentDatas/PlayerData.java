@@ -1,4 +1,4 @@
-package com.chen1335.ultimateEnchantment.AttachmentDatas;
+package com.chen1335.ultimateEnchantment.attachmentDatas;
 
 import com.chen1335.ultimateEnchantment.enchantment.specialEnchantEffects.HardenedManaEffect;
 import com.chen1335.ultimateEnchantment.netWork.BreakSpeedMultiplierPack;

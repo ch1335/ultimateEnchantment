@@ -1,8 +1,8 @@
 package com.chen1335.ultimateEnchantment.API;
 
-import com.chen1335.ultimateEnchantment.AttachmentDatas.CommonEntityData;
-import com.chen1335.ultimateEnchantment.AttachmentDatas.PlayerData;
-import com.chen1335.ultimateEnchantment.AttachmentDatas.UEProjectileData;
+import com.chen1335.ultimateEnchantment.attachmentDatas.CommonEntityData;
+import com.chen1335.ultimateEnchantment.attachmentDatas.PlayerData;
+import com.chen1335.ultimateEnchantment.attachmentDatas.UEProjectileData;
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;

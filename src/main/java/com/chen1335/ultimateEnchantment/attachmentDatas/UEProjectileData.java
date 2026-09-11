@@ -1,4 +1,4 @@
-package com.chen1335.ultimateEnchantment.AttachmentDatas;
+package com.chen1335.ultimateEnchantment.attachmentDatas;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;

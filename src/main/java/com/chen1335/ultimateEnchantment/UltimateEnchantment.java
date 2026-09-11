@@ -3,6 +3,7 @@ package com.chen1335.ultimateEnchantment;
 import com.chen1335.ultimateEnchantment.API.AttachmentTypes;
 import com.chen1335.ultimateEnchantment.API.objects.Conditions;
 import com.chen1335.ultimateEnchantment.API.objects.LootItemConditions;
+import com.chen1335.ultimateEnchantment.apotheosis.attachmentDatas.ApothBossAttachmentTypes;
 import com.chen1335.ultimateEnchantment.common.EventHandler;
 import com.chen1335.ultimateEnchantment.common.Formula;
 import com.chen1335.ultimateEnchantment.config.CommonConfig;
@@ -84,6 +85,11 @@ public class UltimateEnchantment {
         UEDataComponentTypes.AEA_DATA.register(modEventBus);
         UEEnchantmentEffectComponents.TYPES.register(modEventBus);
         AttachmentTypes.ATTACHMENT_TYPES.register(modEventBus);
+        // 神化专属的 attachment 必须等确认神化加载后再注册：ApothBossInfo 直接引用神化类型，
+        // 神化缺席时连加载都不行。隔着一层类的理由见 ApothBossAttachmentTypes 的类注释。
+        if (ModList.get().isLoaded("apotheosis")) {
+            ApothBossAttachmentTypes.ATTACHMENT_TYPES.register(modEventBus);
+        }
         MobEffects.MOB_EFFECT_DEFERRED_REGISTER.register(modEventBus);
         modEventBus.addListener(this::setUp);
         NeoForge.EVENT_BUS.addListener(this::ServerStartedEvent);

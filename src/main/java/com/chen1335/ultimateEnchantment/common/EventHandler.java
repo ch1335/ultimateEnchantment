@@ -3,8 +3,8 @@ package com.chen1335.ultimateEnchantment.common;
 
 import com.chen1335.ultimateEnchantment.API.AttachmentTypes;
 import com.chen1335.ultimateEnchantment.API.UEDamageTypeTags;
-import com.chen1335.ultimateEnchantment.AttachmentDatas.PlayerData;
-import com.chen1335.ultimateEnchantment.AttachmentDatas.UEProjectileData;
+import com.chen1335.ultimateEnchantment.attachmentDatas.PlayerData;
+import com.chen1335.ultimateEnchantment.attachmentDatas.UEProjectileData;
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.config.CommonConfig;
 import com.chen1335.ultimateEnchantment.dataComponentType.UEDataComponentTypes;

@@ -5,7 +5,9 @@ import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -15,12 +17,13 @@ import net.neoforged.neoforge.common.loot.LootTableIdCondition;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * Boss 额外掉落。
  * <p>
- * 按原战利品表<b>额外摇取若干份</b>，把相当于 {@value #RATIO} 份的结果追加到第一次的结果里。
- * 之所以是「重新摇取再抽样」而不是「把第一次的结果复制一份」，是因为战利品表里的
+ * 按原战利品表<b>额外摇取若干份</b>，份数由 {@link #ratioFor} 按击杀者算出，结果追加到
+ * 第一次的结果里。之所以是「重新摇取再抽样」而不是「把第一次的结果复制一份」，是因为战利品表里的
  * 概率条目（{@code minecraft:alternatives}、带 {@code random_chance} 的 pool）每次摇取
  * 结果都不同 —— 重新摇取才符合「额外掉落」的直觉，也才让 {@code 25%} 这个数字有意义。
  * <p>
@@ -32,13 +35,17 @@ import java.util.Optional;
  * {@link Tags.EntityTypes#BOSSES}（{@code c:bosses}）；神化 Boss 用它自己打的持久 NBT 标记。
  * 后者是字符串判断，因此本类<b>不引入对 Apotheosis 的编译期依赖</b>。
  * <p>
- * 调用点见 {@code mixins/ultimate_enchantment/LootTableMixin}。
+ * <p>
+ * 本类只负责<b>战利品表</b>这条路径，调用点见
+ * {@code mixins/ultimate_enchantment/LootTableMixin}。<b>神化 Boss 直接穿在身上的装备</b>
+ * 不经过战利品表（见 {@code ApothBossEquipmentLoot} 的说明），那条路径单独实现，
+ * 这样本类得以保持对 Apotheosis 零编译期依赖。
  */
 @ParametersAreNonnullByDefault
 public final class BossBonusLoot {
 
     /**
-     * 额外掉落的倍率，可以大于 1。
+     * 这次额外掉落的倍率，可以大于 1。只由击杀者决定，与 Boss 本身无关。
      * <p>
      * 结算方式是「整数部分整份全取 + 小数部分按比例抽样」：
      * <ul>
@@ -50,8 +57,15 @@ public final class BossBonusLoot {
      * 处理经验值的方式一致），这样物品基数很小时也不会被 {@code floor} 抹成 0。
      * <p>
      * 注意这个值直接决定额外摇取的次数（每次摇取都完整展开一遍战利品表），别设得太大。
+     * <p>
+     * 返回 {@code 0} 是合法的，表示这次不额外掉 —— 调用方那两处循环都会自然空转。
+     * <p>
+     * {@code killer} 保证非空：没有击杀者的死亡在 {@link #append} 入口就被拦掉了，
+     * 走不到这里。参数留着是为了将来能按击杀者的幸运、进度或属性调整倍率。
      */
-    private static final float RATIO = 0.25F;
+    public static float ratioFor(Player killer) {
+        return 5;
+    }
 
     /** 神化给 Boss 打的持久 NBT 标记（{@code apoth.boss}），值恒为 true。 */
     private static final String APOTH_BOSS_KEY = "apoth.boss";
@@ -75,13 +89,13 @@ public final class BossBonusLoot {
     }
 
     /**
-     * 若 {@code context} 对应的掉落来自 Boss，则追加额外掉落并返回。
+     * 若 {@code context} 对应的掉落来自 Boss，且这次死亡有玩家击杀者，则追加额外掉落并返回。
      * <p>
      * {@code original} 与返回值是同一个列表对象（原地追加），返回值只为了方便调用方直接返回。
      *
      * @param table    正在产出战利品的表，用于与 {@code context} 携带的表 ID 交叉校验
      * @param original 第一次摇取的结果
-     * @param context  该次摇取的上下文，携带 {@code THIS_ENTITY} 参数
+     * @param context  该次摇取的上下文，携带 {@code THIS_ENTITY} 与 {@code ATTACKING_ENTITY} 参数
      */
     public static ObjectArrayList<ItemStack> append(
             LootTable table,
@@ -114,18 +128,28 @@ public final class BossBonusLoot {
             return original;
         }
 
+        // 没有击杀者的死亡一律不参与（摔死、烧死、被别的生物打死的 Boss 都算）。
+        // 用 ATTACKING_ENTITY 而不是 LAST_DAMAGE_PLAYER：前者是最后一击的来源，正是原版
+        // dropFromLootTable 用 damageSource.getEntity() 填进去的那个；后者是「最近 5 秒
+        // 内打过我的玩家」，Boss 挨一刀再摔死也会算在他头上。这个口径与神化装备那条路径
+        // 一致，见 ApothBossEquipmentLoot#appendEquipment。
+        if (!(context.getParamOrNull(LootContextParams.ATTACKING_ENTITY) instanceof Player killer)) {
+            return original;
+        }
+
+        float ratio = ratioFor(killer);
         ServerLevel level = context.getLevel();
 
         // ── 整数部分：整份摇取并全部收取 ──────────────────────────────────────
-        // RATIO = 1.5 时摇 1 次，2.3 时摇 2 次。
+        // ratio = 1.5 时摇 1 次，2.3 时摇 2 次。
         // 每次都用独立的 context，但共享同一个 RandomSource，随机序列连续推进，
         // 因此几份战利品不会摇出完全相同的内容。
-        for (int pass = Mth.floor(RATIO); pass > 0; pass--) {
+        for (int pass = Mth.floor(ratio); pass > 0; pass--) {
             table.getRandomItems(secondaryContext(context), original::add);
         }
 
         // ── 小数部分：再摇一份，拆成单件后按剩余比例取前 N 个 ────────────────
-        float remainder = Mth.frac(0.9F);
+        float remainder = Mth.frac(ratio);
         if (remainder > 0.0F) {
             ObjectArrayList<ItemStack> draw = new ObjectArrayList<>();
             table.getRandomItems(secondaryContext(context), draw::add);
@@ -140,20 +164,59 @@ public final class BossBonusLoot {
                 }
             }
 
-            float expected = singles.size() * remainder;
-            int keep = Mth.floor(expected);
-            float fraction = Mth.frac(expected);
-            if (fraction > 0.0F && level.getRandom().nextFloat() < fraction) {
-                keep++;
-            }
-            if (keep > 0) {
-                // 打乱后再取前 keep 个，避免总是偏向战利品表里靠前的条目
-                Util.shuffle(singles, level.getRandom());
-                original.addAll(singles.subList(0, keep));
-            }
+            sampleInto(singles, remainder, level.getRandom(), original::add);
         }
 
         return original;
+    }
+
+    /**
+     * 按 {@code ratio} 算出该额外产出多少份，基数由调用方给定。
+     * <p>
+     * 先取整数个，余下的小数按概率补一件（与 {@code BlockDropsEvent} 处理经验值的
+     * 方式一致）。这样物品基数很小时也不会被 {@code floor} 抹成 0 —— Boss 只掉
+     * 一件装备时，{@code 0.25} 仍然意味着 25% 的概率多掉一件，而不是永远不掉。
+     * <p>
+     * <b>返回值没有上限</b>：{@code ratio} 是 5、基数是 2 就返回 10。需要「不能多过池子
+     * 本身」这种约束的是抽样场景，由 {@link #sampleInto} 自己截断；要现生成新产物的场景
+     * （见 {@code ApothBossEquipmentLoot}）必须直接收下这个数，否则大倍率会被吃掉。
+     *
+     * @param unitCount 本次实际掉了多少份，作为倍率的基数
+     * @param ratio     额外倍率，见 {@link #ratioFor}
+     */
+    public static int rollCount(int unitCount, float ratio, RandomSource random) {
+        float expected = unitCount * ratio;
+        int count = Mth.floor(expected);
+        float fraction = Mth.frac(expected);
+        if (fraction > 0.0F && random.nextFloat() < fraction) {
+            count++;
+        }
+        return count;
+    }
+
+    /**
+     * 从 {@code pool} 里按 {@code ratio} 抽样，把抽中的元素交给 {@code sink}。
+     * <p>
+     * 抽取个数由 {@link #rollCount} 算出，并以 {@code pool} 的大小为上限
+     * （{@code ratio > 1} 时不会重复抽同一件）。
+     * <p>
+     * 抽样前会打乱 {@code pool}，避免总是偏向靠前的条目。
+     */
+    private static void sampleInto(
+            ObjectArrayList<ItemStack> pool,
+            float ratio,
+            RandomSource random,
+            Consumer<ItemStack> sink
+    ) {
+        int keep = rollCount(pool.size(), ratio, random);
+        if (keep <= 0) {
+            return;
+        }
+
+        Util.shuffle(pool, random);
+        for (ItemStack stack : pool.subList(0, Math.min(keep, pool.size()))) {
+            sink.accept(stack);
+        }
     }
 
     /**
