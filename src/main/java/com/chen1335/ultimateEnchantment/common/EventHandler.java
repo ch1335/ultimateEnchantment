@@ -220,7 +220,7 @@ public class EventHandler {
             }
 
             int lvl = UEEnchantments.LEGEND.getEnchantmentLevel(to, livingEntity.level());
-            if (lvl > 0) {
+            if ((slot.isArmor() || event.getSlot().equals(livingEntity.getEquipmentSlotForItem(to))) && lvl > 0) {
                 SimpleBindings bindings = Legend.buildBindings(lvl);
                 livingEntity.getAttributes().supplier.instances.keySet().forEach((attributeHolder) -> {
                     Attribute.Sentiment sentiment = attributeHolder.value().sentiment;

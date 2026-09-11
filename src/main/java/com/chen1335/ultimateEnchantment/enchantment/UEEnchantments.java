@@ -81,6 +81,7 @@ public class UEEnchantments {
             return enchantment;
         }
         if (Files.exists(file, LinkOption.NOFOLLOW_LINKS)) {
+
             return enchantment;
         }
 

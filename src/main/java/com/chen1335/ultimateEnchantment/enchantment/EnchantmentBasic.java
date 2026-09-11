@@ -2,6 +2,7 @@ package com.chen1335.ultimateEnchantment.enchantment;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.common.Formula;
+import com.chen1335.ultimateEnchantment.common.conditions.EnchantmentEnableCondition;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.FormulaComponent;
 import com.google.gson.JsonObject;
@@ -25,6 +26,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.level.Level;
+import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 
@@ -58,6 +60,7 @@ public class EnchantmentBasic {
         this(UltimateEnchantment.id(name));
         this.requiredMod = requiredMod;
         conditions.add(new ModLoadedCondition(requiredMod));
+        conditions.add(new EnchantmentEnableCondition(true));
     }
 
     public EnchantmentBasic(ResourceLocation id) {
@@ -109,6 +112,7 @@ public class EnchantmentBasic {
     public JsonObject toJson() {
         JsonOps ops = JsonOps.INSTANCE;
         JsonObject object = new JsonObject();
+        object.addProperty("version", ModList.get().getModFileById(UltimateEnchantment.MODID).versionString());
         object.add("neoforge:conditions", ICondition.LIST_CODEC.encodeStart(ops, conditions).getOrThrow());
         object.addProperty("anvil_cost", anvil_cost);
         object.add("description", ComponentSerialization.CODEC.encodeStart(ops, description).getOrThrow());
