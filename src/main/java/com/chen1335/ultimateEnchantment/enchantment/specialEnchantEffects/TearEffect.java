@@ -31,7 +31,7 @@ public class TearEffect {
                 float finalDamage = damageContainers.peek().getNewDamage();
                 damageContainers.peek().setNewDamage(0);
                 float damagePerHit = finalDamage / hitCount * (1 + damageAdd) + target.getHealth() * healthDamage;
-                float tickPerHit = hitCount <= 1 ? 0 : duration / (hitCount - 1);
+                float tickPerHit = hitCount == 1 ? 0 : duration / (hitCount - 1);
                 for (int i = 0; i < hitCount; i++) {
                     SimpleSchedule.addSchedule(attacker.level(), new SimpleSchedule.Wait(() -> {
                         perHit(attacker, damageSource, damageContainers, target, damagePerHit);
@@ -51,16 +51,7 @@ public class TearEffect {
         float lastHurt = target.lastHurt;
         int invulnerableTime = target.invulnerableTime;
 
-        if (UltimateEnchantment.isTwilightForestLoaded()) {
-            if (target instanceof Hydra hydra) {
-                // I hate this :(
-                hydra.body.hurt(damageSource1, damagePerHit);
-            } else {
-                target.hurt(damageSource1, damagePerHit);
-            }
-        } else {
-            target.hurt(damageSource1, damagePerHit);
-        }
+        target.hurt(damageSource1, damagePerHit);
 
         target.lastHurt = lastHurt;
         target.invulnerableTime = invulnerableTime;

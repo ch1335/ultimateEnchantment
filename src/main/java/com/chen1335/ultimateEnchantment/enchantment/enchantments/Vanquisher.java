@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Vanquisher extends EnchantmentBasic {
-    public static final Formula BUFF_DURATION = new Formula("400");
+    public static final Formula BUFF_DURATION = new Formula("200");
     public static final Formula MAX_STACKS = new Formula("10");
     public static final Formula DAMAGE_PER_STACK = new Formula("0.05");
     public static final Formula SPEED_PER_STACK = new Formula("0.1");

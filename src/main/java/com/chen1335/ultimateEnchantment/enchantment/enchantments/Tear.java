@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class Tear extends EnchantmentBasic {
     public static final Formula DAMAGE_ADD = new Formula("0.2");
-    public static final Formula HEALTH_DAMAGE = new Formula("0.005");
+    public static final Formula HEALTH_DAMAGE = new Formula("0.01");
     public static final Formula HIT_COUNT = new Formula("lvl+1");
     public static final Formula DURATION = new Formula("60");
 
@@ -41,6 +41,7 @@ public class Tear extends EnchantmentBasic {
     public MutableComponent getDesc(int level) {
         return Component.translatable(getDescId(), level + 1,
                 DAMAGE_ADD.toComponent(buildBindings(level), 100),
-                HEALTH_DAMAGE.toComponent(buildBindings(level), 100)).withStyle(ChatFormatting.LIGHT_PURPLE);
+                HEALTH_DAMAGE.toComponent(buildBindings(level), 100),
+                DURATION.toComponent(buildBindings(level), 0.05F)).withStyle(ChatFormatting.LIGHT_PURPLE);
     }
 }
