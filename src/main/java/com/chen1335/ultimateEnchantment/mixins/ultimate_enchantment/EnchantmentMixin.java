@@ -1,7 +1,7 @@
 package com.chen1335.ultimateEnchantment.mixins.ultimate_enchantment;
 
 import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
-import com.chen1335.ultimateEnchantment.mixins.MinecraftMixinUtils;
+import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.MinecraftMixinUtils;
 import com.chen1335.ultimateEnchantment.utils.UEEnchantmentHelper;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;

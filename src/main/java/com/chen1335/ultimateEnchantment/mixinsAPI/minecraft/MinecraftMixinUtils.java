@@ -1,4 +1,4 @@
-package com.chen1335.ultimateEnchantment.mixins;
+package com.chen1335.ultimateEnchantment.mixinsAPI.minecraft;
 
 import com.chen1335.ultimateEnchantment.tags.UEEnchantmentTags;
 import net.minecraft.ChatFormatting;

@@ -136,7 +136,7 @@ configurations {
 
 dependencies {
     implementation "curse.maven:cloth-config-348521:5729127"
-//    implementation "curse.maven:apotheosis-313970:6926309"
+    implementation "curse.maven:apotheosis-313970:6926309"
     implementation "curse.maven:apothic-attributes-898963:6751650"
     implementation "curse.maven:apothic-enchanting-1063926:6926290"
     implementation "curse.maven:apothic-spawners-986583:6751589"
