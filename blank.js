@@ -1,1 +1,1 @@
-Math.min(5+lvl,10)
+Math.max(10,20-2*lvl)

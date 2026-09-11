@@ -2,6 +2,7 @@ package com.chen1335.ultimateEnchantment.mixins.minecraft;
 
 import com.chen1335.ultimateEnchantment.API.UEDamageTypeTags;
 import com.chen1335.ultimateEnchantment.dataComponentType.UEDataComponentTypes;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.Vanquisher;
 import com.chen1335.ultimateEnchantment.enchantment.specialEnchantEffects.TearEffect;
 import com.chen1335.ultimateEnchantment.enchantment.specialEnchantEffects.ThunderBoltEffect;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.ILivingEntityMixin;
@@ -24,6 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import javax.annotation.Nullable;
+import javax.script.SimpleBindings;
 import java.util.Stack;
 
 @Mixin(LivingEntity.class)
@@ -95,9 +97,11 @@ public abstract class LivingEntityMixin implements ILivingEntityMixin {
                 return;
             }
 
+            SimpleBindings bindings = new SimpleBindings();
+            int duration = Math.round(Vanquisher.BUFF_DURATION.calculate(bindings));
             if (activeVanquisher != null) {
                 this.removeEffect(MobEffects.UN_ACTIVE_VANQUISHER);
-                this.addEffect(new MobEffectInstance(MobEffects.ACTIVE_VANQUISHER, 400, 0, false, false, true));
+                this.addEffect(new MobEffectInstance(MobEffects.ACTIVE_VANQUISHER, duration, 0, false, false, true));
                 return;
             }
 
@@ -105,12 +109,12 @@ public abstract class LivingEntityMixin implements ILivingEntityMixin {
                 return;
             }
 
-            if (unActiveVanquisher.getAmplifier() + 1 < 10) {
-                unActiveVanquisher.update(new MobEffectInstance(MobEffects.UN_ACTIVE_VANQUISHER, 400, unActiveVanquisher.getAmplifier(), false, false, true));
+            if (unActiveVanquisher.getAmplifier() + 1 < Vanquisher.MAX_STACKS.calculate(bindings)) {
+                unActiveVanquisher.update(new MobEffectInstance(MobEffects.UN_ACTIVE_VANQUISHER, duration, unActiveVanquisher.getAmplifier(), false, false, true));
                 this.onEffectUpdated(unActiveVanquisher, true, entity);
             } else {
                 this.removeEffect(MobEffects.UN_ACTIVE_VANQUISHER);
-                this.addEffect(new MobEffectInstance(MobEffects.ACTIVE_VANQUISHER, 400, 0, false, false, true));
+                this.addEffect(new MobEffectInstance(MobEffects.ACTIVE_VANQUISHER, duration, 0, false, false, true));
             }
         }
     }

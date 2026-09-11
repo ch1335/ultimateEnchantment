@@ -1,6 +1,7 @@
 package com.chen1335.ultimateEnchantment.mobEffect.effects;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.Vanquisher;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -12,12 +13,14 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
+import javax.script.SimpleBindings;
+
 public class UnActiveVanquisher extends MobEffect {
 
     public UnActiveVanquisher(MobEffectCategory pCategory, int pColor) {
         super(pCategory, pColor);
-        this.addAttributeModifier(Attributes.ATTACK_DAMAGE, ResourceLocation.fromNamespaceAndPath(UltimateEnchantment.MODID, "vanquisher"), 0.05, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
-        this.addAttributeModifier(Attributes.ATTACK_SPEED, ResourceLocation.fromNamespaceAndPath(UltimateEnchantment.MODID, "vanquisher"), 0.1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
+        this.addAttributeModifier(Attributes.ATTACK_DAMAGE, ResourceLocation.fromNamespaceAndPath(UltimateEnchantment.MODID, "vanquisher"), Vanquisher.DAMAGE_PER_STACK.calculate(new SimpleBindings()), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+        this.addAttributeModifier(Attributes.ATTACK_SPEED, ResourceLocation.fromNamespaceAndPath(UltimateEnchantment.MODID, "vanquisher"), Vanquisher.SPEED_PER_STACK.calculate(new SimpleBindings()), AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
     }
 
     public static void renderLevel(GuiGraphics pGuiGraphics, Font font, int x, int y, MobEffectInstance mobeffectinstance) {

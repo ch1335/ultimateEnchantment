@@ -3,21 +3,24 @@ package com.chen1335.ultimateEnchantment.enchantment.enchantments;
 import com.chen1335.ultimateEnchantment.common.Formula;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentBasic;
 import com.chen1335.ultimateEnchantment.tags.UEEnchantmentTags;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.item.enchantment.Enchantment;
 
+import javax.script.SimpleBindings;
 import java.util.List;
 import java.util.Map;
 
 public class Vanquisher extends EnchantmentBasic {
     public static final Formula BUFF_DURATION = new Formula("400");
-    public static final Formula CHARGE_THRESHOLD = new Formula("0.5");
     public static final Formula MAX_STACKS = new Formula("10");
     public static final Formula DAMAGE_PER_STACK = new Formula("0.05");
     public static final Formula SPEED_PER_STACK = new Formula("0.1");
-    public static final Formula ACTIVE_DAMAGE = new Formula("0.5");
-    public static final Formula ACTIVE_SPEED = new Formula("1");
+    public static final Formula COOL_DOWN = new Formula("20");
+    public static final Formula LIFE_STEAL = new Formula("0.04");
 
     public Vanquisher() {
         super("vanquisher");
@@ -34,11 +37,21 @@ public class Vanquisher extends EnchantmentBasic {
     @Override
     protected void registerFormula(Map<String, Formula> formulas) {
         formulas.put("buff_duration", BUFF_DURATION);
-        formulas.put("charge_threshold", CHARGE_THRESHOLD);
         formulas.put("max_stacks", MAX_STACKS);
         formulas.put("damage_per_stack", DAMAGE_PER_STACK);
         formulas.put("speed_per_stack", SPEED_PER_STACK);
-        formulas.put("active_damage", ACTIVE_DAMAGE);
-        formulas.put("active_speed", ACTIVE_SPEED);
+        formulas.put("cool_down", COOL_DOWN);
+    }
+
+    @Override
+    public MutableComponent getDesc(int level) {
+        SimpleBindings bindings = new SimpleBindings();
+        return Component.translatable(getDescId(),
+                COOL_DOWN.toComponent(bindings, 0.05F),
+                MAX_STACKS.toComponent(bindings, 1),
+                DAMAGE_PER_STACK.toComponent(bindings, 100),
+                SPEED_PER_STACK.toComponent(bindings, 100),
+                LIFE_STEAL.toComponent(bindings, 100)
+        ).withStyle(ChatFormatting.LIGHT_PURPLE);
     }
 }

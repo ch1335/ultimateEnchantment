@@ -16,15 +16,18 @@ public class PlayerData implements INBTSerializable<CompoundTag> {
     public float breakSpeedMultiplier = 0;
     public float breakSpeedMultiplierRemainingTime = 0;
 
+    public int vanquisherCooldown = 0;
+
     public void tick(Player player) {
-        if (breakSpeedMultiplier > 0) {
+        if (!player.level().isClientSide() && breakSpeedMultiplier > 0) {
             breakSpeedMultiplierRemainingTime--;
             if (breakSpeedMultiplierRemainingTime <= 0) {
                 breakSpeedMultiplier = 0;
-                if (!player.level().isClientSide()) {
-                    PacketDistributor.sendToPlayer((ServerPlayer) player,new BreakSpeedMultiplierPack(breakSpeedMultiplier));
-                }
+                PacketDistributor.sendToPlayer((ServerPlayer) player, new BreakSpeedMultiplierPack(breakSpeedMultiplier));
             }
+        }
+        if (vanquisherCooldown > 0) {
+            vanquisherCooldown--;
         }
         hardenedManaEffect.tick(player);
     }

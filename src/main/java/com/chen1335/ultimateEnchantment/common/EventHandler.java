@@ -105,16 +105,27 @@ public class EventHandler {
             } else {
                 equipmentSlot = itemStack.getEquipmentSlot();
             }
+            HolderLookup.RegistryLookup<Enchantment> lookup = CommonHooks.resolveLookup(Registries.ENCHANTMENT);
+
 
             if (equipmentSlot != null) {
-                int lvl = UEEnchantments.LAST_STAND.getEnchantmentLevel(itemStack, CommonHooks.resolveLookup(Registries.ENCHANTMENT));
-                if (lvl > 0) {
-                    SimpleBindings simpleBindings = LastStand.buildBindings(lvl);
-                    if (itemStack.getOrDefault(UEDataComponentTypes.USER_HEALTH, 0).floatValue() <= itemStack.getOrDefault(UEDataComponentTypes.USER_MAX_HEALTH, 0).floatValue() * LastStand.HEALTH_THRESHOLD.calculate(simpleBindings)) {
-                        AttributeModifier attributeModifier = new AttributeModifier(AttributeModifierId.LAST_STAND_ARMOR.withSuffix("/" + equipmentSlot.getSerializedName()), LastStand.ARMOR_BONUS.calculate(simpleBindings), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
-                        AttributeModifier attributeModifier1 = new AttributeModifier(AttributeModifierId.LAST_STAND_ARMOR_TOUGHNESS.withSuffix("/" + equipmentSlot.getSerializedName()), LastStand.ARMOR_BONUS.calculate(simpleBindings), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
-                        event.addModifier(Attributes.ARMOR, attributeModifier, EquipmentSlotGroup.ARMOR);
-                        event.addModifier(Attributes.ARMOR_TOUGHNESS, attributeModifier1, EquipmentSlotGroup.ARMOR);
+                {
+                    int lvl = UEEnchantments.OVER_GROW.getEnchantmentLevel(itemStack, lookup);
+                    if (lvl > 0) {
+                        SimpleBindings simpleBindings = LastStand.buildBindings(lvl);
+                        event.addModifier(Attributes.MAX_HEALTH, new AttributeModifier(OverGrow.makeId(equipmentSlot.getSerializedName()), OverGrow.HEALTH_BONUS.calculate(simpleBindings), AttributeModifier.Operation.ADD_MULTIPLIED_BASE), EquipmentSlotGroup.bySlot(equipmentSlot));
+                    }
+                }
+                {
+                    int lvl = UEEnchantments.LAST_STAND.getEnchantmentLevel(itemStack, lookup);
+                    if (lvl > 0) {
+                        SimpleBindings simpleBindings = LastStand.buildBindings(lvl);
+                        if (itemStack.getOrDefault(UEDataComponentTypes.USER_HEALTH, 0).floatValue() <= itemStack.getOrDefault(UEDataComponentTypes.USER_MAX_HEALTH, 0).floatValue() * LastStand.HEALTH_THRESHOLD.calculate(simpleBindings)) {
+                            AttributeModifier attributeModifier = new AttributeModifier(AttributeModifierId.LAST_STAND_ARMOR.withSuffix("/" + equipmentSlot.getSerializedName()), LastStand.ARMOR_BONUS.calculate(simpleBindings), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+                            AttributeModifier attributeModifier1 = new AttributeModifier(AttributeModifierId.LAST_STAND_ARMOR_TOUGHNESS.withSuffix("/" + equipmentSlot.getSerializedName()), LastStand.ARMOR_BONUS.calculate(simpleBindings), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+                            event.addModifier(Attributes.ARMOR, attributeModifier, EquipmentSlotGroup.bySlot(equipmentSlot));
+                            event.addModifier(Attributes.ARMOR_TOUGHNESS, attributeModifier1, EquipmentSlotGroup.bySlot(equipmentSlot));
+                        }
                     }
                 }
             }
@@ -149,7 +160,7 @@ public class EventHandler {
                     SimpleBindings bindings = LifeSteal.buildBindings(lvl);
 
                     PlayerData data = event.getPlayer().getData(AttachmentTypes.PLAYER_DATA);
-                    data.breakSpeedMultiplier = Math.min(data.breakSpeedMultiplier + Math.round(KineticEnergy.INCREMENT.calculate(bindings)), Math.round(KineticEnergy.MAX_SPEED.calculate(bindings)));
+                    data.breakSpeedMultiplier = Math.min(data.breakSpeedMultiplier + KineticEnergy.INCREMENT.calculate(bindings), KineticEnergy.MAX_SPEED.calculate(bindings));
                     if (!event.getPlayer().level().isClientSide()) {
                         PacketDistributor.sendToPlayer((ServerPlayer) event.getPlayer(), new BreakSpeedMultiplierPack(data.breakSpeedMultiplier));
                     }
@@ -159,10 +170,10 @@ public class EventHandler {
         }
 
         @SubscribeEvent
-        public static void lifeStealAndManaSteal(LivingDamageEvent.Pre event) {
+        public static void lifeStealAndManaSteal(LivingDamageEvent.Post event) {
             if (event.getSource().getEntity() instanceof LivingEntity attacker && event.getSource().is(UEDamageTypeTags.IS_ATTACK)) {
                 ItemStack itemStack = attacker.getWeaponItem();
-                float actualDamage = Math.min(event.getEntity().getHealth(), event.getNewDamage());
+                float actualDamage = event.getNewDamage();
                 {
                     int lvl = UEEnchantments.LIFE_STEAL.getEnchantmentLevel(itemStack, event.getEntity().level());
                     if (lvl > 0) {
@@ -171,7 +182,6 @@ public class EventHandler {
                         attacker.heal(healAmount);
                     }
                 }
-
                 {
                     int lvl = UEEnchantments.MANA_STEAL.getEnchantmentLevel(itemStack, event.getEntity().level());
                     if (lvl > 0 && UltimateEnchantment.isIronsSpellBooksLoaded() && attacker instanceof ServerPlayer player) {
@@ -179,6 +189,11 @@ public class EventHandler {
                         float manaRegainAmount = (float) Math.min(ManaSteal.MANA_PERCENT.calculate(bindings), player.getAttributeValue(AttributeRegistry.MAX_MANA) * ManaSteal.MAX_PERCENT.calculate(bindings));
                         MagicData.getPlayerMagicData(player).addMana(manaRegainAmount);
                         PacketDistributor.sendToPlayer(player, new SyncManaPacket(MagicData.getPlayerMagicData(player)));
+                    }
+                }
+                {
+                    if (attacker.hasEffect(MobEffects.ACTIVE_VANQUISHER)) {
+                        attacker.heal(actualDamage * Vanquisher.LIFE_STEAL.calculate(new SimpleBindings()));
                     }
                 }
             }
@@ -261,29 +276,30 @@ public class EventHandler {
 
         @SubscribeEvent
         public static void VanquisherEffect(LivingIncomingDamageEvent event) {
-            if (event.getSource().getEntity() instanceof LivingEntity livingEntity && event.getSource().is(UEDamageTypeTags.IS_ATTACK)) {
-                if (livingEntity instanceof Player player && player.getAttackStrengthScale(0) < 0.5) {
+            if (event.getSource().getEntity() instanceof Player player && event.getSource().is(UEDamageTypeTags.IS_ATTACK)) {
+                if (player.getData(AttachmentTypes.PLAYER_DATA).vanquisherCooldown > 0) {
                     return;
                 }
 
-                int lvl = UEEnchantments.VANQUISHER.getEnchantmentLevel(livingEntity.getWeaponItem(), livingEntity.level());
+                int lvl = UEEnchantments.VANQUISHER.getEnchantmentLevel(player.getWeaponItem(), player.level());
                 if (lvl > 0) {
                     SimpleBindings bindings = Vanquisher.buildBindings(lvl);
+                    player.getData(AttachmentTypes.PLAYER_DATA).vanquisherCooldown = Math.round(Vanquisher.COOL_DOWN.calculate(bindings));
                     int buffDuration = Math.round(Vanquisher.BUFF_DURATION.calculate(bindings));
-                    if (livingEntity.getEffect(MobEffects.ACTIVE_VANQUISHER) != null) {
+                    if (player.getEffect(MobEffects.ACTIVE_VANQUISHER) != null) {
                         event.getEntity().invulnerableTime = 0;
-                        livingEntity.addEffect(new MobEffectInstance(MobEffects.ACTIVE_VANQUISHER, buffDuration, 0, false, false, true));
+                        player.addEffect(new MobEffectInstance(MobEffects.ACTIVE_VANQUISHER, buffDuration, 0, false, false, true));
                         return;
                     }
 
-                    MobEffectInstance instance = livingEntity.getEffect(MobEffects.UN_ACTIVE_VANQUISHER);
+                    MobEffectInstance instance = player.getEffect(MobEffects.UN_ACTIVE_VANQUISHER);
                     int amplifier = 0;
                     if (instance != null) {
                         amplifier = instance.getAmplifier() + 1;
                     }
 
 
-                    livingEntity.addEffect(new MobEffectInstance(MobEffects.UN_ACTIVE_VANQUISHER, buffDuration, amplifier, false, false, true));
+                    player.addEffect(new MobEffectInstance(MobEffects.UN_ACTIVE_VANQUISHER, buffDuration, amplifier, false, false, true));
                 }
             }
         }
