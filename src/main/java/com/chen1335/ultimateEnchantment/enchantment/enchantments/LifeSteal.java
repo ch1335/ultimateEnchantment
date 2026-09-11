@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 public class LifeSteal extends EnchantmentBasic {
-    public static final Formula HEAL_PERCENT = new Formula("0.025*lvl");
-    public static final Formula MAX_PERCENT = new Formula("0.04");
+    public static final Formula HEAL_PERCENT = new Formula("(3+lvl)*0.01");
+    public static final Formula MAX_PERCENT = new Formula("Math.min((4+lvl),8)*0.01");
 
     public LifeSteal() {
         super("life_steal");

@@ -1,4 +1,4 @@
-package com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment;
+package com.chen1335.ultimateEnchantment.enchantment.effectComponents;
 
 import com.chen1335.ultimateEnchantment.common.Formula;
 import com.mojang.serialization.Codec;

@@ -10,8 +10,7 @@ import com.chen1335.ultimateEnchantment.config.ServerConfig;
 import com.chen1335.ultimateEnchantment.dataComponentType.UEDataComponentTypes;
 import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
-import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.FormulaComponent;
-import com.chen1335.ultimateEnchantment.enchantment.effects.UEEnchantmentEffects;
+import com.chen1335.ultimateEnchantment.enchantment.effectComponents.FormulaComponent;
 import com.chen1335.ultimateEnchantment.mobEffect.MobEffects;
 import com.chen1335.ultimateEnchantment.tags.UEEnchantmentTags;
 import com.mojang.logging.LogUtils;
@@ -83,8 +82,6 @@ public class UltimateEnchantment {
         Conditions.CONDITION_CODECS.register(modEventBus);
         LootItemConditions.LOOT_ITEM_CONDITION_TYPES.register(modEventBus);
         UEDataComponentTypes.AEA_DATA.register(modEventBus);
-        UEEnchantmentEffects.ENCHANTMENT_ENTITY_EFFECT.register(modEventBus);
-        UEEnchantmentEffects.ENCHANTMENT_LOCATION_BASED_EFFECT.register(modEventBus);
         UEEnchantmentEffectComponents.TYPES.register(modEventBus);
         AttachmentTypes.ATTACHMENT_TYPES.register(modEventBus);
         MobEffects.MOB_EFFECT_DEFERRED_REGISTER.register(modEventBus);

@@ -9,7 +9,6 @@ import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.config.CommonConfig;
 import com.chen1335.ultimateEnchantment.dataComponentType.UEDataComponentTypes;
 import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
-import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.LegendComponent;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.*;
 import com.chen1335.ultimateEnchantment.loot.predicates.CreeperIsPoweredCondition;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IItemStackMixin;
@@ -215,7 +214,7 @@ public class EventHandler {
             ItemStack to = event.getTo();
             if (UEEnchantments.LEGEND.getEnchantmentLevel(form, livingEntity.level()) > 0) {
                 livingEntity.getAttributes().supplier.instances.keySet().forEach((attributeHolder) -> {
-                    Objects.requireNonNull(livingEntity.getAttributes().getInstance(attributeHolder)).removeModifier(LegendComponent.idForSlot(slot));
+                    Objects.requireNonNull(livingEntity.getAttributes().getInstance(attributeHolder)).removeModifier(Legend.idForSlot(slot));
                 });
             }
 
@@ -224,9 +223,9 @@ public class EventHandler {
                 SimpleBindings bindings = Legend.buildBindings(lvl);
                 livingEntity.getAttributes().supplier.instances.keySet().forEach((attributeHolder) -> {
                     Attribute.Sentiment sentiment = attributeHolder.value().sentiment;
-                    Objects.requireNonNull(livingEntity.getAttributes().getInstance(attributeHolder)).removeModifier(LegendComponent.idForSlot(slot));
+                    Objects.requireNonNull(livingEntity.getAttributes().getInstance(attributeHolder)).removeModifier(Legend.idForSlot(slot));
                     if (sentiment == Attribute.Sentiment.POSITIVE && !CommonConfig.loadedLegendBlackList.contains(attributeHolder.value())) {
-                        Objects.requireNonNull(livingEntity.getAttributes().getInstance(attributeHolder)).addTransientModifier(new AttributeModifier(LegendComponent.idForSlot(slot), Legend.ATTRIBUTE_BONUS.calculate(bindings), AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
+                        Objects.requireNonNull(livingEntity.getAttributes().getInstance(attributeHolder)).addTransientModifier(new AttributeModifier(Legend.idForSlot(slot), Legend.ATTRIBUTE_BONUS.calculate(bindings), AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
                     }
                 });
             }

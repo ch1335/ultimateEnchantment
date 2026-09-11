@@ -14,6 +14,8 @@
   "enchantment.ultimate_enchantment.life_steal": "Life Steal",
   "enchantment.ultimate_enchantment.life_steal.specialDesc": "Heals for %d%% of damage dealt, with each heal capped at %d%% of your maximum health",
   "enchantment.ultimate_enchantment.smelting": "Smelting",
+  "enchantment.ultimate_enchantment.smelting.specialDesc": "Automatic smelting of dropped items from mined blocks",
+
   "enchantment.ultimate_enchantment.critical_chance": "Critical Chance",
   "enchantment.ultimate_enchantment.critical_chance.specialDesc": "Grants %d%% critical hit chance",
   "enchantment.ultimate_enchantment.critical_damage": "Critical Damage",

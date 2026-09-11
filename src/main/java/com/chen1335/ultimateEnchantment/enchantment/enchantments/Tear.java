@@ -3,6 +3,7 @@ package com.chen1335.ultimateEnchantment.enchantment.enchantments;
 import com.chen1335.ultimateEnchantment.common.Formula;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentBasic;
 import com.chen1335.ultimateEnchantment.tags.UEEnchantmentTags;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.tags.ItemTags;
@@ -40,6 +41,6 @@ public class Tear extends EnchantmentBasic {
     public MutableComponent getDesc(int level) {
         return Component.translatable(getDescId(), level + 1,
                 DAMAGE_ADD.toComponent(buildBindings(level), 100),
-                HEALTH_DAMAGE.toComponent(buildBindings(level), 100));
+                HEALTH_DAMAGE.toComponent(buildBindings(level), 100)).withStyle(ChatFormatting.LIGHT_PURPLE);
     }
 }

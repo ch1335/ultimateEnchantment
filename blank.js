@@ -1,0 +1,1 @@
+Math.min(5+lvl,10)

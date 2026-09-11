@@ -14,7 +14,7 @@ public record EnchantmentEnableCondition(boolean enable) implements ICondition {
     public static MapCodec<EnchantmentEnableCondition> CODEC = RecordCodecBuilder.mapCodec(
             builder -> builder
                     .group(
-                            Codec.BOOL.fieldOf("id").forGetter(EnchantmentEnableCondition::enable))
+                            Codec.BOOL.fieldOf("enable").forGetter(EnchantmentEnableCondition::enable))
                     .apply(builder, EnchantmentEnableCondition::new));
 
     @Override

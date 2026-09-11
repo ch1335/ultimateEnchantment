@@ -4,7 +4,7 @@ import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.common.Formula;
 import com.chen1335.ultimateEnchantment.common.conditions.EnchantmentEnableCondition;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
-import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UltimateEnchantment.FormulaComponent;
+import com.chen1335.ultimateEnchantment.enchantment.effectComponents.FormulaComponent;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
@@ -182,9 +182,5 @@ public class EnchantmentBasic {
                 list = List.of(items);
             }
         }
-    }
-
-    private record CapturedEnchantment(Optional<Holder.Reference<Enchantment>> optional) {
-        public static final CapturedEnchantment EMPTY = new CapturedEnchantment(Optional.empty());
     }
 }

@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 public class ManaSteal extends EnchantmentBasic {
-    public static final Formula MANA_PERCENT = new Formula("0.1*lvl");
-    public static final Formula MAX_PERCENT = new Formula("0.06");
+    public static final Formula MANA_PERCENT = new Formula("(6 + 2 * (lvl-1))*0.01");
+    public static final Formula MAX_PERCENT = new Formula("Math.min((5+lvl),10)*0.01");
 
     public ManaSteal() {
         super("mana_steal", "irons_spellbooks");
@@ -34,6 +34,6 @@ public class ManaSteal extends EnchantmentBasic {
 
     @Override
     public MutableComponent getDesc(int level) {
-        return Component.translatable(getDescId(), MANA_PERCENT.toComponent(buildBindings(level), 100));
+        return Component.translatable(getDescId(), MANA_PERCENT.toComponent(buildBindings(level), 100),MAX_PERCENT.toComponent(buildBindings(level), 100));
     }
 }

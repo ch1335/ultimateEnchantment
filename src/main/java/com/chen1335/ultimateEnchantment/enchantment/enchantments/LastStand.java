@@ -3,6 +3,7 @@ package com.chen1335.ultimateEnchantment.enchantment.enchantments;
 import com.chen1335.ultimateEnchantment.common.Formula;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentBasic;
 import com.chen1335.ultimateEnchantment.tags.UEEnchantmentTags;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.tags.ItemTags;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 public class LastStand extends EnchantmentBasic {
-    public static final Formula HEALTH_THRESHOLD = new Formula("0.334");
+    public static final Formula HEALTH_THRESHOLD = new Formula("0.4");
     public static final Formula ARMOR_BONUS = new Formula("0.05*lvl");
 
     public LastStand() {
@@ -35,6 +36,6 @@ public class LastStand extends EnchantmentBasic {
 
     @Override
     public MutableComponent getDesc(int level) {
-        return Component.translatable(getDescId(),ARMOR_BONUS.toComponent(buildBindings(level), 100));
+        return Component.translatable(getDescId(),HEALTH_THRESHOLD.toComponent(buildBindings(level), 100),ARMOR_BONUS.toComponent(buildBindings(level), 100)).withStyle(ChatFormatting.LIGHT_PURPLE);
     }
 }

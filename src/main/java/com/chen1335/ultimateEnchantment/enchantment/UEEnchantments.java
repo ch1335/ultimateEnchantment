@@ -22,9 +22,13 @@ import com.chen1335.ultimateEnchantment.enchantment.enchantments.QuickLatch;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.Smelting;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.Eternal;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonParseException;
 import com.google.gson.GsonBuilder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLPaths;
 
 import java.io.IOException;
@@ -77,20 +81,44 @@ public class UEEnchantments {
                 .toAbsolutePath().normalize();
         Path file = directory.resolve(key.location().getPath() + ".json").normalize();
         if (!file.startsWith(directory)) {
-            UltimateEnchantment.LOGGER.error("Enchant configuration path exceeds configuration directory：{}", file);
+            UltimateEnchantment.LOGGER.error("Enchant configuration path exceeds configuration directory: {}", file);
             return enchantment;
         }
-        if (Files.exists(file, LinkOption.NOFOLLOW_LINKS)) {
 
-            return enchantment;
+        String version = ModList.get()
+                .getModFileById(UltimateEnchantment.MODID)
+                .versionString();
+        if (Files.exists(file, LinkOption.NOFOLLOW_LINKS)) {
+            try {
+                JsonObject existing = JsonParser.parseString(
+                        Files.readString(file, StandardCharsets.UTF_8)
+                ).getAsJsonObject();
+                if (existing.has("version")
+                        && version.equals(existing.get("version").getAsString())) {
+                    return enchantment;
+                }
+            } catch (JsonParseException | IllegalStateException | IOException exception) {
+                UltimateEnchantment.LOGGER.error(
+                        "Unable to read enchantment profile version {}, keeping existing file {}",
+                        version,
+                        file,
+                        exception
+                );
+                return enchantment;
+            }
         }
 
         try {
             Files.createDirectories(file.getParent());
-            String json = GSON.toJson(enchantment.toJson()) + System.lineSeparator();
-            Files.writeString(file, json, StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW);
-        } catch (FileAlreadyExistsException exception) {
-            // 检查后文件可能已被其他调用创建，保留已有配置。
+            JsonObject json = enchantment.toJson();
+            json.addProperty("version", version);
+            Files.writeString(
+                    file,
+                    GSON.toJson(json) + System.lineSeparator(),
+                    StandardCharsets.UTF_8,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.TRUNCATE_EXISTING
+            );
         } catch (IOException exception) {
             UltimateEnchantment.LOGGER.error("Unable to create enchantment profile {}", file, exception);
         }

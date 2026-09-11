@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class ThunderBolt extends EnchantmentBasic {
     public static final Formula MAIN_DAMAGE = new Formula("0.1*lvl");
-    public static final Formula OTHER_DAMAGE = new Formula("0.05*lvl");
+    public static final Formula OTHER_DAMAGE = new Formula("0.25*lvl");
     public static final Formula RANGE = new Formula("2");
     public static final Formula HEIGHT = new Formula("4");
     public static final Formula HIT_INTERVAL = new Formula("3");
