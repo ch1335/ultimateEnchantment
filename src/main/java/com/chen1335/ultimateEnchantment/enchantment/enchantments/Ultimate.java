@@ -37,7 +37,7 @@ public class Ultimate extends EnchantmentBasic {
     }
 
     @Override
-    public MutableComponent getDesc(int level) {
-        return Component.translatable(getDescId(), Math.round(LEVEL_ADD.calculate(buildBindings(level)))).withStyle(ChatFormatting.LIGHT_PURPLE);
+    public List<MutableComponent> getDesc(int level) {
+        return List.of(Component.translatable(getDescId(), Math.round(LEVEL_ADD.calculate(buildBindings(level)))).withStyle(ChatFormatting.LIGHT_PURPLE));
     }
 }

@@ -35,7 +35,7 @@ public class LastStand extends EnchantmentBasic {
     }
 
     @Override
-    public MutableComponent getDesc(int level) {
-        return Component.translatable(getDescId(),HEALTH_THRESHOLD.toComponent(buildBindings(level), 100),ARMOR_BONUS.toComponent(buildBindings(level), 100)).withStyle(ChatFormatting.LIGHT_PURPLE);
+    public List<MutableComponent> getDesc(int level) {
+        return List.of(Component.translatable(getDescId(),HEALTH_THRESHOLD.toComponent(buildBindings(level), 100),ARMOR_BONUS.toComponent(buildBindings(level), 100)).withStyle(ChatFormatting.LIGHT_PURPLE));
     }
 }

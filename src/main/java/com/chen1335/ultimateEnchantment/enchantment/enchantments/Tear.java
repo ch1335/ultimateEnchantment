@@ -38,10 +38,10 @@ public class Tear extends EnchantmentBasic {
     }
 
     @Override
-    public MutableComponent getDesc(int level) {
-        return Component.translatable(getDescId(), level + 1,
+    public List<MutableComponent> getDesc(int level) {
+        return List.of(Component.translatable(getDescId(), level + 1,
                 DAMAGE_ADD.toComponent(buildBindings(level), 100),
                 HEALTH_DAMAGE.toComponent(buildBindings(level), 100),
-                DURATION.toComponent(buildBindings(level), 0.05F)).withStyle(ChatFormatting.LIGHT_PURPLE);
+                DURATION.toComponent(buildBindings(level), 0.05F)).withStyle(ChatFormatting.LIGHT_PURPLE));
     }
 }

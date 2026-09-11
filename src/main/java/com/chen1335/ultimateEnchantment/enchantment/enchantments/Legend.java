@@ -47,7 +47,7 @@ public class Legend extends EnchantmentBasic {
     }
 
     @Override
-    public MutableComponent getDesc(int level) {
-        return Component.translatable(getDescId(), ATTRIBUTE_BONUS.toComponent(buildBindings(level), 100)).withStyle(ChatFormatting.LIGHT_PURPLE);
+    public List<MutableComponent> getDesc(int level) {
+        return List.of(Component.translatable(getDescId(), ATTRIBUTE_BONUS.toComponent(buildBindings(level), 100)).withStyle(ChatFormatting.LIGHT_PURPLE));
     }
 }

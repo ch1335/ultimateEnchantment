@@ -33,10 +33,10 @@ public class CutDown extends EnchantmentBasic {
     }
 
     @Override
-    public MutableComponent getDesc(int level) {
+    public List<MutableComponent> getDesc(int level) {
         SimpleBindings simpleBindings = buildBindings(level);
-        return Component.translatable(getDescId(),
+        return List.of(Component.translatable(getDescId(),
                 DAMAGE_MUL.toComponent(simpleBindings, 100, 2),
-                MAX_DAMAGE_MUL.toComponent(simpleBindings, 100));
+                MAX_DAMAGE_MUL.toComponent(simpleBindings, 100)));
     }
 }

@@ -30,7 +30,7 @@ public class DoubleHook extends EnchantmentBasic {
     }
 
     @Override
-    public MutableComponent getDesc(int level) {
-        return Component.translatable(getDescId(), CHANCE.toComponent(buildBindings(level), 100));
+    public List<MutableComponent> getDesc(int level) {
+        return List.of(Component.translatable(getDescId(), CHANCE.toComponent(buildBindings(level), 100)));
     }
 }

@@ -29,7 +29,7 @@ public class QuickBait extends EnchantmentBasic {
     }
 
     @Override
-    public MutableComponent getDesc(int level) {
-        return Component.translatable(getDescId(), SPEED.toComponent(buildBindings(level), 100));
+    public List<MutableComponent> getDesc(int level) {
+        return List.of(Component.translatable(getDescId(), SPEED.toComponent(buildBindings(level), 100)));
     }
 }

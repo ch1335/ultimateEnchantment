@@ -55,14 +55,14 @@ public class LethalTempo extends EnchantmentBasic {
     }
 
     @Override
-    public MutableComponent getDesc(int level) {
+    public List<MutableComponent> getDesc(int level) {
         SimpleBindings simpleBindings = buildBindings(level);
-        return Component.translatable(getDescId(),
+        return List.of(Component.translatable(getDescId(),
                         LethalTempo.DAMAGE_MUL.toComponent(simpleBindings, 100),
                         LethalTempo.CHANCE_PER_HIT.toComponent(simpleBindings, 100),
                         LethalTempo.MAX_CHANCE.toComponent(simpleBindings, 100),
                         LethalTempo.KEEP_TIME.toComponent(simpleBindings, 0.05F))
-                .withStyle(ChatFormatting.LIGHT_PURPLE);
+                .withStyle(ChatFormatting.LIGHT_PURPLE));
     }
 
     @SubscribeEvent

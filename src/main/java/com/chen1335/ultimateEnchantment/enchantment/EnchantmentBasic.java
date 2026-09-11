@@ -138,8 +138,17 @@ public class EnchantmentBasic {
         return object;
     }
 
-    public MutableComponent getDesc(int level) {
-        return Component.translatable(getDescId());
+    /**
+     * 该附魔在 tooltip 里显示的说明，一行一个组件，按顺序排。
+     * <p>
+     * 返回列表而不是单个组件是为了能分行：一条 lang 条目里写 {@code \n} 会被 tooltip
+     * 当成普通字符，要断行只能靠多个组件。
+     * <p>
+     * 默认实现只有一行，即 {@link #getDescId()} 对应的 lang 条目。子类要加行就往返回的
+     * 列表里多塞几个组件，顺序即显示顺序。
+     */
+    public List<MutableComponent> getDesc(int level) {
+        return List.of(Component.translatable(getDescId()));
     }
 
     public String getDescId() {

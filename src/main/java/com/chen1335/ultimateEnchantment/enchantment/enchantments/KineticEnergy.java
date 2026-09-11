@@ -33,10 +33,10 @@ public class KineticEnergy extends EnchantmentBasic {
     }
 
     @Override
-    public MutableComponent getDesc(int level) {
-        return Component.translatable(getDescId(),
+    public List<MutableComponent> getDesc(int level) {
+        return List.of(Component.translatable(getDescId(),
                 INCREMENT.toComponent(buildBindings(level), 100, 1),
                 MAX_SPEED.toComponent(buildBindings(level), 100),
-                KEEP_TIME.toComponent(buildBindings(level), 0.05F, 1));
+                KEEP_TIME.toComponent(buildBindings(level), 0.05F, 1)));
     }
 }

@@ -33,7 +33,7 @@ public class ManaSteal extends EnchantmentBasic {
     }
 
     @Override
-    public MutableComponent getDesc(int level) {
-        return Component.translatable(getDescId(), MANA_PERCENT.toComponent(buildBindings(level), 100),MAX_PERCENT.toComponent(buildBindings(level), 100));
+    public List<MutableComponent> getDesc(int level) {
+        return List.of(Component.translatable(getDescId(), MANA_PERCENT.toComponent(buildBindings(level), 100),MAX_PERCENT.toComponent(buildBindings(level), 100)));
     }
 }

@@ -37,10 +37,10 @@ public class ThunderBolt extends EnchantmentBasic {
     }
 
     @Override
-    public MutableComponent getDesc(int level) {
-        return Component.translatable(getDescId(),
+    public List<MutableComponent> getDesc(int level) {
+        return List.of(Component.translatable(getDescId(),
                 MAIN_DAMAGE.toComponent(buildBindings(level), 100),
                 OTHER_DAMAGE.toComponent(buildBindings(level), 100),
-                RANGE.toComponent(buildBindings(level), 1));
+                RANGE.toComponent(buildBindings(level), 1)));
     }
 }

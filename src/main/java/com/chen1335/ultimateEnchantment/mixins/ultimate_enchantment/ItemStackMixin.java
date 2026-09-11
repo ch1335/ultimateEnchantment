@@ -33,6 +33,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.function.Consumer;
 
 
@@ -66,10 +67,9 @@ public abstract class ItemStackMixin implements IItemStackExtension, MutableData
             ItemEnchantments itemEnchantments = this.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY);
             if (itemEnchantments.size() == 1) {
                 for (Object2IntMap.Entry<Holder<Enchantment>> holderEntry : itemEnchantments.entrySet()) {
-                    MutableComponent newDescription = EnchantmentSpecialDesc.getNewDescription(holderEntry.getKey(), holderEntry.getIntValue());
-                    if (newDescription != null) {
-                        tooltipAdder.accept(newDescription);
-                    }
+                    List<MutableComponent> newDescription = EnchantmentSpecialDesc.getNewDescription(holderEntry.getKey(), holderEntry.getIntValue());
+                    // 逐行加：说明书里一行一个组件，拼起来就分不出行了。
+                    newDescription.forEach(tooltipAdder);
                 }
             }
         }

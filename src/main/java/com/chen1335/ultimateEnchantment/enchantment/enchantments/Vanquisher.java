@@ -44,14 +44,14 @@ public class Vanquisher extends EnchantmentBasic {
     }
 
     @Override
-    public MutableComponent getDesc(int level) {
+    public List<MutableComponent> getDesc(int level) {
         SimpleBindings bindings = new SimpleBindings();
-        return Component.translatable(getDescId(),
+        return List.of(Component.translatable(getDescId(),
                 COOL_DOWN.toComponent(bindings, 0.05F),
                 MAX_STACKS.toComponent(bindings, 1),
                 DAMAGE_PER_STACK.toComponent(bindings, 100),
                 SPEED_PER_STACK.toComponent(bindings, 100),
                 LIFE_STEAL.toComponent(bindings, 100)
-        ).withStyle(ChatFormatting.LIGHT_PURPLE);
+        ).withStyle(ChatFormatting.LIGHT_PURPLE));
     }
 }
