@@ -51,6 +51,7 @@
   "enchantment.ultimate_enchantment.ultimate.specialDesc": "§d将这个物品上的§e其他所有附魔§d提升%s级",
   "enchantment.ultimate_enchantment.ultimate_slayer": "终极猎手",
   "enchantment.ultimate_enchantment.ultimate_slayer.specialDesc": "对抗boss时:",
+  "enchantment.ultimate_enchantment.ultimate_slayer.specialDesc.apotheosis": "神化boss被视为boss",
   "enchantment.ultimate_enchantment.ultimate_slayer.specialDesc.damage": "+%s%%伤害",
   "enchantment.ultimate_enchantment.ultimate_slayer.specialDesc.loot": "+%s%%战利品",
   "enchantment.ultimate_enchantment.vanquisher": "征服者",

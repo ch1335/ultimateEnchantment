@@ -59,7 +59,8 @@ public final class BossBonusLoot {
      * <p>
      * 注意这个值直接决定额外摇取的次数（每次摇取都完整展开一遍战利品表），别设得太大。
      * <p>
-     * 返回 {@code 0} 是合法的，表示这次不额外掉 —— 调用方那两处循环都会自然空转。
+     * 返回 {@code 0} 是合法且常见的：不带终极猎手时正是 {@code 0}，调用方那两处循环都会
+     * 自然空转，一点额外掉落都不会有。倍率没有底数，完全由附魔决定。
      * <p>
      * <b>终极猎手</b>的加成在这里叠加：本方法是唯一决定「额外掉多少份」的地方，
      * 而伤害那条路径（{@code EventHandler#ultimateSlayer}）走的是同一套逐件结算，
@@ -68,14 +69,8 @@ public final class BossBonusLoot {
      * {@code killer} 保证非空：没有击杀者的死亡在 {@link #append} 入口就被拦掉了，
      * 走不到这里。
      */
-    /** 底层掉落倍率，即不带任何附魔时的默认值。 */
-    public static final float BASE_RATIO = 0.25F;
-
     public static float ratioFor(Player killer) {
-        // 逐件结算再相加，不是先合并等级 —— 见 UltimateSlayer#sumPerSlot。
-        // 就 0.05*lvl 这个线性公式而言，四件各 V 级相当于每件 +25%、合计 +100%，
-        // 倍率 0.25 -> 1.25。
-        return BASE_RATIO + UltimateSlayer.sumPerSlot(killer, UltimateSlayer.LOOT_BONUS);
+        return UltimateSlayer.sumPerSlot(killer, UltimateSlayer.LOOT_BONUS);
     }
 
     /** 神化给 Boss 打的持久 NBT 标记（{@code apoth.boss}），值恒为 true。 */

@@ -4,10 +4,6 @@
         {
             "id": "ultimate_enchantment:vanquisher",
             "required": false
-        },
-        {
-            "id": "ultimate_enchantment:terminator",
-            "required": false
         }
     ]
 }

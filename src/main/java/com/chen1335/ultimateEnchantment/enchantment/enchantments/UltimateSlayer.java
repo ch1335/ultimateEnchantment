@@ -14,30 +14,24 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.neoforged.fml.ModList;
 
 import javax.script.SimpleBindings;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * 终极猎手：对 Boss 与神化 Boss 的伤害、战利品加成。
- * <p>
- * 加成不取最高、也不合并成一个总等级再算，而是<b>按部位逐件结算再相加</b>，
- * 见 {@link #sumPerSlot(LivingEntity, Formula)}。
- */
+
 public class UltimateSlayer extends EnchantmentBasic {
-    /**
-     * 每级 +2% 对 Boss 伤害。
-     */
-    public static final Formula DAMAGE_BONUS = new Formula("0.02*lvl");
-    /**
-     * 每级 +5% Boss 额外战利品。
-     */
+
+    public static final Formula DAMAGE_BONUS = new Formula("0.03*lvl");
+
     public static final Formula LOOT_BONUS = new Formula("0.05*lvl");
 
     public UltimateSlayer() {
         super("ultimate_slayer");
         supported_items = new Type.TagType<>(ItemTags.ARMOR_ENCHANTABLE);
+        primary_items = supported_items;
         exclusive_set = new Type.TagType<>(UEEnchantmentTags.ULTIMATE_ENCHANTMENT_EXCLUSIVE);
         max_cost = new Enchantment.Cost(200, 0);
         min_cost = new Enchantment.Cost(200, 0);
@@ -88,10 +82,15 @@ public class UltimateSlayer extends EnchantmentBasic {
     @Override
     public List<MutableComponent> getDesc(int level) {
         SimpleBindings bindings = buildBindings(level);
-        return List.of(
-                Component.translatable(getDescId()).withStyle(ChatFormatting.LIGHT_PURPLE),
-                Component.translatable(getDescId() + ".damage", DAMAGE_BONUS.toComponent(bindings, 100)).withStyle(ChatFormatting.LIGHT_PURPLE),
-                Component.translatable(getDescId() + ".loot", LOOT_BONUS.toComponent(bindings, 100)).withStyle(ChatFormatting.LIGHT_PURPLE)
-        );
+        List<MutableComponent> desc = new ArrayList<>(4);
+        desc.add(Component.translatable(getDescId()).withStyle(ChatFormatting.LIGHT_PURPLE));
+        desc.add(Component.translatable(getDescId() + ".damage", DAMAGE_BONUS.toComponent(bindings, 100)).withStyle(ChatFormatting.LIGHT_PURPLE));
+        desc.add(Component.translatable(getDescId() + ".loot", LOOT_BONUS.toComponent(bindings, 100)).withStyle(ChatFormatting.LIGHT_PURPLE));
+        if (ModList.get().isLoaded("apotheosis")) {
+            // 神化的 Boss 用的是它自己那套标签，不带原版 boss 标签，本附魔认不出来，
+            // 所以没装神化时这行不显示 —— 说了反而是误导。
+            desc.add(Component.translatable(getDescId() + ".apotheosis").withStyle(ChatFormatting.GRAY));
+        }
+        return desc;
     }
 }

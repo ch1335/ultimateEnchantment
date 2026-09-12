@@ -137,6 +137,7 @@ configurations {
 dependencies {
     implementation "curse.maven:cloth-config-348521:5729127"
     implementation "curse.maven:apotheosis-313970:6926309"
+    implementation "curse.maven:gateways-to-eternity-417802:6926284"
     implementation "curse.maven:apothic-attributes-898963:6751650"
     implementation "curse.maven:apothic-enchanting-1063926:6926290"
     implementation "curse.maven:apothic-spawners-986583:6751589"
@@ -159,6 +160,8 @@ dependencies {
 
     implementation "curse.maven:mmmmmmmmmmmm-225738:8510632"
     implementation "curse.maven:target-dummy-dependency-fix-1685707:8830057"
+
+    implementation "curse.maven:tslatentitystatus-tes-830420:7115952"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
