@@ -1,6 +1,6 @@
 package com.chen1335.ultimateEnchantment.mixins.ultimate_enchantment;
 
-import com.chen1335.ultimateEnchantment.loot.BossBonusLoot;
+import com.chen1335.ultimateEnchantment.loot.BonusLoot;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * 凋零的下界之星额外掉落。
  * <p>
  * 凋零之星是硬编码在 {@code WitherBoss#dropCustomDeathLoot} 里掉的，不走战利品表，
- * 所以挂在 {@code LootTable#getRandomItems} 上的 {@link BossBonusLoot#append} 完全看不到它。
+ * 所以挂在 {@code LootTable#getRandomItems} 上的 {@link BonusLoot#append} 完全看不到它。
  * 这里补上同一口径的额外掉落。
  * <p>
  * <b>为什么注入 TAIL</b>：原版那颗星得先掉出来，我们才好在它之外追加。TAIL 的位置也仍在
@@ -49,7 +49,7 @@ public abstract class WitherBossMixin {
         WitherBoss self = (WitherBoss) (Object) this;
         RandomSource random = level.getRandom();
         // 原版固定掉 1 颗，基数就是 1。
-        int count = BossBonusLoot.rollCount(1, BossBonusLoot.ratioFor(killer), random);
+        int count = BonusLoot.rollCount(1, BonusLoot.ratioFor(killer), random);
         for (int i = 0; i < count; i++) {
             ItemEntity extra = self.spawnAtLocation(Items.NETHER_STAR);
             if (extra != null) {

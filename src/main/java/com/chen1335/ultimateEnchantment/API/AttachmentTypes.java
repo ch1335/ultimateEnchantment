@@ -22,6 +22,6 @@ public class AttachmentTypes {
     );
 
     public static final Supplier<AttachmentType<CommonEntityData>> COMMON_ENTITY = ATTACHMENT_TYPES.register(
-            "common_entity", () -> AttachmentType.serializable((holder) -> new CommonEntityData()).build()
+            "common_entity", () -> AttachmentType.serializable((holder) -> new CommonEntityData(holder)).build()
     );
 }

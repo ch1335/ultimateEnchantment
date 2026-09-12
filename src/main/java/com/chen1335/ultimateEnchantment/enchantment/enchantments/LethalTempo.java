@@ -1,6 +1,7 @@
 package com.chen1335.ultimateEnchantment.enchantment.enchantments;
 
 import com.chen1335.ultimateEnchantment.API.AttachmentTypes;
+import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.attachmentDatas.UEProjectileData;
 import com.chen1335.ultimateEnchantment.common.Formula;
 import com.chen1335.ultimateEnchantment.dataComponentType.UEDataComponentTypes;
@@ -28,7 +29,7 @@ import javax.script.SimpleBindings;
 import java.util.List;
 import java.util.Map;
 
-@EventBusSubscriber()
+@EventBusSubscriber(modid = UltimateEnchantment.MODID)
 public class LethalTempo extends EnchantmentBasic {
     public static final Formula DAMAGE_MUL = new Formula("0.2");
     public static final Formula CHANCE_PER_HIT = new Formula("0.2");

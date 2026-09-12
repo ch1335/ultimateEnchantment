@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Scabbing extends EnchantmentBasic {
-    public static final Formula ARMOR_SHRED = new Formula("0.05*lvl");
+    public static final Formula ARMOR_SHRED = new Formula("1 - Math.pow(1-0.04,lvl)");
     public static final ResourceLocation MODIFIER_ID = UltimateEnchantment.id("scabbing");
 
     public Scabbing() {
@@ -44,6 +44,6 @@ public class Scabbing extends EnchantmentBasic {
 
     @Override
     public List<MutableComponent> getDesc(int level) {
-        return List.of(Component.translatable(getDescId(), ARMOR_SHRED.toComponent(buildBindings(level), 100)).withStyle(ChatFormatting.GOLD));
+        return List.of(Component.translatable(getDescId(), ARMOR_SHRED.toComponent(buildBindings(level), 100,1)).withStyle(ChatFormatting.GOLD));
     }
 }

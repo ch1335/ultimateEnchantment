@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
- * Boss 额外掉落。
+ * 额外掉落。
  * <p>
  * 按原战利品表<b>额外摇取若干份</b>，份数由 {@link #ratioFor} 按击杀者算出，结果追加到
  * 第一次的结果里。之所以是「重新摇取再抽样」而不是「把第一次的结果复制一份」，是因为战利品表里的
@@ -43,10 +43,10 @@ import java.util.function.Consumer;
  * 这样本类得以保持对 Apotheosis 零编译期依赖。
  */
 @ParametersAreNonnullByDefault
-public final class BossBonusLoot {
+public final class BonusLoot {
 
     /**
-     * 这次额外掉落的倍率，可以大于 1。只由击杀者决定，与 Boss 本身无关。
+     * 这次额外掉落的倍率，可以大于 1。只由击杀者决定，与 实体 本身无关。
      * <p>
      * 结算方式是「整数部分整份全取 + 小数部分按比例抽样」：
      * <ul>
@@ -91,11 +91,11 @@ public final class BossBonusLoot {
     private static final LootContext.VisitedEntry<LootTable> SECOND_PASS =
             LootContext.createVisitedEntry(LootTable.EMPTY);
 
-    private BossBonusLoot() {
+    private BonusLoot() {
     }
 
     /**
-     * 若 {@code context} 对应的掉落来自 Boss，且这次死亡有玩家击杀者，则追加额外掉落并返回。
+     * 若 {@code context} 对应的掉落来自 实体，且这次死亡有玩家击杀者，则追加额外掉落并返回。
      * <p>
      * {@code original} 与返回值是同一个列表对象（原地追加），返回值只为了方便调用方直接返回。
      *
@@ -126,18 +126,18 @@ public final class BossBonusLoot {
         }
 
         // 最热的一行：方块、宝箱、钓鱼等绝大多数 loot table 都没有 THIS_ENTITY，
-        // 在这里就返回了，底下 Boss 判定的开销不会被摊到它们身上。
+        // 在这里就返回了，底下 实体 判定的开销不会被摊到它们身上。
         if (!(context.getParamOrNull(LootContextParams.THIS_ENTITY) instanceof LivingEntity entity)) {
             return original;
         }
-        if (!isBoss(entity)) {
+        if (!canApply(entity)) {
             return original;
         }
 
-        // 没有击杀者的死亡一律不参与（摔死、烧死、被别的生物打死的 Boss 都算）。
+        // 没有击杀者的死亡一律不参与（摔死、烧死、被别的生物打死的 实体 都算）。
         // 用 ATTACKING_ENTITY 而不是 LAST_DAMAGE_PLAYER：前者是最后一击的来源，正是原版
         // dropFromLootTable 用 damageSource.getEntity() 填进去的那个；后者是「最近 5 秒
-        // 内打过我的玩家」，Boss 挨一刀再摔死也会算在他头上。这个口径与神化装备那条路径
+        // 内打过我的玩家」，实体 挨一刀再摔死也会算在他头上。这个口径与神化装备那条路径
         // 一致，见 ApothBossEquipmentLoot#appendEquipment。
         if (!(context.getParamOrNull(LootContextParams.ATTACKING_ENTITY) instanceof Player killer)) {
             return original;
@@ -248,14 +248,11 @@ public final class BossBonusLoot {
         return fresh;
     }
 
-    /**
-     * Boss 判定：原版与模组 Boss 走 {@code c:bosses} tag，神化 Boss 走它自己的持久 NBT 标记。
-     * <p>
-     * 公开给 {@code EventHandler#ultimateSlayer} 复用：终极猎手的伤害与战利品加成
-     * 必须认同一批目标，否则会出现「打得出额外伤害却不掉额外战利品」的割裂。
-     */
-    public static boolean isBoss(LivingEntity entity) {
-        return entity.getType().is(Tags.EntityTypes.BOSSES)
+
+    public static boolean canApply(LivingEntity entity) {
+        boolean isBoss = entity.getType().is(Tags.EntityTypes.BOSSES)
                 || entity.getPersistentData().getBoolean(APOTH_BOSS_KEY);
+
+        return isBoss;
     }
 }

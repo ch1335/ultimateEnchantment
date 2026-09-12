@@ -33,8 +33,7 @@ public class UEEnchantmentTagsProvider extends EnchantmentTagsProvider {
                 .addTag(UEEnchantmentTags.LEGENDARY_ENCHANTMENT);
 
         tag(EnchantmentTags.IN_ENCHANTING_TABLE)
-                .addTag(UEEnchantmentTags.TRADEABLE_LEGENDARY_ENCHANTMENT)
-                .addOptional(UEEnchantments.VANQUISHER.getKey().location());
+                .addTag(UEEnchantmentTags.TRADEABLE_LEGENDARY_ENCHANTMENT);
 
         tag(EnchantmentTags.DOUBLE_TRADE_PRICE)
                 .addTag(UEEnchantmentTags.TRADEABLE_LEGENDARY_ENCHANTMENT);

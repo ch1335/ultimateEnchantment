@@ -4,14 +4,14 @@ package com.chen1335.ultimateEnchantment.common;
 import com.chen1335.ultimateEnchantment.API.AttachmentTypes;
 import com.chen1335.ultimateEnchantment.API.UEDamageTypeTags;
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
+import com.chen1335.ultimateEnchantment.attachmentDatas.CommonEntityData;
 import com.chen1335.ultimateEnchantment.attachmentDatas.PlayerData;
 import com.chen1335.ultimateEnchantment.attachmentDatas.UEProjectileData;
 import com.chen1335.ultimateEnchantment.config.CommonConfig;
-import com.chen1335.ultimateEnchantment.dataComponentType.UEDataComponentTypes;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentBasic;
 import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.*;
-import com.chen1335.ultimateEnchantment.loot.BossBonusLoot;
+import com.chen1335.ultimateEnchantment.loot.BonusLoot;
 import com.chen1335.ultimateEnchantment.loot.predicates.CreeperIsPoweredCondition;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IItemStackMixin;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IUEEntityExtension;
@@ -30,10 +30,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -62,6 +64,7 @@ import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -80,6 +83,13 @@ public class EventHandler {
         public static void PlayerPreTick(PlayerTickEvent.Pre event) {
             if (!event.getEntity().level().isClientSide) {
                 event.getEntity().getData(AttachmentTypes.PLAYER_DATA).tick(event.getEntity());
+            }
+        }
+
+        @SubscribeEvent
+        public static void EntityTickEvent(EntityTickEvent.Post event) {
+            if (!event.getEntity().level().isClientSide) {
+                event.getEntity().getExistingData(AttachmentTypes.COMMON_ENTITY).ifPresent(CommonEntityData::tick);
             }
         }
 
@@ -112,7 +122,7 @@ public class EventHandler {
             for (Object2IntMap.Entry<Holder<Enchantment>> holderEntry : itemStack.getAllEnchantments(lookup).entrySet()) {
                 EnchantmentBasic enchantmentBasic = UEEnchantments.MAP.get(holderEntry.getKey().getKey());
                 if (enchantmentBasic != null && holderEntry.getIntValue() > 0) {
-                    enchantmentBasic.addModifier(event, holderEntry.getIntValue(),equipmentSlot);
+                    enchantmentBasic.addModifier(event, holderEntry.getIntValue(), equipmentSlot);
                 }
             }
         }
@@ -135,9 +145,9 @@ public class EventHandler {
         /**
          * 终极猎手：对 Boss 与神化 Boss 的伤害加成。
          * <p>
-         * 加成按部位逐件结算再相加，与 {@code BossBonusLoot#ratioFor} 共用
+         * 加成按部位逐件结算再相加，与 {@code BonusLoot#ratioFor} 共用
          * {@link UltimateSlayer#sumPerSlot}；Boss 判定也共用
-         * {@link BossBonusLoot#isBoss}，避免出现「打得出额外伤害却不掉额外战利品」的割裂。
+         * {@link BonusLoot#canApply}，避免出现「打得出额外伤害却不掉额外战利品」的割裂。
          */
         @SubscribeEvent(priority = EventPriority.LOW)
         public static void ultimateSlayer(LivingIncomingDamageEvent event) {
@@ -146,7 +156,7 @@ public class EventHandler {
                 return;
             }
             // Boss 判定比遍历装备槽便宜，而绝大多数挨打的目标都不是 Boss，先判。
-            if (!BossBonusLoot.isBoss(event.getEntity())) {
+            if (!BonusLoot.canApply(event.getEntity())) {
                 return;
             }
 

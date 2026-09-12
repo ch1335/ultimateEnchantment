@@ -2,7 +2,7 @@ package com.chen1335.ultimateEnchantment.apotheosis;
 
 import com.chen1335.ultimateEnchantment.apotheosis.attachmentDatas.ApothBossAttachmentTypes;
 import com.chen1335.ultimateEnchantment.apotheosis.attachmentDatas.ApothBossInfo;
-import com.chen1335.ultimateEnchantment.loot.BossBonusLoot;
+import com.chen1335.ultimateEnchantment.loot.BonusLoot;
 import dev.shadowsoffire.apotheosis.affix.AffixHelper;
 import dev.shadowsoffire.apotheosis.loot.LootController;
 import dev.shadowsoffire.apotheosis.loot.LootRarity;
@@ -25,7 +25,7 @@ import java.util.Set;
  * 神化 Boss 的装备不是战利品表产出的，而是 {@code Invader#initBoss} 用
  * {@code Mob#setItemSlot} 直接穿上去的，死亡时由 {@code Mob#dropCustomDeathLoot}
  * 掉落 —— 这条路径<b>完全不经过 {@code LootTable}</b>，所以
- * {@link BossBonusLoot#append} 那个注入点看不到它。宝石之所以一直有效，是因为它走
+ * {@link BonusLoot#append} 那个注入点看不到它。宝石之所以一直有效，是因为它走
  * {@code BonusLootTables#drop}，内部仍然展开战利品表。
  * <p>
  * <b>本类直接引用神化 API</b>，因此调用方必须保证神化已加载 —— 由
@@ -47,7 +47,7 @@ public final class ApothBossEquipmentLoot {
     }
 
     /**
-     * 若 {@code entity} 是神化 Boss 且这次死亡有玩家击杀者，则按 {@link BossBonusLoot#ratioFor}
+     * 若 {@code entity} 是神化 Boss 且这次死亡有玩家击杀者，则按 {@link BonusLoot#ratioFor}
      * 决定这次额外掉几件，每件都现摇一件全新的神化装备掉出。
      * <p>
      * <b>只处理神化装备</b>：判定依据是物品上带没带神化的稀有度组件。神化 Boss 身上
@@ -70,7 +70,7 @@ public final class ApothBossEquipmentLoot {
         if (droppedEquipment.isEmpty()) {
             return;
         }
-        // 没有击杀者的死亡不参与 —— 与 BossBonusLoot#append 同一口径，那边在战利品表
+        // 没有击杀者的死亡不参与 —— 与 BonusLoot#append 同一口径，那边在战利品表
         // 上下文里取不到玩家时也是直接返回。
         if (killer == null) {
             return;
@@ -98,11 +98,11 @@ public final class ApothBossEquipmentLoot {
         Set<LootRarity> rarities = info != null ? info.rarities() : Set.of();
 
         RandomSource random = level.getRandom();
-        float ratio = BossBonusLoot.ratioFor(killer);
+        float ratio = BonusLoot.ratioFor(killer);
         // 件数按 ratio 直接算，不能借 sampleInto —— 那个方法是从既有池子里挑，抽取量被
         // 池子大小卡住，而 Boss 身上就那几件装备，倍率一超就整段被吃掉。基数取「这次实际
         // 掉了几件神化装备」，与战利品表那边同口径：整数部分整件全给，小数部分按概率补一件。
-        int count = BossBonusLoot.rollCount(affixDrops.size(), ratio, random);
+        int count = BonusLoot.rollCount(affixDrops.size(), ratio, random);
         for (int i = 0; i < count; i++) {
             ItemStack fresh = createNewEquipment(ctx, rarities);
             if (!fresh.isEmpty()) {
