@@ -2,6 +2,7 @@ package com.chen1335.ultimateEnchantment.enchantment.enchantments;
 
 import com.chen1335.ultimateEnchantment.common.Formula;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentBasic;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.tags.ItemTags;
@@ -37,6 +38,6 @@ public class KineticEnergy extends EnchantmentBasic {
         return List.of(Component.translatable(getDescId(),
                 INCREMENT.toComponent(buildBindings(level), 100, 1),
                 MAX_SPEED.toComponent(buildBindings(level), 100),
-                KEEP_TIME.toComponent(buildBindings(level), 0.05F, 1)));
+                KEEP_TIME.toComponent(buildBindings(level), 0.05F, 1)).withStyle(ChatFormatting.GOLD));
     }
 }

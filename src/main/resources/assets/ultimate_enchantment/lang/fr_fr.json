@@ -14,6 +14,8 @@
   "enchantment.ultimate_enchantment.double_hook.specialDesc": "Vous avez %s%% de chances de pêcher double butin",
   "enchantment.ultimate_enchantment.eternal": "Éternel",
   "enchantment.ultimate_enchantment.eternal.specialDesc": "§dCet objet devient indestructible et ne peut être détruit par les explosions, le feu, etc. Il flotte au-dessus du vide lorsqu'il est lâché et ses objets ne disparaissent jamais",
+  "enchantment.ultimate_enchantment.ethereal_arrow": "Flèche Éthérée",
+  "enchantment.ultimate_enchantment.ethereal_arrow.specialDesc": "Les flèches infligent %s dégâts supplémentaires par bloc parcouru, jusqu'à un maximum de %s",
   "enchantment.ultimate_enchantment.hardened_mana": "Mana Durci",
   "enchantment.ultimate_enchantment.hardened_mana.specialDesc": "Convertit %s%% du mana dépensé pour les sorts en armure pendant 10 secondes, jusqu'à %s d'armure maximum",
   "enchantment.ultimate_enchantment.kinetic_energy": "Énergie Cinétique",

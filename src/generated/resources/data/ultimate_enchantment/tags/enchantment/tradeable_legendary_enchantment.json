@@ -21,6 +21,10 @@
             "required": false
         },
         {
+            "id": "ultimate_enchantment:ethereal_arrow",
+            "required": false
+        },
+        {
             "id": "ultimate_enchantment:scabbing",
             "required": false
         },

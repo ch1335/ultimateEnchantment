@@ -2,6 +2,7 @@ package com.chen1335.ultimateEnchantment.enchantment.enchantments;
 
 import com.chen1335.ultimateEnchantment.common.Formula;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentBasic;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.tags.ItemTags;
@@ -41,6 +42,6 @@ public class ThunderBolt extends EnchantmentBasic {
         return List.of(Component.translatable(getDescId(),
                 MAIN_DAMAGE.toComponent(buildBindings(level), 100),
                 OTHER_DAMAGE.toComponent(buildBindings(level), 100),
-                RANGE.toComponent(buildBindings(level), 1)));
+                RANGE.toComponent(buildBindings(level), 1)).withStyle(ChatFormatting.GOLD));
     }
 }

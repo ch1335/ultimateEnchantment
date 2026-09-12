@@ -14,6 +14,8 @@
   "enchantment.ultimate_enchantment.double_hook.specialDesc": "You have a %s%% chance to catch double the loot while fishing",
   "enchantment.ultimate_enchantment.eternal": "Eternal",
   "enchantment.ultimate_enchantment.eternal.specialDesc": "§dThis item becomes indestructible and immune to explosions, fire, etc. It floats above the void when dropped and its drops never despawn",
+  "enchantment.ultimate_enchantment.ethereal_arrow": "Ethereal Arrow",
+  "enchantment.ultimate_enchantment.ethereal_arrow.specialDesc": "Arrows deal %s extra damage for every block flown, up to a maximum of %s",
   "enchantment.ultimate_enchantment.hardened_mana": "Hardened Mana",
   "enchantment.ultimate_enchantment.hardened_mana.specialDesc": "Converts %s%% of mana spent on spells into armor for 10 seconds, up to %s armor",
   "enchantment.ultimate_enchantment.kinetic_energy": "Kinetic Energy",

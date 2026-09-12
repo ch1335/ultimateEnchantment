@@ -2,6 +2,7 @@ package com.chen1335.ultimateEnchantment.enchantment.enchantments;
 
 import com.chen1335.ultimateEnchantment.common.Formula;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentBasic;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.tags.ItemTags;
@@ -37,6 +38,6 @@ public class CutDown extends EnchantmentBasic {
         SimpleBindings simpleBindings = buildBindings(level);
         return List.of(Component.translatable(getDescId(),
                 DAMAGE_MUL.toComponent(simpleBindings, 100, 2),
-                MAX_DAMAGE_MUL.toComponent(simpleBindings, 100)));
+                MAX_DAMAGE_MUL.toComponent(simpleBindings, 100)).withStyle(ChatFormatting.GOLD));
     }
 }

@@ -2,6 +2,7 @@ package com.chen1335.ultimateEnchantment.enchantment.enchantments;
 
 import com.chen1335.ultimateEnchantment.common.Formula;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentBasic;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.tags.ItemTags;
@@ -30,6 +31,6 @@ public class QuickBait extends EnchantmentBasic {
 
     @Override
     public List<MutableComponent> getDesc(int level) {
-        return List.of(Component.translatable(getDescId(), SPEED.toComponent(buildBindings(level), 100)));
+        return List.of(Component.translatable(getDescId(), SPEED.toComponent(buildBindings(level), 100)).withStyle(ChatFormatting.GOLD));
     }
 }
