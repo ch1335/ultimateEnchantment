@@ -1,21 +1,20 @@
 package com.chen1335.ultimateEnchantment.utils;
 
+import com.chen1335.ultimateEnchantment.common.EnchantmentLookup;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.neoforged.neoforge.common.CommonHooks;
 
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public interface UEEnchantmentHelper {
     static Optional<Holder.Reference<Enchantment>> getEnchantment(ResourceKey<Enchantment> resourceKey) {
-        HolderLookup.RegistryLookup<Enchantment> lookup = CommonHooks.resolveLookup(Registries.ENCHANTMENT);
+        HolderLookup.RegistryLookup<Enchantment> lookup = EnchantmentLookup.getOrNull();
         if (lookup == null) {
             return Optional.empty();
         }

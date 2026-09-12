@@ -1,14 +1,15 @@
 package com.chen1335.ultimateEnchantment.mixins.ultimate_enchantment;
 
 import com.chen1335.ultimateEnchantment.client.EnchantmentSpecialDesc;
+import com.chen1335.ultimateEnchantment.common.EnchantmentLookup;
 import com.chen1335.ultimateEnchantment.dataComponentType.UEDataComponentTypes;
 import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IItemStackMixin;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
@@ -21,7 +22,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.common.MutableDataComponentHolder;
 import net.neoforged.neoforge.common.extensions.IItemStackExtension;
 import org.jetbrains.annotations.NotNull;
@@ -83,9 +83,26 @@ public abstract class ItemStackMixin implements IItemStackExtension, MutableData
         }
     }
 
+    /**
+     * {@code ETERNAL} 是否生效。
+     * <p>
+     * 用 {@link EnchantmentLookup#getOrNull()} 而不是 {@link EnchantmentLookup#get()}：
+     * 客户端没加载世界时（主菜单、断开连接后）附魔注册表确实取不到，而这时附魔系统本来就不该
+     * 起作用，返回 {@code false} 即可。原先这里把可能为 null 的 lookup 直接交给了
+     * {@code EnchantmentBasic#getEnchantmentLevel}，内部 {@code lookup.get(key)} 会 NPE。
+     */
+    @Unique
+    private boolean ue$isEternal() {
+        HolderLookup.RegistryLookup<Enchantment> lookup = EnchantmentLookup.getOrNull();
+        if (lookup == null) {
+            return false;
+        }
+        return UEEnchantments.ETERNAL.getEnchantmentLevel((ItemStack) (Object) this, lookup) > 0;
+    }
+
     @Inject(method = "setDamageValue", at = @At("HEAD"), cancellable = true)
     private void setDamageValue(int damage, CallbackInfo ci) {
-        if (UEEnchantments.ETERNAL.getEnchantmentLevel((ItemStack) (Object) this, CommonHooks.resolveLookup(Registries.ENCHANTMENT)) > 0) {
+        if (ue$isEternal()) {
             this.getItem().setDamage(ItemStack.class.cast(this), 0);
             ci.cancel();
         }
@@ -93,7 +110,7 @@ public abstract class ItemStackMixin implements IItemStackExtension, MutableData
 
     @Inject(method = "hurtAndBreak(ILnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;Ljava/util/function/Consumer;)V", at = @At("HEAD"), cancellable = true)
     private void hurtAndBreak(int p_220158_, ServerLevel p_346256_, LivingEntity p_220160_, Consumer<Item> p_348596_, CallbackInfo ci) {
-        if (UEEnchantments.ETERNAL.getEnchantmentLevel((ItemStack) (Object) this, CommonHooks.resolveLookup(Registries.ENCHANTMENT)) > 0) {
+        if (ue$isEternal()) {
             this.getItem().setDamage(ItemStack.class.cast(this), 0);
             ci.cancel();
         }

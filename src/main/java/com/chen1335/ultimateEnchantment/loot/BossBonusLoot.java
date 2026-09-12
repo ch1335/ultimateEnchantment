@@ -1,5 +1,6 @@
 package com.chen1335.ultimateEnchantment.loot;
 
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.UltimateSlayer;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
@@ -60,11 +61,21 @@ public final class BossBonusLoot {
      * <p>
      * 返回 {@code 0} 是合法的，表示这次不额外掉 —— 调用方那两处循环都会自然空转。
      * <p>
+     * <b>终极猎手</b>的加成在这里叠加：本方法是唯一决定「额外掉多少份」的地方，
+     * 而伤害那条路径（{@code EventHandler#ultimateSlayer}）走的是同一套逐件结算，
+     * 两边的口径必须一致，所以都调 {@link UltimateSlayer#sumPerSlot}。
+     * <p>
      * {@code killer} 保证非空：没有击杀者的死亡在 {@link #append} 入口就被拦掉了，
-     * 走不到这里。参数留着是为了将来能按击杀者的幸运、进度或属性调整倍率。
+     * 走不到这里。
      */
+    /** 底层掉落倍率，即不带任何附魔时的默认值。 */
+    public static final float BASE_RATIO = 0.25F;
+
     public static float ratioFor(Player killer) {
-        return 5;
+        // 逐件结算再相加，不是先合并等级 —— 见 UltimateSlayer#sumPerSlot。
+        // 就 0.05*lvl 这个线性公式而言，四件各 V 级相当于每件 +25%、合计 +100%，
+        // 倍率 0.25 -> 1.25。
+        return BASE_RATIO + UltimateSlayer.sumPerSlot(killer, UltimateSlayer.LOOT_BONUS);
     }
 
     /** 神化给 Boss 打的持久 NBT 标记（{@code apoth.boss}），值恒为 true。 */
@@ -244,8 +255,11 @@ public final class BossBonusLoot {
 
     /**
      * Boss 判定：原版与模组 Boss 走 {@code c:bosses} tag，神化 Boss 走它自己的持久 NBT 标记。
+     * <p>
+     * 公开给 {@code EventHandler#ultimateSlayer} 复用：终极猎手的伤害与战利品加成
+     * 必须认同一批目标，否则会出现「打得出额外伤害却不掉额外战利品」的割裂。
      */
-    private static boolean isBoss(LivingEntity entity) {
+    public static boolean isBoss(LivingEntity entity) {
         return entity.getType().is(Tags.EntityTypes.BOSSES)
                 || entity.getPersistentData().getBoolean(APOTH_BOSS_KEY);
     }

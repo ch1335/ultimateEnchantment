@@ -21,6 +21,7 @@ import com.chen1335.ultimateEnchantment.enchantment.enchantments.Scabbing;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.QuickLatch;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.Smelting;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.Eternal;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.UltimateSlayer;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -62,6 +63,7 @@ public class UEEnchantments {
     public static final QuickLatch QUICK_LATCH = register(new QuickLatch());
     public static final Smelting SMELTING = register(new Smelting());
     public static final Eternal ETERNAL = register(new Eternal());
+    public static final UltimateSlayer ULTIMATE_SLAYER = register(new UltimateSlayer());
 
     public static SimpleBindings buildBindings(int level) {
         return EnchantmentBasic.buildBindings(level);

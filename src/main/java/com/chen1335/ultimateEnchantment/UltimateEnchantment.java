@@ -4,6 +4,7 @@ import com.chen1335.ultimateEnchantment.API.AttachmentTypes;
 import com.chen1335.ultimateEnchantment.API.objects.Conditions;
 import com.chen1335.ultimateEnchantment.API.objects.LootItemConditions;
 import com.chen1335.ultimateEnchantment.apotheosis.attachmentDatas.ApothBossAttachmentTypes;
+import com.chen1335.ultimateEnchantment.common.EnchantmentLookup;
 import com.chen1335.ultimateEnchantment.common.EventHandler;
 import com.chen1335.ultimateEnchantment.common.Formula;
 import com.chen1335.ultimateEnchantment.config.CommonConfig;
@@ -121,6 +122,10 @@ public class UltimateEnchantment {
     }
 
     public void ServerStartedEvent(ServerStartedEvent event) {
+        // 附魔注册表在 RegistryLayer.WORLDGEN，/reload 不会重建它，所以缓存在这里填一次即可。
+        // 详见 EnchantmentLookup 的类注释。
+        EnchantmentLookup.refreshServer(event.getServer().registryAccess());
+
         event.getServer().registryAccess().lookupOrThrow(Registries.ENCHANTMENT).listElements().forEach(r -> {
             if (r.key().location().getNamespace().equals(MODID)) {
                 UEEnchantments.getEnchantment(r.key()).ifPresent(old -> {

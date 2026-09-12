@@ -10,6 +10,7 @@ import com.chen1335.ultimateEnchantment.config.CommonConfig;
 import com.chen1335.ultimateEnchantment.dataComponentType.UEDataComponentTypes;
 import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.*;
+import com.chen1335.ultimateEnchantment.loot.BossBonusLoot;
 import com.chen1335.ultimateEnchantment.loot.predicates.CreeperIsPoweredCondition;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IItemStackMixin;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IUEEntityExtension;
@@ -23,7 +24,6 @@ import io.redspace.ironsspellbooks.api.registry.AttributeRegistry;
 import io.redspace.ironsspellbooks.network.SyncManaPacket;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -52,7 +52,6 @@ import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 import net.neoforged.neoforge.event.LootTableLoadEvent;
 import net.neoforged.neoforge.event.enchanting.GetEnchantmentLevelEvent;
@@ -105,7 +104,7 @@ public class EventHandler {
             } else {
                 equipmentSlot = itemStack.getEquipmentSlot();
             }
-            HolderLookup.RegistryLookup<Enchantment> lookup = CommonHooks.resolveLookup(Registries.ENCHANTMENT);
+            HolderLookup.RegistryLookup<Enchantment> lookup = EnchantmentLookup.get();
 
 
             if (equipmentSlot != null) {
@@ -143,6 +142,30 @@ public class EventHandler {
                     float damageMultiplier = Math.clamp(percentage * CutDown.DAMAGE_MUL.calculate(simpleBindings), 0, CutDown.MAX_DAMAGE_MUL.calculate(simpleBindings));
                     event.setAmount(event.getAmount() * (damageMultiplier + 1));
                 }
+            }
+        }
+
+        /**
+         * 终极猎手：对 Boss 与神化 Boss 的伤害加成。
+         * <p>
+         * 加成按部位逐件结算再相加，与 {@code BossBonusLoot#ratioFor} 共用
+         * {@link UltimateSlayer#sumPerSlot}；Boss 判定也共用
+         * {@link BossBonusLoot#isBoss}，避免出现「打得出额外伤害却不掉额外战利品」的割裂。
+         */
+        @SubscribeEvent(priority = EventPriority.LOW)
+        public static void ultimateSlayer(LivingIncomingDamageEvent event) {
+            if (!(event.getSource().getEntity() instanceof Player attacker)
+                    || !event.getSource().is(UEDamageTypeTags.IS_ATTACK)) {
+                return;
+            }
+            // Boss 判定比遍历装备槽便宜，而绝大多数挨打的目标都不是 Boss，先判。
+            if (!BossBonusLoot.isBoss(event.getEntity())) {
+                return;
+            }
+
+            float bonus = UltimateSlayer.sumPerSlot(attacker, UltimateSlayer.DAMAGE_BONUS);
+            if (bonus > 0.0F) {
+                event.setAmount(event.getAmount() * (1 + bonus));
             }
         }
 

@@ -1,6 +1,7 @@
 package com.chen1335.ultimateEnchantment.enchantment;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
+import com.chen1335.ultimateEnchantment.common.EnchantmentLookup;
 import com.chen1335.ultimateEnchantment.common.Formula;
 import com.chen1335.ultimateEnchantment.common.conditions.EnchantmentEnableCondition;
 import com.chen1335.ultimateEnchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
@@ -78,7 +79,20 @@ public class EnchantmentBasic {
     }
 
 
+    /**
+     * 走 {@link EnchantmentLookup} 的缓存 lookup，不再自己从 {@code level} 解析。
+     * <p>
+     * {@code level} 只在缓存还没填上时兜底：客户端没有世界（主菜单、断开连接后）、
+     * 数据生成这类时机 {@link EnchantmentLookup#getOrNull()} 返回 {@code null}，
+     * 而调用方显式传进来的 {@code level} 一定是可用的。正常游戏里走不到这条分支。
+     * <p>
+     * 保留这个重载而不是删掉：调用点有二十来处，且签名是公开 API。
+     */
     public int getEnchantmentLevel(ItemStack itemStack, Level level) {
+        HolderLookup.RegistryLookup<Enchantment> lookup = EnchantmentLookup.getOrNull();
+        if (lookup != null) {
+            return getEnchantmentLevel(itemStack, lookup);
+        }
         return getEnchantmentLevel(itemStack, level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT));
     }
 
