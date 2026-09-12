@@ -25,6 +25,10 @@
             "required": false
         },
         {
+            "id": "ultimate_enchantment:hurt_deepens",
+            "required": false
+        },
+        {
             "id": "ultimate_enchantment:scabbing",
             "required": false
         },

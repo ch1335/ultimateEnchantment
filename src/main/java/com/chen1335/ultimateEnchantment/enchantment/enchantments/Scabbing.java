@@ -1,19 +1,26 @@
 package com.chen1335.ultimateEnchantment.enchantment.enchantments;
 
+import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.common.Formula;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentBasic;
+import dev.shadowsoffire.apothic_attributes.api.ALObjects;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 
 import java.util.List;
 import java.util.Map;
 
 public class Scabbing extends EnchantmentBasic {
     public static final Formula ARMOR_SHRED = new Formula("0.05*lvl");
+    public static final ResourceLocation MODIFIER_ID = UltimateEnchantment.id("scabbing");
 
     public Scabbing() {
         super("scabbing", "apothic_enchanting");
@@ -23,6 +30,11 @@ public class Scabbing extends EnchantmentBasic {
         slots = List.of(EquipmentSlotGroup.HAND);
         max_level = 5;
         weight = 2;
+    }
+
+    @Override
+    public void addModifier(ItemAttributeModifierEvent event, int lvl, EquipmentSlot equipmentSlot) {
+        event.addModifier(ALObjects.Attributes.ARMOR_SHRED, new AttributeModifier(MODIFIER_ID, ARMOR_SHRED.calculate(buildBindings(lvl)), AttributeModifier.Operation.ADD_MULTIPLIED_BASE), EquipmentSlotGroup.MAINHAND);
     }
 
     @Override

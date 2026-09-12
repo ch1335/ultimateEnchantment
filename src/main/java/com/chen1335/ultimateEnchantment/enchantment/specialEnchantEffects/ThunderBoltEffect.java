@@ -39,10 +39,10 @@ public class ThunderBoltEffect {
                     return entity instanceof LivingEntity livingEntity && livingEntity.attackable() && livingEntity != attacker;
                 })) {
                     entity.invulnerableTime = 0;
-                    entity.hurt(new DamageSource(attacker.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.LIGHTNING_BOLT), attacker), damageContainers.peek().getNewDamage() * mainDamage);
+                    entity.hurt(new DamageSource(attacker.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.LIGHTNING_BOLT), attacker), damageContainers.peek().getNewDamage() * otherDamage);
                 }
                 target.invulnerableTime = 0;
-                target.hurt(new DamageSource(attacker.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.LIGHTNING_BOLT), attacker), damageContainers.peek().getNewDamage() * otherDamage);
+                target.hurt(new DamageSource(attacker.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.LIGHTNING_BOLT), attacker), damageContainers.peek().getNewDamage() * mainDamage);
 
             }
         }

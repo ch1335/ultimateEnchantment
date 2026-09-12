@@ -5,6 +5,7 @@ import com.chen1335.ultimateEnchantment.enchantment.enchantments.CutDown;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.DoubleHook;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.EtherealArrow;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.HardenedMana;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.HurtDeepens;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.KineticEnergy;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.LethalTempo;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.LifeSteal;
@@ -66,6 +67,7 @@ public class UEEnchantments {
     public static final Eternal ETERNAL = register(new Eternal());
     public static final UltimateSlayer ULTIMATE_SLAYER = register(new UltimateSlayer());
     public static final EtherealArrow ETHEREAL_ARROW = register(new EtherealArrow());
+    public static final HurtDeepens HURT_DEEPENS = register(new HurtDeepens());
 
     public static SimpleBindings buildBindings(int level) {
         return EnchantmentBasic.buildBindings(level);

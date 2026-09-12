@@ -3,11 +3,12 @@ package com.chen1335.ultimateEnchantment.common;
 
 import com.chen1335.ultimateEnchantment.API.AttachmentTypes;
 import com.chen1335.ultimateEnchantment.API.UEDamageTypeTags;
+import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.attachmentDatas.PlayerData;
 import com.chen1335.ultimateEnchantment.attachmentDatas.UEProjectileData;
-import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.config.CommonConfig;
 import com.chen1335.ultimateEnchantment.dataComponentType.UEDataComponentTypes;
+import com.chen1335.ultimateEnchantment.enchantment.EnchantmentBasic;
 import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.*;
 import com.chen1335.ultimateEnchantment.loot.BossBonusLoot;
@@ -22,6 +23,7 @@ import io.redspace.ironsspellbooks.api.events.SpellOnCastEvent;
 import io.redspace.ironsspellbooks.api.magic.MagicData;
 import io.redspace.ironsspellbooks.api.registry.AttributeRegistry;
 import io.redspace.ironsspellbooks.network.SyncManaPacket;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
@@ -104,28 +106,13 @@ public class EventHandler {
             } else {
                 equipmentSlot = itemStack.getEquipmentSlot();
             }
+
             HolderLookup.RegistryLookup<Enchantment> lookup = EnchantmentLookup.get();
 
-
-            if (equipmentSlot != null) {
-                {
-                    int lvl = UEEnchantments.OVER_GROW.getEnchantmentLevel(itemStack, lookup);
-                    if (lvl > 0) {
-                        SimpleBindings simpleBindings = LastStand.buildBindings(lvl);
-                        event.addModifier(Attributes.MAX_HEALTH, new AttributeModifier(OverGrow.makeId(equipmentSlot.getSerializedName()), OverGrow.HEALTH_BONUS.calculate(simpleBindings), AttributeModifier.Operation.ADD_MULTIPLIED_BASE), EquipmentSlotGroup.bySlot(equipmentSlot));
-                    }
-                }
-                {
-                    int lvl = UEEnchantments.LAST_STAND.getEnchantmentLevel(itemStack, lookup);
-                    if (lvl > 0) {
-                        SimpleBindings simpleBindings = LastStand.buildBindings(lvl);
-                        if (itemStack.getOrDefault(UEDataComponentTypes.USER_HEALTH, 0).floatValue() <= itemStack.getOrDefault(UEDataComponentTypes.USER_MAX_HEALTH, 0).floatValue() * LastStand.HEALTH_THRESHOLD.calculate(simpleBindings)) {
-                            AttributeModifier attributeModifier = new AttributeModifier(AttributeModifierId.LAST_STAND_ARMOR.withSuffix("/" + equipmentSlot.getSerializedName()), LastStand.ARMOR_BONUS.calculate(simpleBindings), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
-                            AttributeModifier attributeModifier1 = new AttributeModifier(AttributeModifierId.LAST_STAND_ARMOR_TOUGHNESS.withSuffix("/" + equipmentSlot.getSerializedName()), LastStand.ARMOR_BONUS.calculate(simpleBindings), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
-                            event.addModifier(Attributes.ARMOR, attributeModifier, EquipmentSlotGroup.bySlot(equipmentSlot));
-                            event.addModifier(Attributes.ARMOR_TOUGHNESS, attributeModifier1, EquipmentSlotGroup.bySlot(equipmentSlot));
-                        }
-                    }
+            for (Object2IntMap.Entry<Holder<Enchantment>> holderEntry : itemStack.getAllEnchantments(lookup).entrySet()) {
+                EnchantmentBasic enchantmentBasic = UEEnchantments.MAP.get(holderEntry.getKey().getKey());
+                if (enchantmentBasic != null && holderEntry.getIntValue() > 0) {
+                    enchantmentBasic.addModifier(event, holderEntry.getIntValue(),equipmentSlot);
                 }
             }
         }

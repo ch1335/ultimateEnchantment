@@ -21,6 +21,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -30,7 +31,9 @@ import net.minecraft.world.level.Level;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
+import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 
+import javax.annotation.Nullable;
 import javax.script.SimpleBindings;
 import java.util.*;
 
@@ -171,6 +174,10 @@ public class EnchantmentBasic {
 
     public ResourceLocation getId() {
         return id;
+    }
+
+    public void addModifier(ItemAttributeModifierEvent event, int lvl,@Nullable EquipmentSlot equipmentSlot) {
+
     }
 
 

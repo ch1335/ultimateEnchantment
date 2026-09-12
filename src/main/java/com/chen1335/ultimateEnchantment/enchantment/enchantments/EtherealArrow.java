@@ -10,8 +10,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlotGroup;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -53,29 +53,22 @@ public class EtherealArrow extends EnchantmentBasic {
     }
 
     /**
-     * 箭一进世界就把「出发时的状态」钉在这支箭上：当时弓上的附魔等级，以及发射点。
+     * 箭一进世界就把发射点记在这支箭上，命中时拿它量直线距离。
      * <p>
-     * 之所以在这里一次性取好、而不是等命中时再回头读射手：箭飞行途中射手完全可能换手
-     * 或切物品栏，命中那一刻再去问他要武器，拿到的已经不是射出这支箭的那把弓了。
+     * 这里只记发射点，附魔等级留到命中时从箭自己带着的那把弓上读（见
+     * {@link #onArrowHit}）。{@link AbstractArrow#getWeaponItem()} 给的是发射那一刻
+     * 弓的副本，所以玩家放完箭再把弓丢掉、换格子或换成别的武器都不影响判定 ——
+     * 这也是它比回头读射手主手更准的原因。
      * <p>
-     * 客户端也会走到这里，但只是给本地那份 {@code UEProjectileData} 写入同样的值，不产生
+     * 客户端也会走到这里，但只是给本地那份 {@code UEProjectileData} 写同样的值，不产生
      * 效果；真正结算伤害的 {@link #onArrowHit} 只在服务端触发。
-     * <p>
-     * 这里读的是射手主手物品，与 {@code LethalTempo} 取弓的方式一致。
      */
     @SubscribeEvent
     public static void onProjectileJoinLevel(EntityJoinLevelEvent event) {
-        if (!(event.getEntity() instanceof Projectile projectile)
-                || !(projectile.getOwner() instanceof LivingEntity shooter)) {
+        if (!(event.getEntity() instanceof AbstractArrow arrow) || arrow.getOwner() == null) {
             return;
         }
-        int lvl = UEEnchantments.ETHEREAL_ARROW.getEnchantmentLevel(shooter.getWeaponItem(), shooter.level());
-        if (lvl <= 0) {
-            return;
-        }
-        UEProjectileData data = projectile.getData(AttachmentTypes.PROJECTILE_DATA);
-        data.etherealArrowLevel = lvl;
-        data.etherealArrowOrigin = projectile.position();
+        arrow.getData(AttachmentTypes.PROJECTILE_DATA).etherealArrowOrigin = arrow.position();
     }
 
     /**
@@ -83,18 +76,26 @@ public class EtherealArrow extends EnchantmentBasic {
      * <p>
      * 用直线距离而不是逐 tick 累加的路径长度：箭飞出的是近似抛物线，两者只差在高抛的
      * 弧度上；而累加路径得给每个投射物挂一个每 tick 的钩子，代价和收益不成比例。
+     * <p>
+     * 只认 {@link AbstractArrow}：附魔挂在弓上，射出的一定是箭，用 {@code Projectile}
+     * 会把三叉戟之类也放进来。
      */
     @SubscribeEvent
     public static void onArrowHit(LivingIncomingDamageEvent event) {
-        if (!(event.getSource().getDirectEntity() instanceof Projectile projectile)) {
+        if (!(event.getSource().getDirectEntity() instanceof AbstractArrow arrow)) {
             return;
         }
-        UEProjectileData data = projectile.getData(AttachmentTypes.PROJECTILE_DATA);
-        if (data.etherealArrowLevel <= 0 || data.etherealArrowOrigin == null) {
+        ItemStack bow = arrow.getWeaponItem();
+        if (bow == null || bow.isEmpty()) {
             return;
         }
-        float distance = (float) data.etherealArrowOrigin.distanceTo(projectile.position());
-        SimpleBindings bindings = buildBindings(data.etherealArrowLevel);
+        int lvl = UEEnchantments.ETHEREAL_ARROW.getEnchantmentLevel(bow, arrow.level());
+        UEProjectileData data = arrow.getData(AttachmentTypes.PROJECTILE_DATA);
+        if (lvl <= 0 || data.etherealArrowOrigin == null) {
+            return;
+        }
+        float distance = (float) data.etherealArrowOrigin.distanceTo(arrow.position());
+        SimpleBindings bindings = buildBindings(lvl);
         float bonus = Math.min(
                 DAMAGE_PER_BLOCK.calculate(bindings) * distance,
                 MAX_DAMAGE.calculate(bindings)

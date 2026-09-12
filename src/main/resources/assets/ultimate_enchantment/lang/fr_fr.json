@@ -18,6 +18,8 @@
   "enchantment.ultimate_enchantment.ethereal_arrow.specialDesc": "Les flèches infligent %s dégâts supplémentaires par bloc parcouru, jusqu'à un maximum de %s",
   "enchantment.ultimate_enchantment.hardened_mana": "Mana Durci",
   "enchantment.ultimate_enchantment.hardened_mana.specialDesc": "Convertit %s%% du mana dépensé pour les sorts en armure pendant 10 secondes, jusqu'à %s d'armure maximum",
+  "enchantment.ultimate_enchantment.hurt_deepens": "Blessure S'Aggrave",
+  "enchantment.ultimate_enchantment.hurt_deepens.specialDesc": "Inflige %s%% de dégâts supplémentaires pour chaque 1%% d'écart de vie en moins que la cible, jusqu'à %s%%",
   "enchantment.ultimate_enchantment.kinetic_energy": "Énergie Cinétique",
   "enchantment.ultimate_enchantment.kinetic_energy.specialDesc": "Miner un bloc augmente votre vitesse de minage de %s%%, jusqu'à %s%% maximum, pendant %s secondes",
   "enchantment.ultimate_enchantment.last_stand": "Dernier Rempart",

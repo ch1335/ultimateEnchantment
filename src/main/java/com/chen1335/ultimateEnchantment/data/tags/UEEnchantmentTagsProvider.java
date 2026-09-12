@@ -75,7 +75,8 @@ public class UEEnchantmentTagsProvider extends EnchantmentTagsProvider {
                 .addOptional(UEEnchantments.KINETIC_ENERGY.getKey().location())
                 .addOptional(UEEnchantments.DOUBLE_HOOK.getKey().location())
                 .addOptional(UEEnchantments.QUICK_BAIT.getKey().location())
-                .addOptional(UEEnchantments.ETHEREAL_ARROW.getKey().location());
+                .addOptional(UEEnchantments.ETHEREAL_ARROW.getKey().location())
+                .addOptional(UEEnchantments.HURT_DEEPENS.getKey().location());
 
 
         tag(UEEnchantmentTags.UN_TRADEABLE_LEGENDARY_ENCHANTMENT)

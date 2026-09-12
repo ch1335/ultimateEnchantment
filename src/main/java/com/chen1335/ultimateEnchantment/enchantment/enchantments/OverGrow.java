@@ -8,9 +8,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
+import org.jetbrains.annotations.Nullable;
 
+import javax.script.SimpleBindings;
 import java.util.List;
 import java.util.Map;
 
@@ -42,5 +48,14 @@ public class OverGrow extends EnchantmentBasic {
     @Override
     public List<MutableComponent> getDesc(int level) {
         return List.of(Component.translatable(getDescId(), HEALTH_BONUS.toComponent(buildBindings(level), 100)).withStyle(ChatFormatting.GOLD));
+    }
+
+    @Override
+    public void addModifier(ItemAttributeModifierEvent event, int lvl, @Nullable EquipmentSlot equipmentSlot) {
+        if (equipmentSlot == null) {
+            return;
+        }
+        SimpleBindings simpleBindings = buildBindings(lvl);
+        event.addModifier(Attributes.MAX_HEALTH, new AttributeModifier(OverGrow.makeId(equipmentSlot.getSerializedName()), OverGrow.HEALTH_BONUS.calculate(simpleBindings), AttributeModifier.Operation.ADD_MULTIPLIED_BASE), EquipmentSlotGroup.bySlot(equipmentSlot));
     }
 }
