@@ -28,7 +28,7 @@ public class QuickShooting extends EnchantmentBasic {
         super("quick_shooting", "apothic_enchanting");
         supported_items = new Type.TagType<>(ItemTags.BOW_ENCHANTABLE);
         max_cost = new Enchantment.Cost(90, 10);
-        min_cost = new Enchantment.Cost(20, 5);
+        min_cost = new Enchantment.Cost(20, 10);
         slots = List.of(EquipmentSlotGroup.HAND);
         max_level = 5;
         weight = 2;

@@ -25,14 +25,10 @@ public class ServerConfig {
 
     public static final ModConfigSpec CONFIG_SPEC;
 
-    public static final ModConfigSpec.BooleanValue ENABLE_LOOT;
 
     static {
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
 
-        ENABLE_LOOT = builder
-                .comment("Can enchantments be obtained from the default loot table")
-                .define("enable_loot", true);
 
         CONFIG_SPEC = builder.build();
     }

@@ -1,5 +1,6 @@
 package com.chen1335.ultimateEnchantment.enchantment.enchantments;
 
+import com.chen1335.ultimateEnchantment.API.objects.UESounds;
 import com.chen1335.ultimateEnchantment.common.EnchantmentLookup;
 import com.chen1335.ultimateEnchantment.common.Formula;
 import com.chen1335.ultimateEnchantment.data.registries.UEDamageType;
@@ -83,7 +84,9 @@ public class Tear extends EnchantmentBasic {
                 return;
             }
             DamageSource damageSource1 = attacker.level().damageSources().source(UEDamageType.TEAR_DAMAGE, attacker);
+            target.playSound(UESounds.TEAR.value(), 1.5F, 1.1F);
             target.playSound(SoundEvents.ZOMBIE_BREAK_WOODEN_DOOR, 0.3F, 1.7F);
+
             ((ILivingEntityMixin) target).ue$setDisableHurtSound(true);
             float lastHurt = target.lastHurt;
             int invulnerableTime = target.invulnerableTime;
@@ -91,7 +94,7 @@ public class Tear extends EnchantmentBasic {
             target.hurt(damageSource1, damagePerHit);
 
             target.lastHurt = lastHurt;
-            target.invulnerableTime = 0;
+            target.invulnerableTime = invulnerableTime;
             ((ILivingEntityMixin) target).ue$setDisableHurtSound(false);
         }
 

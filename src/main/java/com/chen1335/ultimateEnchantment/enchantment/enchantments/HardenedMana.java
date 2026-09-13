@@ -19,7 +19,7 @@ public class HardenedMana extends EnchantmentBasic {
         super("hardened_mana", "irons_spellbooks");
         supported_items = new Type.TagType<>(ItemTags.CHEST_ARMOR_ENCHANTABLE);
         max_cost = new Enchantment.Cost(50, 10);
-        min_cost = new Enchantment.Cost(15, 5);
+        min_cost = new Enchantment.Cost(15, 8);
         slots = List.of();
         max_level = 4;
         weight = 3;

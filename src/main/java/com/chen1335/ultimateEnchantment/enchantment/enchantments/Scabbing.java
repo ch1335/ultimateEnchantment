@@ -26,7 +26,7 @@ public class Scabbing extends EnchantmentBasic {
         super("scabbing", "apothic_enchanting");
         supported_items = new Type.TagType<>(ItemTags.WEAPON_ENCHANTABLE);
         max_cost = new Enchantment.Cost(90, 10);
-        min_cost = new Enchantment.Cost(25, 5);
+        min_cost = new Enchantment.Cost(25, 12);
         slots = List.of(EquipmentSlotGroup.HAND);
         max_level = 5;
         weight = 2;

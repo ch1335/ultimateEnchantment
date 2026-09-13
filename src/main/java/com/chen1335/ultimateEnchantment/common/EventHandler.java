@@ -8,7 +8,6 @@ import com.chen1335.ultimateEnchantment.attachmentDatas.CommonEntityData;
 import com.chen1335.ultimateEnchantment.attachmentDatas.PlayerData;
 import com.chen1335.ultimateEnchantment.attachmentDatas.UEProjectileData;
 import com.chen1335.ultimateEnchantment.config.CommonConfig;
-import com.chen1335.ultimateEnchantment.config.ServerConfig;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentBasic;
 import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.*;
@@ -222,6 +221,12 @@ public class EventHandler {
 
         @SubscribeEvent(priority = EventPriority.LOWEST)
         public static void GetEnchantmentLevelEvent(GetEnchantmentLevelEvent event) {
+            for (Object2IntMap.Entry<Holder<Enchantment>> entry : event.getStack().getTagEnchantments().entrySet()) {
+                if (entry.getKey().is(UEEnchantmentTags.ULTIMATE_ENCHANTMENT)) {
+                    event.getEnchantments().set(entry.getKey(), entry.getIntValue());
+                }
+            }
+
             if (event.getTargetEnchant() != null && event.getTargetEnchant().is(UEEnchantments.ULTIMATE.getKey())) {
                 return;
             }

@@ -19,7 +19,7 @@ public class DoubleHook extends EnchantmentBasic {
         super("double_hook");
         supported_items = new Type.TagType<>(ItemTags.FISHING_ENCHANTABLE);
         max_cost = new Enchantment.Cost(60, 10);
-        min_cost = new Enchantment.Cost(20, 5);
+        min_cost = new Enchantment.Cost(20, 10);
         slots = List.of();
         max_level = 5;
         weight = 3;

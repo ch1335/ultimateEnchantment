@@ -3,6 +3,7 @@ package com.chen1335.ultimateEnchantment;
 import com.chen1335.ultimateEnchantment.API.AttachmentTypes;
 import com.chen1335.ultimateEnchantment.API.objects.Conditions;
 import com.chen1335.ultimateEnchantment.API.objects.LootItemConditions;
+import com.chen1335.ultimateEnchantment.API.objects.UESounds;
 import com.chen1335.ultimateEnchantment.apotheosis.attachmentDatas.ApothBossAttachmentTypes;
 import com.chen1335.ultimateEnchantment.common.EnchantmentLookup;
 import com.chen1335.ultimateEnchantment.common.EventHandler;
@@ -94,6 +95,7 @@ public class UltimateEnchantment {
         MobEffects.MOB_EFFECT_DEFERRED_REGISTER.register(modEventBus);
         modEventBus.addListener(this::setUp);
         NeoForge.EVENT_BUS.addListener(this::ServerStartedEvent);
+        UESounds.register(modEventBus);
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.CONFIG_SPEC,"ultimate_enchantment/server.toml");
         modContainer.registerConfig(ModConfig.Type.COMMON, CommonConfig.CONFIG_SPEC,"ultimate_enchantment/common.toml");
         if (ModList.get().isLoaded("irons_spellbooks")) {

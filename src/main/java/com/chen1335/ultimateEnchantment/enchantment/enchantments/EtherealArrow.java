@@ -31,7 +31,7 @@ public class EtherealArrow extends EnchantmentBasic {
         super("ethereal_arrow");
         supported_items = new Type.TagType<>(ItemTags.BOW_ENCHANTABLE);
         max_cost = new Enchantment.Cost(90, 10);
-        min_cost = new Enchantment.Cost(25, 3);
+        min_cost = new Enchantment.Cost(25, 10);
         slots = List.of(EquipmentSlotGroup.HAND);
         max_level = 5;
         weight = 2;

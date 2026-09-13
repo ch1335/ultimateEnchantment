@@ -86,5 +86,9 @@ public class UERegistries {
         generator.addProvider(event.includeServer(), new UELootTableProvider(
                 generator.getPackOutput(),
                 ueLookupProvider.getRegistryProvider()));
+
+        generator.addProvider(event.includeServer(), new UESoundDefinitionsProvider(
+                generator.getPackOutput(),
+                event.getExistingFileHelper()));
     }
 }

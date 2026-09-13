@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class TooltipUtilMixin {
     @Inject(method = "applyOverMaxLevelColor",at = @At("HEAD"), cancellable = true)
     private static void applyOverMaxLevelColor(Holder<Enchantment> ench, int level, Component name, CallbackInfo ci){
-        if (ench.tags().anyMatch(enchantmentTagKey -> enchantmentTagKey == UEEnchantmentTags.USE_CUSTOM_COLOR)) {
+        if (ench.is(UEEnchantmentTags.USE_CUSTOM_COLOR)) {
             ci.cancel();
         }
     }

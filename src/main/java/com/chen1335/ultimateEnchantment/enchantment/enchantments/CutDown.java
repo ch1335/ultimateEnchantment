@@ -21,7 +21,7 @@ public class CutDown extends EnchantmentBasic {
         super("cut_down");
         supported_items = new Type.TagType<>(ItemTags.SHARP_WEAPON_ENCHANTABLE);
         max_cost = new Enchantment.Cost(60, 10);
-        min_cost = new Enchantment.Cost(20, 5);
+        min_cost = new Enchantment.Cost(20, 10);
         slots = List.of(EquipmentSlotGroup.HAND);
         max_level = 5;
         weight = 3;
