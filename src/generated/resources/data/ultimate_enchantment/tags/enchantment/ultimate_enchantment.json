@@ -29,6 +29,10 @@
             "required": false
         },
         {
+            "id": "ultimate_enchantment:the_fortress",
+            "required": false
+        },
+        {
             "id": "ultimate_enchantment:ultimate_slayer",
             "required": false
         }

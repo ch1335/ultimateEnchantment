@@ -58,6 +58,7 @@ public class UEEnchantmentTagsProvider extends EnchantmentTagsProvider {
                 .addOptional(UEEnchantments.ETERNAL.getKey().location())
                 .addOptional(UEEnchantments.TEAR.getKey().location())
                 .addOptional(UEEnchantments.LETHAL_TEMPO.getKey().location())
+                .addOptional(UEEnchantments.THE_FORTRESS.getKey().location())
                 .addOptional(UEEnchantments.ULTIMATE_SLAYER.getKey().location());
 
         tag(UEEnchantmentTags.ULTIMATE_ENCHANTMENT_EXCLUSIVE)
