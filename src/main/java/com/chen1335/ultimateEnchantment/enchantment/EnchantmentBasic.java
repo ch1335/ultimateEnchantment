@@ -56,6 +56,7 @@ public class EnchantmentBasic {
     protected List<ICondition> conditions = new ArrayList<>();
     protected final String descId;
 
+
     public EnchantmentBasic(String name) {
         this(name, UltimateEnchantment.MODID);
     }

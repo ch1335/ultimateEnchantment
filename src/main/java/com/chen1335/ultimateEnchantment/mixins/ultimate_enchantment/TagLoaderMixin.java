@@ -44,7 +44,7 @@ public class TagLoaderMixin {
             newOrder.addAll(otherEnchantments);
             original.put(EnchantmentTags.TOOLTIP_ORDER.location(), newOrder);
 
-            if (!CommonConfig.isUltimateEnchantmentExclusiveEachOther) {
+            if (!CommonConfig.isUltimateEnchantmentExclusiveEachOther.getAsBoolean()) {
                 original.put(UEEnchantmentTags.ULTIMATE_ENCHANTMENT_EXCLUSIVE.location(), List.of());
             }
         }

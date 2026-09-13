@@ -1,6 +1,7 @@
 package com.chen1335.ultimateEnchantment.enchantment.enchantments;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
+import com.chen1335.ultimateEnchantment.client.UEClient;
 import com.chen1335.ultimateEnchantment.common.EnchantmentLookup;
 import com.chen1335.ultimateEnchantment.common.Formula;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentBasic;
@@ -10,14 +11,12 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
@@ -31,33 +30,25 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
+import net.neoforged.neoforge.client.event.AddAttributeTooltipsEvent;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.util.AttributeUtil;
 import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 
 import javax.script.SimpleBindings;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 
 public class TheFortress extends EnchantmentBasic {
-
-    /**
-     * 注册名。构造函数与 {@link Handler} 共用一份，免得两边各写一遍对不上。
-     */
     public static final String NAME = "the_fortress";
 
-    /**
-     * 复制多少比例的盔甲属性，由手持武器上的附魔等级决定。
-     * <p>
-     * 用小数写法（与项目 Formula 惯例一致）：{@code 0.1} 就是 10%，5 级即 50%。
-     */
     public static final Formula COPY_RATIO = new Formula("0.1*lvl");
 
     public TheFortress() {
         super(NAME);
-        supported_items = new Type.TagType<>(ItemTags.WEAPON_ENCHANTABLE);
+        supported_items = new Type.TagType<>(Tags.Items.TOOLS_SHIELD);
         primary_items = supported_items;
         exclusive_set = new Type.TagType<>(UEEnchantmentTags.ULTIMATE_ENCHANTMENT_EXCLUSIVE);
         max_cost = new Enchantment.Cost(200, 0);
@@ -161,8 +152,8 @@ public class TheFortress extends EnchantmentBasic {
                 }
                 ItemStack eventTo = event.getTo();
                 if (!eventTo.isEmpty()) {
-                    int mainHandRatio = UEEnchantments.THE_FORTRESS.getEnchantmentLevel(entity.getMainHandItem(), entity.level());
-                    int offHandRatio = UEEnchantments.THE_FORTRESS.getEnchantmentLevel(entity.getOffhandItem(), entity.level());
+                    float mainHandRatio = ratioFor(entity.getMainHandItem());
+                    float offHandRatio = ratioFor(entity.getOffhandItem());
                     Multimap<Holder<Attribute>, AttributeModifier> mainHandModifier = getModifier(entity, mainHandRatio, event.getSlot(), EquipmentSlot.MAINHAND);
                     Multimap<Holder<Attribute>, AttributeModifier> offHandModifier = getModifier(entity, offHandRatio, event.getSlot(), EquipmentSlot.OFFHAND);
                     entity.getAttributes().addTransientAttributeModifiers(mainHandModifier);
@@ -189,6 +180,19 @@ public class TheFortress extends EnchantmentBasic {
             return multimap;
         }
 
+        /**
+         * 汇总四件盔甲在当前比例下会被复制出来的属性。
+         * <p>
+         * 只给 tooltip 用：调用方拿到的是「如果施加会是什么样」，谁也不会写进玩家属性。
+         * id 里的手部前缀在这里没有意义（工具提示不分主副手），传主手只为凑出一个稳定的 id。
+         */
+        static Multimap<Holder<Attribute>, AttributeModifier> copy(LivingEntity entity, float ratio) {
+            Multimap<Holder<Attribute>, AttributeModifier> multimap = HashMultimap.create();
+            for (EquipmentSlot armorSlot : ARMOR_SLOTS) {
+                multimap.putAll(getModifier(entity, ratio, armorSlot, EquipmentSlot.MAINHAND));
+            }
+            return multimap;
+        }
 
 
         private static boolean triggers(EquipmentSlot slot) {
@@ -211,4 +215,41 @@ public class TheFortress extends EnchantmentBasic {
         }
     }
 
+    /**
+     * 客户端：把复制来的属性追加到 tooltip 上，只显示，不施加。
+     * <p>
+     * {@link AddAttributeTooltipsEvent} 在原版属性行渲染完之后触发，位置正好接在物品自己的
+     * 属性下面。行文本交给 {@link AttributeUtil#applyTextFor} 生成 —— 它和原版共用
+     * {@code neoforge.modifier.*} 文案与属性配色，同一属性有多个来源时还会自动合并成一行。
+     * <p>
+     * 不能再用 {@code ItemAttributeModifierEvent}：{@code ItemStack#getAttributeModifiers}
+     * 会 fire 它，而客户端算装备属性时也走这条路，加进去的东西会真的落到玩家身上。
+     * <p>
+     * 限定 {@link Dist#CLIENT}：要读 {@code Minecraft}，且服务端那份实效已由 {@link Handler} 挂上。
+     */
+    @EventBusSubscriber(modid = UltimateEnchantment.MODID, value = Dist.CLIENT)
+    public static class ClientHandler {
+
+        @SubscribeEvent
+        public static void AddAttributeTooltipsEvent(AddAttributeTooltipsEvent event) {
+            // 物品把属性藏起来时（HIDE_ATTRIBUTES）就跟着藏。
+            if (!event.shouldShow()) return;
+
+            ItemStack stack = event.getStack();
+            // 只看物品自己有没有本附魔，不管它在谁手里。
+            float ratio = Handler.ratioFor(stack);
+            if (ratio <= 0.0F) return;
+
+            // 能复制出什么取决于玩家穿着什么 —— 事件没有玩家上下文，只能这样反查。
+            Player player = UEClient.getPlayer();
+            if (player == null) return;
+
+            Multimap<Holder<Attribute>, AttributeModifier> modifiers = Handler.copy(player, ratio);
+            if (modifiers.isEmpty()) return;
+
+            event.addTooltipLines(Component.empty());
+            event.addTooltipLines(Component.translatable("item.modifiers.hand").withStyle(ChatFormatting.GRAY));
+            AttributeUtil.applyTextFor(stack, event::addTooltipLines, modifiers, event.getContext());
+        }
+    }
 }

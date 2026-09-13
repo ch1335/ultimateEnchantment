@@ -29,7 +29,7 @@ public class OverGrow extends EnchantmentBasic {
         super("over_grow");
         supported_items = new Type.TagType<>(ItemTags.ARMOR_ENCHANTABLE);
         max_cost = new Enchantment.Cost(80, 10);
-        min_cost = new Enchantment.Cost(25, 5);
+        min_cost = new Enchantment.Cost(25, 7);
         slots = List.of(EquipmentSlotGroup.ARMOR);
         max_level = 5;
         weight = 2;

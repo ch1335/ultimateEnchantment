@@ -8,6 +8,7 @@ import com.chen1335.ultimateEnchantment.attachmentDatas.CommonEntityData;
 import com.chen1335.ultimateEnchantment.attachmentDatas.PlayerData;
 import com.chen1335.ultimateEnchantment.attachmentDatas.UEProjectileData;
 import com.chen1335.ultimateEnchantment.config.CommonConfig;
+import com.chen1335.ultimateEnchantment.config.ServerConfig;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentBasic;
 import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.*;
@@ -354,11 +355,13 @@ public class EventHandler {
             ResourceLocation lootTableId = event.getName();
             HolderLookup.Provider registries = event.getRegistries();
             List<LootPool> pools = event.getTable().pools;
-            if (lootTableId.equals(BuiltInLootTables.END_CITY_TREASURE.location()) && CommonConfig.willEndCityTreasureLootUltimateEnchant) {
+            if (lootTableId.equals(BuiltInLootTables.END_CITY_TREASURE.location()) && CommonConfig.willEndCityTreasureLootUltimateEnchant.getAsBoolean()) {
                 List<Holder<Enchantment>> holders = new ArrayList<>();
                 UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.LETHAL_TEMPO.getKey()).ifPresent(holders::add);
                 UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.VANQUISHER.getKey()).ifPresent(holders::add);
                 UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.TEAR.getKey()).ifPresent(holders::add);
+                UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.ULTIMATE_SLAYER.getKey()).ifPresent(holders::add);
+                UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.THE_FORTRESS.getKey()).ifPresent(holders::add);
                 LootPool.Builder builder = LootPool.lootPool();
                 for (Holder<Enchantment> holder : holders) {
                     LootPoolSingletonContainer.Builder<?> item = LootItem.lootTableItem(Items.ENCHANTED_BOOK);

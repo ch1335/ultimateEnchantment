@@ -33,8 +33,8 @@ public class Tear extends EnchantmentBasic {
         super("tear");
         supported_items = new Type.TagType<>(ItemTags.SHARP_WEAPON_ENCHANTABLE);
         exclusive_set = new Type.TagType<>(UEEnchantmentTags.ULTIMATE_ENCHANTMENT_EXCLUSIVE);
-        max_cost = new Enchantment.Cost(150, 0);
-        min_cost = new Enchantment.Cost(80, 0);
+        max_cost = new Enchantment.Cost(200, 0);
+        min_cost = new Enchantment.Cost(200, 0);
         slots = List.of();
         max_level = 5;
         weight = 3;

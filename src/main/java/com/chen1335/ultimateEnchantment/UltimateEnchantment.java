@@ -94,7 +94,8 @@ public class UltimateEnchantment {
         MobEffects.MOB_EFFECT_DEFERRED_REGISTER.register(modEventBus);
         modEventBus.addListener(this::setUp);
         NeoForge.EVENT_BUS.addListener(this::ServerStartedEvent);
-        modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.CONFIG_SPEC);
+        modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.CONFIG_SPEC,"ultimate_enchantment/server.toml");
+        modContainer.registerConfig(ModConfig.Type.COMMON, CommonConfig.CONFIG_SPEC,"ultimate_enchantment/common.toml");
         if (ModList.get().isLoaded("irons_spellbooks")) {
             IRONS_SPELL_BOOKS_LOADED = true;
             NeoForge.EVENT_BUS.register(EventHandler.Game.IronsSpellBooksEvents.class);
@@ -118,7 +119,6 @@ public class UltimateEnchantment {
 
     public void setUp(FMLCommonSetupEvent event) {
         UEEnchantments.init();
-        CommonConfig.staticLoad();
     }
 
     public void ServerStartedEvent(ServerStartedEvent event) {

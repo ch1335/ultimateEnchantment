@@ -63,6 +63,7 @@
   "enchantment.ultimate_enchantment.ultimate_slayer.specialDesc.apotheosis": "Les boss d'Apotheosis comptent comme des boss",
   "enchantment.ultimate_enchantment.vanquisher": "Conquérant",
   "enchantment.ultimate_enchantment.vanquisher.specialDesc": "§dToutes les %s secondes, les attaques accordent une pile de Conquérant, jusqu'à %s piles. Chaque pile accorde %s%% de §edégâts d'attaque totaux§r§d et %s%% de vitesse d'attaque. Au maximum de piles, %s%% des dégâts infligés sont convertis en soins",
+  "item.modifiers.hand": "En main :",
   "itemGroup.ultimate_enchantment": "Enchantement Ultime",
   "ultimate_enchantment.enchantment": "§eEnchantement Ultime",
   "ultimate_enchantment.type.condition.creeper_is_powered": "Est un Creeper Chargé"

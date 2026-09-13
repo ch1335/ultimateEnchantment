@@ -12,21 +12,28 @@ public class ServerConfig {
     @SubscribeEvent
     public static void onConfigReload(ModConfigEvent.Reloading ev) {
         if (CONFIG_SPEC == ev.getConfig().getSpec()) {
-            UltimateEnchantment.LOGGER.info("test");
+
         }
     }
 
     @SubscribeEvent
     public static void onConfigLoad(ModConfigEvent.Loading ev) {
         if (CONFIG_SPEC == ev.getConfig().getSpec()) {
-            UltimateEnchantment.LOGGER.info("test");
+
         }
     }
 
     public static final ModConfigSpec CONFIG_SPEC;
+
+    public static final ModConfigSpec.BooleanValue ENABLE_LOOT;
+
     static {
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
-        builder.define("test",1);
+
+        ENABLE_LOOT = builder
+                .comment("Can enchantments be obtained from the default loot table")
+                .define("enable_loot", true);
+
         CONFIG_SPEC = builder.build();
     }
 }

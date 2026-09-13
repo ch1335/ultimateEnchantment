@@ -27,8 +27,8 @@ public class Vanquisher extends EnchantmentBasic {
         supported_items = new Type.TagType<>(ItemTags.SHARP_WEAPON_ENCHANTABLE);
         primary_items = new Type.TagType<>(ItemTags.SWORD_ENCHANTABLE);
         exclusive_set = new Type.TagType<>(UEEnchantmentTags.ULTIMATE_ENCHANTMENT_EXCLUSIVE);
-        max_cost = new Enchantment.Cost(999, 0);
-        min_cost = new Enchantment.Cost(100, 0);
+        max_cost = new Enchantment.Cost(200, 0);
+        min_cost = new Enchantment.Cost(200, 0);
         slots = List.of(EquipmentSlotGroup.HAND);
         max_level = 1;
         weight = 1;

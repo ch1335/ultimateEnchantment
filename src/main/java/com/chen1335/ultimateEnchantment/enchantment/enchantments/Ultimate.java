@@ -24,8 +24,8 @@ public class Ultimate extends EnchantmentBasic {
         supported_items = new Type.TagType<>(enchantables);
         primary_items = new Type.TagType<>(enchantables);
         exclusive_set = new Type.TagType<>(UEEnchantmentTags.ULTIMATE_ENCHANTMENT_EXCLUSIVE);
-        max_cost = new Enchantment.Cost(999, 0);
-        min_cost = new Enchantment.Cost(999, 0);
+        max_cost = new Enchantment.Cost(200, 0);
+        min_cost = new Enchantment.Cost(200, 0);
         slots = List.of(EquipmentSlotGroup.ANY);
         max_level = 5;
         weight = 2;

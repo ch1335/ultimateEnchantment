@@ -20,7 +20,7 @@ public class ManaSteal extends EnchantmentBasic {
         supported_items = new Type.TagType<>(ItemTags.SHARP_WEAPON_ENCHANTABLE);
         exclusive_set = new Type.TagType<>(UEEnchantmentTags.LIFE_STEAL_ENCHANTMENT);
         max_cost = new Enchantment.Cost(60, 10);
-        min_cost = new Enchantment.Cost(15, 10);
+        min_cost = new Enchantment.Cost(15, 8);
         slots = List.of();
         max_level = 4;
         weight = 3;

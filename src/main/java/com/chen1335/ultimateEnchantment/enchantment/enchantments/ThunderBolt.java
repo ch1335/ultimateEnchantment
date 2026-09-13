@@ -21,8 +21,8 @@ public class ThunderBolt extends EnchantmentBasic {
     public ThunderBolt() {
         super("thunder_bolt");
         supported_items = new Type.TagType<>(ItemTags.SHARP_WEAPON_ENCHANTABLE);
-        max_cost = new Enchantment.Cost(30, 0);
-        min_cost = new Enchantment.Cost(25, 0);
+        max_cost = new Enchantment.Cost(200, 0);
+        min_cost = new Enchantment.Cost(25, 5);
         slots = List.of();
         max_level = 3;
         weight = 3;

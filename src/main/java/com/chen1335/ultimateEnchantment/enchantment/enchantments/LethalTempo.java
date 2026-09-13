@@ -40,8 +40,8 @@ public class LethalTempo extends EnchantmentBasic {
         super("lethal_tempo");
         supported_items = new Type.TagType<>(ItemTags.BOW_ENCHANTABLE);
         exclusive_set = new Type.TagType<>(UEEnchantmentTags.ULTIMATE_ENCHANTMENT_EXCLUSIVE);
-        max_cost = new Enchantment.Cost(150, 0);
-        min_cost = new Enchantment.Cost(80, 0);
+        max_cost = new Enchantment.Cost(200, 0);
+        min_cost = new Enchantment.Cost(200, 0);
         slots = List.of(EquipmentSlotGroup.HAND);
         max_level = 5;
         weight = 3;

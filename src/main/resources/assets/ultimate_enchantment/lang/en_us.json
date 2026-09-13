@@ -63,6 +63,7 @@
   "enchantment.ultimate_enchantment.ultimate_slayer.specialDesc.apotheosis": "Apotheosis bosses count as bosses",
   "enchantment.ultimate_enchantment.vanquisher": "Vanquisher",
   "enchantment.ultimate_enchantment.vanquisher.specialDesc": "§dEvery %s seconds, attacks grant a Vanquisher stack, up to %s stacks. Each stack grants %s%% §etotal attack damage§r§d and %s%% attack speed. At max stacks, %s%% of damage dealt is converted into healing",
+  "item.modifiers.hand": "When in Hand:",
   "itemGroup.ultimate_enchantment": "Ultimate Enchantment",
   "ultimate_enchantment.enchantment": "§eUltimate Enchantment",
   "ultimate_enchantment.type.condition.creeper_is_powered": "Is Charged Creeper"
