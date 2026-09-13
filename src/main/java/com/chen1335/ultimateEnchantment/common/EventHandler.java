@@ -17,6 +17,7 @@ import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IItemStackMixin;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IUEEntityExtension;
 import com.chen1335.ultimateEnchantment.mobEffect.MobEffects;
 import com.chen1335.ultimateEnchantment.netWork.BreakSpeedMultiplierPack;
+import com.chen1335.ultimateEnchantment.netWork.TearParticlesPack;
 import com.chen1335.ultimateEnchantment.tags.UEEnchantmentTags;
 import com.chen1335.ultimateEnchantment.utils.UEEnchantmentHelper;
 import io.redspace.ironsspellbooks.api.events.SpellOnCastEvent;
@@ -438,6 +439,7 @@ public class EventHandler {
         public static void RegisterPayloadHandlersEvent(RegisterPayloadHandlersEvent event) {
             final PayloadRegistrar registrar = event.registrar("1");
             registrar.playToClient(BreakSpeedMultiplierPack.TYPE, BreakSpeedMultiplierPack.STREAM_CODEC, BreakSpeedMultiplierPack::handler);
+            registrar.playToClient(TearParticlesPack.TYPE, TearParticlesPack.STREAM_CODEC, TearParticlesPack::handler);
 
         }
     }

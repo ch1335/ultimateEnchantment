@@ -7,10 +7,12 @@ import com.chen1335.ultimateEnchantment.data.registries.UEDamageType;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentBasic;
 import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.ILivingEntityMixin;
+import com.chen1335.ultimateEnchantment.netWork.TearParticlesPack;
 import com.chen1335.ultimateEnchantment.tags.UEEnchantmentTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.damagesource.DamageSource;
@@ -18,6 +20,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayDeque;
 import java.util.List;
@@ -96,6 +99,19 @@ public class Tear extends EnchantmentBasic {
             target.lastHurt = lastHurt;
             target.invulnerableTime = invulnerableTime;
             ((ILivingEntityMixin) target).ue$setDisableHurtSound(false);
+
+            spawnTearParticles(target);
+        }
+
+        // 只把"目标刚裂了一道"广播给附近客户端，特效怎么画由客户端现算。
+        // 位置必须放在状态还原之后：hurt() 到还原之间是临界区，不能插广播。
+        private static void spawnTearParticles(LivingEntity target) {
+            if (!(target.level() instanceof ServerLevel level)) {
+                return;
+            }
+            PacketDistributor.sendToPlayersNear(level, null,
+                    target.getX(), target.getY() + target.getBbHeight() * 0.5, target.getZ(), 32.0,
+                    new TearParticlesPack(target.getId()));
         }
 
         public boolean tryAddDamage(float amount, LivingEntity source) {
