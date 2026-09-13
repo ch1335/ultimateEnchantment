@@ -138,6 +138,9 @@ public class EventHandler {
                     float attackerMaxHealth = attacker.getMaxHealth();
                     float percentage = ((event.getEntity().getHealth() - attackerMaxHealth) / attackerMaxHealth) * 100;
                     float damageMultiplier = Math.clamp(percentage * CutDown.DAMAGE_MUL.calculate(simpleBindings), 0, CutDown.MAX_DAMAGE_MUL.calculate(simpleBindings));
+                    if (Float.isNaN(damageMultiplier)) {
+                        return;
+                    }
                     event.setAmount(event.getAmount() * (damageMultiplier + 1));
                 }
             }

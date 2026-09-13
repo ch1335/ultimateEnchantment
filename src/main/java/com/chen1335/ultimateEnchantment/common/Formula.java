@@ -14,6 +14,8 @@ import java.math.BigDecimal;
 public class Formula {
     private String formula;
     private CompiledScript compile;
+    private String formulaDefault;
+    private CompiledScript compileDefault;
     public static final Codec<Formula> CODEC = Codec.STRING.flatXmap(
             formula -> {
                 try {
@@ -28,6 +30,8 @@ public class Formula {
     public Formula(String formula) {
         try {
             compile(formula);
+            formulaDefault = formula;
+            compileDefault = compile;
         } catch (ScriptException e) {
             throw new RuntimeException(e);
         }

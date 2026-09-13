@@ -32,6 +32,7 @@ public class TearEffect {
                         for (int j = 0; j < hitCount - i; j++) {
                             Tear.Ticker.perHit(attacker, target, damagePerHit);
                         }
+                        break;
                     }
                 }
             }

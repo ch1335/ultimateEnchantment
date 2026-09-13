@@ -19,7 +19,7 @@ public record BreakSpeedMultiplierPack(float breakSpeedMultiplier) implements Cu
     );
 
     public void handler(IPayloadContext iPayloadContext) {
-        iPayloadContext.player().getData(AttachmentTypes.PLAYER_DATA).breakSpeedMultiplier = breakSpeedMultiplier;
+        iPayloadContext.enqueueWork(() -> iPayloadContext.player().getData(AttachmentTypes.PLAYER_DATA).breakSpeedMultiplier = breakSpeedMultiplier);
     }
 
     @Override
