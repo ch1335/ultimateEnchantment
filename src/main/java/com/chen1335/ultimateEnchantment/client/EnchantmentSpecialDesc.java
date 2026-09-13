@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class EnchantmentSpecialDesc {
@@ -50,6 +51,11 @@ public class EnchantmentSpecialDesc {
     }
 
     private static String format(float value, int i) {
-        return new BigDecimal(String.format("%." + i + "f", value)).stripTrailingZeros().toPlainString();
+        // 和 Formula#format 同样的两个坑：String.format 默认跟随区域设置（法语区小数点是逗号，
+        // BigDecimal 解析不了），以及 Infinity/NaN 同样解析不了。
+        if (!Float.isFinite(value)) {
+            return "0";
+        }
+        return new BigDecimal(String.format(Locale.ROOT, "%." + i + "f", value)).stripTrailingZeros().toPlainString();
     }
 }

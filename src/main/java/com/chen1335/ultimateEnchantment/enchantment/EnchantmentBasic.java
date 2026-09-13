@@ -192,7 +192,7 @@ public class EnchantmentBasic {
                 if (input instanceof ItemType<?> item) {
                     return ops.mergeToList(prefix, item.list.stream().map(key -> ops.createString(key.location().toString())).toList());
                 }
-                return DataResult.error(() -> "未知的 Type 子类: " + input.getClass().getName());
+                return DataResult.error(() -> "Unknown Type subclass: " + input.getClass().getName());
             }
         };
 

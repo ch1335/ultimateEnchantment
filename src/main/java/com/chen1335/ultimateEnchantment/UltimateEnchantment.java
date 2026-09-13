@@ -39,7 +39,6 @@ import org.slf4j.Logger;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 import java.util.Map;
 
 @Mod(UltimateEnchantment.MODID)
@@ -134,13 +133,9 @@ public class UltimateEnchantment {
                     FormulaComponent loaded = r.value().effects().get(UEEnchantmentEffectComponents.FORMULA.value());
                     if (loaded != null) {
                         Map<String, Formula> formulas = loaded.formulas();
-                        old.formulas.forEach((s, formula) -> {
-                            try {
-                                formula.compile(formulas.getOrDefault(s, formula).getFormula());
-                            } catch (ScriptException e) {
-                                throw new RuntimeException(e);
-                            }
-                        });
+                        // 编译失败由 Formula 自己回滚到默认公式，这里不需要兜异常
+                        old.formulas.forEach((s, formula) ->
+                                formula.compile(formulas.getOrDefault(s, formula).getFormula()));
                     }
                 });
             }

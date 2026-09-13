@@ -57,7 +57,8 @@ public final class BonusLoot {
      * 小数部分的抽样先取整数个，余下的小数按概率补一件（与 {@code BlockDropsEvent}
      * 处理经验值的方式一致），这样物品基数很小时也不会被 {@code floor} 抹成 0。
      * <p>
-     * 注意这个值直接决定额外摇取的次数（每次摇取都完整展开一遍战利品表），别设得太大。
+     * 这个值直接决定额外摇取的次数（每次摇取都完整展开一遍战利品表），所以在这里被
+     * {@link #MAX_RATIO} 硬性截断 —— 它由数据包可覆盖的公式算出，不能只靠「别设太大」这句提醒。
      * <p>
      * 返回 {@code 0} 是合法且常见的：不带终极猎手时正是 {@code 0}，调用方那两处循环都会
      * 自然空转，一点额外掉落都不会有。倍率没有底数，完全由附魔决定。
@@ -70,8 +71,27 @@ public final class BonusLoot {
      * 走不到这里。
      */
     public static float ratioFor(Player killer) {
-        return UltimateSlayer.sumPerSlot(killer, UltimateSlayer.LOOT_BONUS);
+        float ratio = UltimateSlayer.sumPerSlot(killer, UltimateSlayer.LOOT_BONUS);
+        // 非有限值理论上到不了这里：公式求值会把 Infinity/NaN 转成异常并回滚（见 Formula#calculate）。
+        // 仍然挡一道，因为下面的整数部分是 Mth.floor 出来的循环上界，拿到 Infinity 就是死循环。
+        if (!Float.isFinite(ratio)) {
+            return 0.0F;
+        }
+        return Mth.clamp(ratio, 0.0F, MAX_RATIO);
     }
+
+    /**
+     * 额外掉落倍率的硬上限。
+     * <p>
+     * 正常玩法够不到：终极猎手满级 5 级，四个盔甲槽逐件结算，
+     * {@code 0.05 * 5 * 4 = 1.0}，也就是「多掉一整份」。
+     * <p>
+     * 但 {@link UltimateSlayer#LOOT_BONUS} 是数据包可覆盖的公式组件，写成
+     * {@code "100000*lvl"} 就是一个直接乘在单次击杀主线程开销上的巨大系数 —— 整数部分
+     * 每一份都要完整摇一遍战利品表（Boss 那条路径还要现生成一件装备），很容易把服务器
+     * 线程卡死。这里给个兜底，20 倍已经是正常玩法的 20 倍。
+     */
+    private static final float MAX_RATIO = 20.0F;
 
     /** 神化给 Boss 打的持久 NBT 标记（{@code apoth.boss}），值恒为 true。 */
     private static final String APOTH_BOSS_KEY = "apoth.boss";

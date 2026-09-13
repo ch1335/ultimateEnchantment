@@ -121,7 +121,7 @@ public class DynamicDataPackManager {
             Files.createDirectories(ENCHANTMENTS_DIRECTORY);
         } catch (IOException exception) {
             UltimateEnchantment.LOGGER.error(
-                    "无法创建附魔配置目录 {}",
+                    "Failed to create enchantment config directory {}",
                     ENCHANTMENTS_DIRECTORY,
                     exception
             );
@@ -135,7 +135,7 @@ public class DynamicDataPackManager {
                     .forEach(DynamicDataPackManager::loadConfiguredEnchantment);
         } catch (IOException exception) {
             UltimateEnchantment.LOGGER.error(
-                    "无法读取附魔配置目录 {}",
+                    "Failed to list enchantment config directory {}",
                     ENCHANTMENTS_DIRECTORY,
                     exception
             );
@@ -149,15 +149,19 @@ public class DynamicDataPackManager {
                     UltimateEnchantment.id("enchantment/" + fileName),
                     Files.readAllBytes(path)
             );
-        } catch (IllegalArgumentException exception) {
+        } catch (RuntimeException exception) {
+            // 文件名不是合法 ResourceLocation 路径时（大写、空格、中文都算），UltimateEnchantment.id 抛的是
+            // ResourceLocationException，它直接继承 RuntimeException 而**不是** IllegalArgumentException，
+            // 所以这里必须接 RuntimeException。之前接 IllegalArgumentException 是接不住的，异常会冒出
+            // AddPackFindersEvent，而事件总线记完日志仍会 rethrow，最终把服务器启动整个搞失败。
             UltimateEnchantment.LOGGER.warn(
-                    "跳过非法附魔配置文件名 {}",
+                    "Skipping enchantment config file with an invalid name {}",
                     fileName,
                     exception
             );
         } catch (IOException exception) {
             UltimateEnchantment.LOGGER.warn(
-                    "无法读取附魔配置文件 {}",
+                    "Failed to read enchantment config file {}",
                     path,
                     exception
             );
