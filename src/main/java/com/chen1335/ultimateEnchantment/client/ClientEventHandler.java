@@ -1,14 +1,20 @@
 package com.chen1335.ultimateEnchantment.client;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
+import com.chen1335.ultimateEnchantment.client.model.UEBakedModelWrapper;
 import com.chen1335.ultimateEnchantment.common.EnchantmentLookup;
 import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
 import com.chen1335.ultimateEnchantment.utils.UEEnchantmentHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.Item;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
@@ -48,5 +54,17 @@ public class ClientEventHandler {
                 Minecraft.getInstance().rightClickDelay = 0;
             }
         });
+    }
+
+    @SubscribeEvent
+    public static void ModifyBakingResult(ModelEvent.ModifyBakingResult event) {
+//        for (Item item : BuiltInRegistries.ITEM) {
+//            ModelResourceLocation key = ModelResourceLocation.inventory(item.builtInRegistryHolder().getKey().location());
+//            BakedModel original = event.getModels().get(key);
+//            if (original == null || original instanceof UEBakedModelWrapper) {
+//                return;
+//            }
+//            event.getModels().put(key, new UEBakedModelWrapper<>(original));
+//        }
     }
 }

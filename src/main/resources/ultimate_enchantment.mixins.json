@@ -3,10 +3,7 @@
   "package": "com.chen1335.ultimateEnchantment.mixins",
   "plugin": "com.chen1335.ultimateEnchantment.mixins.MainMixinPlugin",
   "compatibilityLevel": "JAVA_21",
-  "mixins": ["apothic_enchanting.TooltipUtilMixin", "apotheosis.BossEquipmentDropMixin", "apotheosis.InvaderMixin", "ultimate_enchantment.CommonHooksMixin", "ultimate_enchantment.EnchantmentHelperMixin", "ultimate_enchantment.EnchantmentMixin", "ultimate_enchantment.EnchantRandomlyFunctionMixin", "ultimate_enchantment.EntityMixin", "ultimate_enchantment.FishingHookMixin", "ultimate_enchantment.ItemEnchantmentsMixin", "ultimate_enchantment.ItemEntityMixin", "ultimate_enchantment.ItemStackMixin", "ultimate_enchantment.LivingEntityMixin", "ultimate_enchantment.LootParams$BuilderMixin", "ultimate_enchantment.LootParamsMixin", "ultimate_enchantment.LootTableMixin", "ultimate_enchantment.RegistryOpsMixin", "ultimate_enchantment.TagLoaderMixin", "ultimate_enchantment.WitherBossMixin"],
-  "client": [
-    "ultimate_enchantment.client.GuiMixin",
-    "ultimate_enchantment.client.ClientHooksMixin"
-  ],
+  "mixins": ["apotheosis.BossEquipmentDropMixin", "apotheosis.InvaderMixin", "apothic_enchanting.TooltipUtilMixin", "ultimate_enchantment.CommonHooksMixin", "ultimate_enchantment.EnchantmentHelperMixin", "ultimate_enchantment.EnchantmentMixin", "ultimate_enchantment.EnchantRandomlyFunctionMixin", "ultimate_enchantment.EntityMixin", "ultimate_enchantment.FishingHookMixin", "ultimate_enchantment.ItemEnchantmentsMixin", "ultimate_enchantment.ItemEntityMixin", "ultimate_enchantment.ItemStackMixin", "ultimate_enchantment.LivingEntityMixin", "ultimate_enchantment.LootParams$BuilderMixin", "ultimate_enchantment.LootParamsMixin", "ultimate_enchantment.LootTableMixin", "ultimate_enchantment.RegistryOpsMixin", "ultimate_enchantment.TagLoaderMixin", "ultimate_enchantment.WitherBossMixin"],
+  "client": ["ultimate_enchantment.client.ClientHooksMixin", "ultimate_enchantment.client.GuiMixin", "ultimate_enchantment.client.ItemRendererMixin"],
   "minVersion": "0.8"
 }

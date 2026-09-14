@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class HardenedMana extends EnchantmentBasic {
-    public static final Formula MANA_PERCENT = new Formula("(1+0.1*lvl)*0.1");
+    public static final Formula MANA_PERCENT = new Formula("(1+0.1*lvl)*0.01");
     public static final Formula MAX_ARMOR = new Formula("1+lvl");
     public static final Formula KEEP_TIME = new Formula("200");
 

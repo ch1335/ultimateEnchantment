@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ManaSteal extends EnchantmentBasic {
-    public static final Formula MANA_PERCENT = new Formula("(6 + 2 * (lvl-1))*0.01");
+    public static final Formula MANA_PERCENT = new Formula("(4 + 2 * lvl)*0.01");
     public static final Formula MAX_PERCENT = new Formula("Math.min((5+lvl),10)*0.01");
 
     public ManaSteal() {
