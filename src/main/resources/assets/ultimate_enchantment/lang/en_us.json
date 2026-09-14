@@ -30,6 +30,8 @@
   "enchantment.ultimate_enchantment.mana_steal.specialDesc": "Restores %s%% of damage dealt as mana, with each restore capped at %s%% of your maximum mana",
   "enchantment.ultimate_enchantment.over_grow": "Overgrowth",
   "enchantment.ultimate_enchantment.over_grow.specialDesc": "Grants %s%% bonus maximum health",
+  "enchantment.ultimate_enchantment.pierce_through": "Pierce Through",
+  "enchantment.ultimate_enchantment.pierce_through.specialDesc": "Grants %s%% armor shred",
   "enchantment.ultimate_enchantment.quick_bait": "Quick Bait",
   "enchantment.ultimate_enchantment.quick_bait.specialDesc": "Fish approach your bobber %s%% faster",
   "enchantment.ultimate_enchantment.quick_latch": "Quick Latch",

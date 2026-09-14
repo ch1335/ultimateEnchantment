@@ -19,6 +19,7 @@ import com.chen1335.ultimateEnchantment.enchantment.enchantments.LastStand;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.Legend;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.OverGrow;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.QuickShooting;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.PierceThrough;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.Scabbing;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.QuickLatch;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.Smelting;
@@ -70,6 +71,7 @@ public class UEEnchantments {
     public static final EtherealArrow ETHEREAL_ARROW = register(new EtherealArrow());
     public static final HurtDeepens HURT_DEEPENS = register(new HurtDeepens());
     public static final TheFortress THE_FORTRESS = register(new TheFortress());
+    public static final PierceThrough PIERCE_THROUGH = register(new PierceThrough());
 
     public static SimpleBindings buildBindings(int level) {
         return EnchantmentBasic.buildBindings(level);

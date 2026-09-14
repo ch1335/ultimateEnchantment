@@ -30,6 +30,8 @@
   "enchantment.ultimate_enchantment.mana_steal.specialDesc": "攻击时会回复实际伤害的%s%%的魔力值，单次魔力回复上限为你最大魔力值的%s%%",
   "enchantment.ultimate_enchantment.over_grow": "过度生长",
   "enchantment.ultimate_enchantment.over_grow.specialDesc": "为你提供%s%%最大生命值",
+  "enchantment.ultimate_enchantment.pierce_through": "凿穿",
+  "enchantment.ultimate_enchantment.pierce_through.specialDesc": "提供%s%%的护甲撕裂",
   "enchantment.ultimate_enchantment.quick_bait": "快钩",
   "enchantment.ultimate_enchantment.quick_bait.specialDesc": "鱼游向你浮标的速度提高%s%%",
   "enchantment.ultimate_enchantment.quick_latch": "快卸销",

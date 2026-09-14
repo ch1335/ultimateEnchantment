@@ -112,11 +112,13 @@ public class UEEnchantmentTagsProvider extends EnchantmentTagsProvider {
 
         tag(UEEnchantmentTags.TRADEABLE_LEGENDARY_ENCHANTMENT)
                 .addOptional(UEEnchantments.SCABBING.getKey().location())
-                .addOptional(UEEnchantments.QUICK_SHOOTING.getKey().location());
+                .addOptional(UEEnchantments.QUICK_SHOOTING.getKey().location())
+                .addOptional(UEEnchantments.PIERCE_THROUGH.getKey().location());
 
         tag(UEEnchantmentTags.UE_APOTHIC_ENCHANTING_ADDITION)
                 .addOptional(UEEnchantments.SCABBING.getKey().location())
-                .addOptional(UEEnchantments.QUICK_SHOOTING.getKey().location());
+                .addOptional(UEEnchantments.QUICK_SHOOTING.getKey().location())
+                .addOptional(UEEnchantments.PIERCE_THROUGH.getKey().location());
     }
 
     private void addIronsSpellBooksTag(HolderLookup.@NotNull Provider pProvider) {

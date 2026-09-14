@@ -18,13 +18,26 @@ import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 import java.util.List;
 import java.util.Map;
 
-public class Scabbing extends EnchantmentBasic {
-    public static final Formula ARMOR_SHRED = new Formula("1 - Math.pow(1-0.04,lvl)");
-    public static final ResourceLocation MODIFIER_ID = UltimateEnchantment.id("scabbing");
+/**
+ * 凿穿：弓版本的护甲撕裂。
+ * <p>
+ * 效果与 {@link Scabbing} 一致 —— 同样是护甲撕裂，等级、权重、槽位、代价都照搬
+ * —— 只是作用在弓上，且单级撕裂比例由 4% 提到 5%。
+ * <p>
+ * 两者沿用同一条复利递减曲线：以单级比例作底数逐级衰减，而不是单级比例乘等级。
+ * 所以高等级的边际收益是递减的 —— 满级 5 级时 {@link Scabbing} 约 18.5%，
+ * 这里约 22.6%。
+ * <p>
+ * 护甲撕裂本身来自 Apothic Attributes，所以和 {@link Scabbing} 一样要求
+ * {@code apothic_enchanting} 在场。
+ */
+public class PierceThrough extends EnchantmentBasic {
+    public static final Formula ARMOR_SHRED = new Formula("1 - Math.pow(1-0.05,lvl)");
+    public static final ResourceLocation MODIFIER_ID = UltimateEnchantment.id("pierce_through");
 
-    public Scabbing() {
-        super("scabbing", "apothic_enchanting");
-        supported_items = new Type.TagType<>(ItemTags.WEAPON_ENCHANTABLE);
+    public PierceThrough() {
+        super("pierce_through", "apothic_enchanting");
+        supported_items = new Type.TagType<>(ItemTags.BOW_ENCHANTABLE);
         max_cost = new Enchantment.Cost(90, 10);
         min_cost = new Enchantment.Cost(25, 12);
         slots = List.of(EquipmentSlotGroup.HAND);

@@ -30,6 +30,8 @@
   "enchantment.ultimate_enchantment.mana_steal.specialDesc": "Les attaques restaurent %s%% des dégâts infligés en mana, chaque restauration étant limitée à %s%% de votre mana maximum",
   "enchantment.ultimate_enchantment.over_grow": "Surcroissance",
   "enchantment.ultimate_enchantment.over_grow.specialDesc": "Vous accorde %s%% de points de vie maximum supplémentaires",
+  "enchantment.ultimate_enchantment.pierce_through": "Transpercement",
+  "enchantment.ultimate_enchantment.pierce_through.specialDesc": "Accorde %s%% de pénétration d'armure",
   "enchantment.ultimate_enchantment.quick_bait": "Appât Rapide",
   "enchantment.ultimate_enchantment.quick_bait.specialDesc": "Les poissons s'approchent de votre flotteur %s%% plus vite",
   "enchantment.ultimate_enchantment.quick_latch": "Déclenchement Rapide",
