@@ -2,6 +2,7 @@ package com.chen1335.ultimateEnchantment.apotheosis;
 
 import com.chen1335.ultimateEnchantment.apotheosis.attachmentDatas.ApothBossAttachmentTypes;
 import com.chen1335.ultimateEnchantment.apotheosis.attachmentDatas.ApothBossInfo;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.UltimateSlayer;
 import com.chen1335.ultimateEnchantment.loot.BonusLoot;
 import dev.shadowsoffire.apotheosis.affix.AffixHelper;
 import dev.shadowsoffire.apotheosis.loot.LootController;
@@ -46,22 +47,6 @@ public final class ApothBossEquipmentLoot {
     private ApothBossEquipmentLoot() {
     }
 
-    /**
-     * 若 {@code entity} 是神化 Boss 且这次死亡有玩家击杀者，则按 {@link BonusLoot#ratioFor}
-     * 决定这次额外掉几件，每件都现摇一件全新的神化装备掉出。
-     * <p>
-     * <b>只处理神化装备</b>：判定依据是物品上带没带神化的稀有度组件。神化 Boss 身上
-     * 可能混着原版装备（例如 GearSet 里没被词缀化的物品），那些不计入掉落件数，
-     * 原版 Boss 身上的普通装备同样不会被碰到。
-     * <p>
-     * 掉出来的新装备与计数用的那一件<b>没有关系</b>：物品类型、稀有度、词缀都是重新摇的，
-     * 原装备只提供一个「这里本来掉了一件神化装备」的信号。稀有度在
-     * <b>该 Boss 自己能出的那几档</b>里摇，见 {@link #createNewEquipment}。
-     *
-     * @param entity           刚死亡的实体
-     * @param droppedEquipment 本次实际掉落的装备，元素是死亡前的快照副本
-     * @param killer           击杀者；为 {@code null} 时整个流程直接跳过
-     */
     public static void appendEquipment(
             LivingEntity entity,
             ObjectArrayList<ItemStack> droppedEquipment,
@@ -98,7 +83,7 @@ public final class ApothBossEquipmentLoot {
         Set<LootRarity> rarities = info != null ? info.rarities() : Set.of();
 
         RandomSource random = level.getRandom();
-        float ratio = BonusLoot.ratioFor(killer);
+        float ratio = UltimateSlayer.ratioFor(killer);
         // 件数按 ratio 直接算，不能借 sampleInto —— 那个方法是从既有池子里挑，抽取量被
         // 池子大小卡住，而 Boss 身上就那几件装备，倍率一超就整段被吃掉。基数取「这次实际
         // 掉了几件神化装备」，与战利品表那边同口径：整数部分整件全给，小数部分按概率补一件。

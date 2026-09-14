@@ -1,5 +1,6 @@
 package com.chen1335.ultimateEnchantment.mixins.ultimate_enchantment;
 
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.UltimateSlayer;
 import com.chen1335.ultimateEnchantment.loot.BonusLoot;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -49,7 +50,7 @@ public abstract class WitherBossMixin {
         WitherBoss self = (WitherBoss) (Object) this;
         RandomSource random = level.getRandom();
         // 原版固定掉 1 颗，基数就是 1。
-        int count = BonusLoot.rollCount(1, BonusLoot.ratioFor(killer), random);
+        int count = BonusLoot.rollCount(1, UltimateSlayer.ratioFor(killer), random);
         for (int i = 0; i < count; i++) {
             ItemEntity extra = self.spawnAtLocation(Items.NETHER_STAR);
             if (extra != null) {

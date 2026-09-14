@@ -50,9 +50,19 @@ public class UltimateSlayer extends EnchantmentBasic {
         formulas.put("loot_bonus", LOOT_BONUS);
     }
 
+    /**
+     * 实体来源的额外倍率：被杀者不是 Boss、或者击杀者身上没有本附魔，都返回 {@code 0}。
+     * <p>
+     * 判定分两层：{@link #canApply} 认被杀者是不是 Boss（原版与模组 Boss 走
+     * {@code c:bosses} 标签，神化 Boss 走它自己打的持久 NBT 标记），{@link #ratioFor}
+     * 再按击杀者四个盔甲槽上的等级累加。
+     * <p>
+     * 击杀者的类型是 {@link LivingEntity} 而不是 {@code Player}：加成读的是击杀者身上
+     * 的装备，谁杀的谁享受，不限定非得是玩家。
+     */
     public static float getRatio(LivingEntity thisEntity, LivingEntity killer) {
         if (!canApply(thisEntity)) {
-            return 0;
+            return 0.0F;
         }
         return ratioFor(killer);
     }
@@ -74,7 +84,7 @@ public class UltimateSlayer extends EnchantmentBasic {
     public static float ratioFor(LivingEntity killer) {
         float ratio = UltimateSlayer.sumPerSlot(killer, UltimateSlayer.LOOT_BONUS);
         // 非有限值理论上到不了这里：公式求值会把 Infinity/NaN 转成异常并回滚（见 Formula#calculate）。
-        // 仍然挡一道，因为下面的整数部分是 Mth.floor 出来的循环上界，拿到 Infinity 就是死循环。
+        // 仍然挡一道，因为调用方会拿它当 Mth.floor 出来的循环上界，拿到 Infinity 就是死循环。
         if (!Float.isFinite(ratio)) {
             return 0.0F;
         }
@@ -82,10 +92,9 @@ public class UltimateSlayer extends EnchantmentBasic {
     }
 
     public static boolean canApply(LivingEntity entity) {
-        boolean isBoss = entity.getType().is(Tags.EntityTypes.BOSSES)
-                || entity.getPersistentData().getBoolean(APOTH_BOSS_KEY);
 
-        return isBoss;
+        return entity.getType().is(Tags.EntityTypes.BOSSES)
+                || entity.getPersistentData().getBoolean(APOTH_BOSS_KEY);
     }
 
     @Override

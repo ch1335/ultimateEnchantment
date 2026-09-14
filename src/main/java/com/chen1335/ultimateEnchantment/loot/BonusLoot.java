@@ -10,12 +10,10 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.loot.LootTableIdCondition;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -26,8 +24,8 @@ import java.util.function.Consumer;
  * 额外掉落。
  * <p>
  * 按原战利品表<b>额外摇取若干份</b>，份数由倍率决定 —— Boss 掉落看击杀者
- * （{@link #ratioFor}），作物掉落看工具上的「收获」附魔（{@link #appendHarvest}）——
- * 结果追加到第一次的结果里。之所以是「重新摇取再抽样」而不是「把第一次的结果复制一份」，
+ * （{@link UltimateSlayer#getRatio}），作物掉落看工具上的「收获」附魔
+ * （{@link Harvest#getRatio}）—— 结果追加到第一次的结果里。之所以是「重新摇取再抽样」而不是「把第一次的结果复制一份」，
  * 是因为战利品表里的概率条目（{@code minecraft:alternatives}、带 {@code random_chance}
  * 的 pool）每次摇取结果都不同 —— 重新摇取才符合「额外掉落」的直觉，
  * 也才让 {@code 25%} 这个数字有意义。
@@ -50,59 +48,10 @@ import java.util.function.Consumer;
  */
 @ParametersAreNonnullByDefault
 public final class BonusLoot {
-
-    /**
-     * 这次额外掉落的倍率，可以大于 1。只由击杀者决定，与 实体 本身无关。
-     * <p>
-     * 结算方式是「整数部分整份全取 + 小数部分按比例抽样」：
-     * <ul>
-     *   <li>{@code 0.25} —— 多掉 25%</li>
-     *   <li>{@code 1.5} —— 多掉一整份，外加半份的随机抽样</li>
-     *   <li>{@code 2.3} —— 多掉两份，外加 30%</li>
-     * </ul>
-     * 小数部分的抽样先取整数个，余下的小数按概率补一件（与 {@code BlockDropsEvent}
-     * 处理经验值的方式一致），这样物品基数很小时也不会被 {@code floor} 抹成 0。
-     * <p>
-     * 这个值直接决定额外摇取的次数（每次摇取都完整展开一遍战利品表），所以在这里被
-     * {@link #MAX_RATIO} 硬性截断 —— 它由数据包可覆盖的公式算出，不能只靠「别设太大」这句提醒。
-     * <p>
-     * 返回 {@code 0} 是合法且常见的：不带终极猎手时正是 {@code 0}，调用方那两处循环都会
-     * 自然空转，一点额外掉落都不会有。倍率没有底数，完全由附魔决定。
-     * <p>
-     * <b>终极猎手</b>的加成在这里叠加：本方法是唯一决定「额外掉多少份」的地方，
-     * 而伤害那条路径（{@code EventHandler#ultimateSlayer}）走的是同一套逐件结算，
-     * 两边的口径必须一致，所以都调 {@link UltimateSlayer#sumPerSlot}。
-     * <p>
-     * {@code killer} 保证非空：没有击杀者的死亡在 {@link #append} 入口就被拦掉了，
-     * 走不到这里。
-     */
-    public static float ratioFor(Player killer) {
-        float ratio = UltimateSlayer.sumPerSlot(killer, UltimateSlayer.LOOT_BONUS);
-        // 非有限值理论上到不了这里：公式求值会把 Infinity/NaN 转成异常并回滚（见 Formula#calculate）。
-        // 仍然挡一道，因为下面的整数部分是 Mth.floor 出来的循环上界，拿到 Infinity 就是死循环。
-        if (!Float.isFinite(ratio)) {
-            return 0.0F;
-        }
-        return Mth.clamp(ratio, 0.0F, MAX_RATIO);
-    }
-
     /**
      * 额外掉落倍率的硬上限。
-     * <p>
-     * 正常玩法够不到：终极猎手满级 5 级，四个盔甲槽逐件结算，
-     * {@code 0.05 * 5 * 4 = 1.0}，也就是「多掉一整份」。
-     * <p>
-     * 但 {@link UltimateSlayer#LOOT_BONUS} 是数据包可覆盖的公式组件，写成
-     * {@code "100000*lvl"} 就是一个直接乘在单次击杀主线程开销上的巨大系数 —— 整数部分
-     * 每一份都要完整摇一遍战利品表（Boss 那条路径还要现生成一件装备），很容易把服务器
-     * 线程卡死。这里给个兜底，20 倍已经是正常玩法的 20 倍。
      */
     private static final float MAX_RATIO = 20.0F;
-
-    /**
-     * 神化给 Boss 打的持久 NBT 标记（{@code apoth.boss}），值恒为 true。
-     */
-    private static final String APOTH_BOSS_KEY = "apoth.boss";
 
     /**
      * 二次摇取的重入哨兵，挂在 {@link LootContext#pushVisitedElement} 的展开栈上。
@@ -119,9 +68,6 @@ public final class BonusLoot {
     private static final LootContext.VisitedEntry<LootTable> SECOND_PASS =
             LootContext.createVisitedEntry(LootTable.EMPTY);
 
-    private BonusLoot() {
-    }
-
     /**
      * 按 {@code context} 的来源追加额外掉落：方块看是不是成熟作物，实体看击杀者。
      * <p>
@@ -137,7 +83,6 @@ public final class BonusLoot {
             ObjectArrayList<ItemStack> original,
             LootContext context
     ) {
-        // 二次摇取自己触发的回调：放行。见 SECOND_PASS 的说明。
         if (context.hasVisitedElement(SECOND_PASS)) {
             return original;
         }
@@ -145,9 +90,6 @@ public final class BonusLoot {
         if (original.isEmpty()) {
             return original;
         }
-        // context 的表 ID 由 CommonHooks#modifyLoot 写入，而对同一个 context
-        // 它只写一次。这里 ID 对不上，说明这个 context 是被外层复用的
-        // （比如嵌套的 loot table），此时不插手，避免张冠李戴。
         ResourceLocation lootTableId = context.getQueriedLootTableId();
         if (LootTableIdCondition.UNKNOWN_LOOT_TABLE.equals(lootTableId)
                 || !lootTableId.equals(table.getLootTableId())) {
@@ -158,10 +100,6 @@ public final class BonusLoot {
         LivingEntity thisEntity = null;
         LivingEntity killer = null;
         BlockState blockState = null;
-        // ── 方块路径：成熟作物 ────────────────────────────────────────────────
-        // 必须排在实体判定之前。玩家破坏方块时 THIS_ENTITY 装的就是他本人，而下面
-        // canApply 只认 Boss —— 这条分支落在后面会被直接挡掉。反向也成立：没有
-        // BLOCK_STATE 的 context（实体、宝箱、钓鱼）在这里就被拦下，不会误入。
 
         if (context.getParamOrNull(LootContextParams.BLOCK_STATE) instanceof BlockState state) {
             blockState = state;
@@ -174,29 +112,22 @@ public final class BonusLoot {
             killer = entity;
         }
 
+
         if (blockState != null) {
             ratio += Harvest.getRatio(context, blockState);
         }
         if (thisEntity != null && killer != null) {
-            ratio += UltimateSlayer.getRatio(thisEntity,killer);
+            ratio += UltimateSlayer.getRatio(thisEntity, killer);
         }
 
 
-
-        addExtraRolls(table, original, context, ratio);
+        addExtraRolls(table, original, context, Math.clamp(0, ratio, MAX_RATIO));
         return original;
     }
 
 
     /**
      * 按 {@code ratio} 往 {@code original} 里追加若干份额外摇取。
-     * <p>
-     * 结算口径见 {@link #ratioFor}：整数部分整份全取，小数部分再摇一份、
-     * 拆成单件后按比例抽样。实体与方块两条来源共用这一套口径，两边因此不会
-     * 出现「同样写着 25%，一边多一边少」的偏差。
-     * <p>
-     * {@code ratio} 必须已经被钳到 {@link #MAX_RATIO} 以内 —— 整数部分是这个方法里
-     * 那个循环的上界，拿到 {@code Infinity} 就是死循环。
      */
     private static void addExtraRolls(
             LootTable table,
@@ -234,17 +165,8 @@ public final class BonusLoot {
 
     /**
      * 按 {@code ratio} 算出该额外产出多少份，基数由调用方给定。
-     * <p>
-     * 先取整数个，余下的小数按概率补一件（与 {@code BlockDropsEvent} 处理经验值的
-     * 方式一致）。这样物品基数很小时也不会被 {@code floor} 抹成 0 —— Boss 只掉
-     * 一件装备时，{@code 0.25} 仍然意味着 25% 的概率多掉一件，而不是永远不掉。
-     * <p>
-     * <b>返回值没有上限</b>：{@code ratio} 是 5、基数是 2 就返回 10。需要「不能多过池子
-     * 本身」这种约束的是抽样场景，由 {@link #sampleInto} 自己截断；要现生成新产物的场景
-     * （见 {@code ApothBossEquipmentLoot}）必须直接收下这个数，否则大倍率会被吃掉。
-     *
      * @param unitCount 本次实际掉了多少份，作为倍率的基数
-     * @param ratio     额外倍率，见 {@link #ratioFor}
+     * @param ratio     额外倍率
      */
     public static int rollCount(int unitCount, float ratio, RandomSource random) {
         float expected = unitCount * ratio;
