@@ -33,5 +33,8 @@ public class UEItemTagsProvider extends ItemTagsProvider {
                 .addTag(ItemTags.SHARP_WEAPON_ENCHANTABLE)
                 .addTag(Tags.Items.RANGED_WEAPON_TOOLS)
                 .addTag(Tags.Items.MELEE_WEAPON_TOOLS);
+        tag(UEItemTags.RANGE_WEAPON_ENCHANTABLE)
+                .addTag(ItemTags.BOW_ENCHANTABLE)
+                .addTag(ItemTags.CROSSBOW_ENCHANTABLE);
     }
 }

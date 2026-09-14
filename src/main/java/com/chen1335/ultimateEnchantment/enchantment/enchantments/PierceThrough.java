@@ -3,6 +3,7 @@ package com.chen1335.ultimateEnchantment.enchantment.enchantments;
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.common.Formula;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentBasic;
+import com.chen1335.ultimateEnchantment.tags.UEItemTags;
 import dev.shadowsoffire.apothic_attributes.api.ALObjects;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -37,7 +38,8 @@ public class PierceThrough extends EnchantmentBasic {
 
     public PierceThrough() {
         super("pierce_through", "apothic_enchanting");
-        supported_items = new Type.TagType<>(ItemTags.BOW_ENCHANTABLE);
+        supported_items = new Type.TagType<>(UEItemTags.RANGE_WEAPON_ENCHANTABLE);
+        primary_items = supported_items;
         max_cost = new Enchantment.Cost(90, 10);
         min_cost = new Enchantment.Cost(25, 12);
         slots = List.of(EquipmentSlotGroup.HAND);

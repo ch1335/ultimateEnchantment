@@ -3,10 +3,10 @@ package com.chen1335.ultimateEnchantment.enchantment.enchantments;
 import com.chen1335.ultimateEnchantment.common.Formula;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentBasic;
 import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
+import com.chen1335.ultimateEnchantment.tags.UEItemTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -28,7 +28,8 @@ public class HurtDeepens extends EnchantmentBasic {
 
     public HurtDeepens() {
         super("hurt_deepens");
-        supported_items = new Type.TagType<>(ItemTags.BOW_ENCHANTABLE);
+        supported_items = new Type.TagType<>(UEItemTags.RANGE_WEAPON_ENCHANTABLE);
+        primary_items = supported_items;
         max_cost = new Enchantment.Cost(90, 10);
         min_cost = new Enchantment.Cost(20, 10);
         slots = List.of(EquipmentSlotGroup.HAND);
