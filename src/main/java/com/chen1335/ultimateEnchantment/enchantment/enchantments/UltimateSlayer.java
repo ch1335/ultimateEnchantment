@@ -15,6 +15,7 @@ import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.common.Tags;
 
 import javax.script.SimpleBindings;
 import java.util.ArrayList;
@@ -28,6 +29,8 @@ public class UltimateSlayer extends EnchantmentBasic {
 
     public static final Formula LOOT_BONUS = new Formula("0.05*lvl");
 
+    private static final String APOTH_BOSS_KEY = "apoth.boss";
+
     public UltimateSlayer() {
         super("ultimate_slayer");
         supported_items = new Type.TagType<>(ItemTags.ARMOR_ENCHANTABLE);
@@ -40,31 +43,20 @@ public class UltimateSlayer extends EnchantmentBasic {
         weight = 1;
     }
 
+
     @Override
     protected void registerFormula(Map<String, Formula> formulas) {
         formulas.put("damage_bonus", DAMAGE_BONUS);
         formulas.put("loot_bonus", LOOT_BONUS);
     }
 
-    /**
-     * 对本实体每一件带本附魔的盔甲<b>单独代入公式求值</b>，返回这些结果之和。
-     * <p>
-     * 刻意不先把等级累加起来再算一次：{@link Formula} 支持 {@code lvl*lvl}、{@code lvl/2}
-     * 这类非线性写法，也支持带 {@code return} 的多语句，此时「四件各 I 级各算一遍」与
-     * 「合并成 4 级算一遍」结果并不相等。要让每件装备按它自己的等级计贡献，就只能逐件求值。
-     * <p>
-     * 顺带一提，也不能拿
-     * {@code EnchantmentHelper#getEnchantmentLevel(Holder, LivingEntity)} 代替：那个方法
-     * 内部是 {@code if (j > i) i = j}，返回的是单件最高等级。
-     * <p>
-     * {@code lookup} 取自 {@link EnchantmentLookup} 的缓存并供所有槽复用，而不是每次调用
-     * 都 {@code lookupOrThrow} —— 后者在 5 个槽的循环里就是 5 次多余的注册表解析。
-     * <p>
-     * 缓存能这么用是因为 {@code ENCHANTMENT} 属于 {@code RegistryLayer.WORLDGEN}，
-     * 不在 {@code /reload} 重建的那一层里；前提与刷新时机见 {@link EnchantmentLookup} 的类注释。
-     *
-     * @return 各部位贡献之和；没有装备本附魔时返回 {@code 0}
-     */
+    public static float getRatio(LivingEntity thisEntity, LivingEntity killer) {
+        if (!canApply(thisEntity)) {
+            return 0;
+        }
+        return ratioFor(killer);
+    }
+
     public static float sumPerSlot(LivingEntity entity, Formula formula) {
         HolderLookup.RegistryLookup<Enchantment> lookup = EnchantmentLookup.get();
         float total = 0.0F;
@@ -77,6 +69,23 @@ public class UltimateSlayer extends EnchantmentBasic {
             }
         }
         return total;
+    }
+
+    public static float ratioFor(LivingEntity killer) {
+        float ratio = UltimateSlayer.sumPerSlot(killer, UltimateSlayer.LOOT_BONUS);
+        // 非有限值理论上到不了这里：公式求值会把 Infinity/NaN 转成异常并回滚（见 Formula#calculate）。
+        // 仍然挡一道，因为下面的整数部分是 Mth.floor 出来的循环上界，拿到 Infinity 就是死循环。
+        if (!Float.isFinite(ratio)) {
+            return 0.0F;
+        }
+        return ratio;
+    }
+
+    public static boolean canApply(LivingEntity entity) {
+        boolean isBoss = entity.getType().is(Tags.EntityTypes.BOSSES)
+                || entity.getPersistentData().getBoolean(APOTH_BOSS_KEY);
+
+        return isBoss;
     }
 
     @Override

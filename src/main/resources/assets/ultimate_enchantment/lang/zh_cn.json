@@ -14,6 +14,8 @@
   "enchantment.ultimate_enchantment.ethereal_arrow.specialDesc": "箭矢每飞行1格附加%s点伤害，最多附加%s点",
   "enchantment.ultimate_enchantment.hardened_mana": "硬化魔法",
   "enchantment.ultimate_enchantment.hardened_mana.specialDesc": "将你用于释放法术所消耗的魔力的%s%%转化为护甲值，持续十秒，最高%s护甲值",
+  "enchantment.ultimate_enchantment.harvest": "收获",
+  "enchantment.ultimate_enchantment.harvest.specialDesc": "收获成熟作物时，额外获得%s%%的掉落物",
   "enchantment.ultimate_enchantment.hurt_deepens": "伤者愈伤",
   "enchantment.ultimate_enchantment.hurt_deepens.specialDesc": "目标当前生命值百分比每比你低1%%，就多造成%s%%伤害，最多%s%%",
   "enchantment.ultimate_enchantment.kinetic_energy": "动能",

@@ -146,13 +146,6 @@ public class EventHandler {
             }
         }
 
-        /**
-         * 终极猎手：对 Boss 与神化 Boss 的伤害加成。
-         * <p>
-         * 加成按部位逐件结算再相加，与 {@code BonusLoot#ratioFor} 共用
-         * {@link UltimateSlayer#sumPerSlot}；Boss 判定也共用
-         * {@link BonusLoot#canApply}，避免出现「打得出额外伤害却不掉额外战利品」的割裂。
-         */
         @SubscribeEvent(priority = EventPriority.LOW)
         public static void ultimateSlayer(LivingIncomingDamageEvent event) {
             if (!(event.getSource().getEntity() instanceof Player attacker)
@@ -160,7 +153,7 @@ public class EventHandler {
                 return;
             }
             // Boss 判定比遍历装备槽便宜，而绝大多数挨打的目标都不是 Boss，先判。
-            if (!BonusLoot.canApply(event.getEntity())) {
+            if (!UltimateSlayer.canApply(event.getEntity())) {
                 return;
             }
 

@@ -5,6 +5,7 @@ import com.chen1335.ultimateEnchantment.enchantment.enchantments.CutDown;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.DoubleHook;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.EtherealArrow;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.HardenedMana;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.Harvest;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.HurtDeepens;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.KineticEnergy;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.LethalTempo;
@@ -72,6 +73,7 @@ public class UEEnchantments {
     public static final HurtDeepens HURT_DEEPENS = register(new HurtDeepens());
     public static final TheFortress THE_FORTRESS = register(new TheFortress());
     public static final PierceThrough PIERCE_THROUGH = register(new PierceThrough());
+    public static final Harvest HARVEST = register(new Harvest());
 
     public static SimpleBindings buildBindings(int level) {
         return EnchantmentBasic.buildBindings(level);

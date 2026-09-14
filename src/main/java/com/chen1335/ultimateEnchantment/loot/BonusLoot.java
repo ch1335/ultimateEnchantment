@@ -1,15 +1,17 @@
 package com.chen1335.ultimateEnchantment.loot;
 
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.Harvest;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.UltimateSlayer;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -23,10 +25,12 @@ import java.util.function.Consumer;
 /**
  * 额外掉落。
  * <p>
- * 按原战利品表<b>额外摇取若干份</b>，份数由 {@link #ratioFor} 按击杀者算出，结果追加到
- * 第一次的结果里。之所以是「重新摇取再抽样」而不是「把第一次的结果复制一份」，是因为战利品表里的
- * 概率条目（{@code minecraft:alternatives}、带 {@code random_chance} 的 pool）每次摇取
- * 结果都不同 —— 重新摇取才符合「额外掉落」的直觉，也才让 {@code 25%} 这个数字有意义。
+ * 按原战利品表<b>额外摇取若干份</b>，份数由倍率决定 —— Boss 掉落看击杀者
+ * （{@link #ratioFor}），作物掉落看工具上的「收获」附魔（{@link #appendHarvest}）——
+ * 结果追加到第一次的结果里。之所以是「重新摇取再抽样」而不是「把第一次的结果复制一份」，
+ * 是因为战利品表里的概率条目（{@code minecraft:alternatives}、带 {@code random_chance}
+ * 的 pool）每次摇取结果都不同 —— 重新摇取才符合「额外掉落」的直觉，
+ * 也才让 {@code 25%} 这个数字有意义。
  * <p>
  * 第二次摇取复用同一个 {@link net.minecraft.util.RandomSource}（见
  * {@link LootContext.Builder#Builder(LootContext)}），所以世界种子推进是连续可复现的，
@@ -38,7 +42,9 @@ import java.util.function.Consumer;
  * <p>
  * <p>
  * 本类只负责<b>战利品表</b>这条路径，调用点见
- * {@code mixins/ultimate_enchantment/LootTableMixin}。<b>神化 Boss 直接穿在身上的装备</b>
+ * {@code mixins/ultimate_enchantment/LootTableMixin}。实体与<b>方块（成熟作物）</b>两种
+ * 来源都经由它 —— 方块掉落本身就是一次 {@code LootTable#getRandomItems}，在战利品表
+ * 这一层和实体掉落是同一件事。<b>神化 Boss 直接穿在身上的装备</b>
  * 不经过战利品表（见 {@code ApothBossEquipmentLoot} 的说明），那条路径单独实现，
  * 这样本类得以保持对 Apotheosis 零编译期依赖。
  */
@@ -93,7 +99,9 @@ public final class BonusLoot {
      */
     private static final float MAX_RATIO = 20.0F;
 
-    /** 神化给 Boss 打的持久 NBT 标记（{@code apoth.boss}），值恒为 true。 */
+    /**
+     * 神化给 Boss 打的持久 NBT 标记（{@code apoth.boss}），值恒为 true。
+     */
     private static final String APOTH_BOSS_KEY = "apoth.boss";
 
     /**
@@ -115,13 +123,14 @@ public final class BonusLoot {
     }
 
     /**
-     * 若 {@code context} 对应的掉落来自 实体，且这次死亡有玩家击杀者，则追加额外掉落并返回。
+     * 按 {@code context} 的来源追加额外掉落：方块看是不是成熟作物，实体看击杀者。
      * <p>
      * {@code original} 与返回值是同一个列表对象（原地追加），返回值只为了方便调用方直接返回。
      *
      * @param table    正在产出战利品的表，用于与 {@code context} 携带的表 ID 交叉校验
      * @param original 第一次摇取的结果
-     * @param context  该次摇取的上下文，携带 {@code THIS_ENTITY} 与 {@code ATTACKING_ENTITY} 参数
+     * @param context  该次摇取的上下文；方块来源带 {@code BLOCK_STATE} 与 {@code TOOL}，
+     *                 实体来源带 {@code THIS_ENTITY} 与 {@code ATTACKING_ENTITY}
      */
     public static ObjectArrayList<ItemStack> append(
             LootTable table,
@@ -145,27 +154,56 @@ public final class BonusLoot {
             return original;
         }
 
-        // 最热的一行：方块、宝箱、钓鱼等绝大多数 loot table 都没有 THIS_ENTITY，
-        // 在这里就返回了，底下 实体 判定的开销不会被摊到它们身上。
-        if (!(context.getParamOrNull(LootContextParams.THIS_ENTITY) instanceof LivingEntity entity)) {
-            return original;
-        }
-        if (!canApply(entity)) {
-            return original;
-        }
+        float ratio = 0;
+        LivingEntity thisEntity = null;
+        LivingEntity killer = null;
+        BlockState blockState = null;
+        // ── 方块路径：成熟作物 ────────────────────────────────────────────────
+        // 必须排在实体判定之前。玩家破坏方块时 THIS_ENTITY 装的就是他本人，而下面
+        // canApply 只认 Boss —— 这条分支落在后面会被直接挡掉。反向也成立：没有
+        // BLOCK_STATE 的 context（实体、宝箱、钓鱼）在这里就被拦下，不会误入。
 
-        // 没有击杀者的死亡一律不参与（摔死、烧死、被别的生物打死的 实体 都算）。
-        // 用 ATTACKING_ENTITY 而不是 LAST_DAMAGE_PLAYER：前者是最后一击的来源，正是原版
-        // dropFromLootTable 用 damageSource.getEntity() 填进去的那个；后者是「最近 5 秒
-        // 内打过我的玩家」，实体 挨一刀再摔死也会算在他头上。这个口径与神化装备那条路径
-        // 一致，见 ApothBossEquipmentLoot#appendEquipment。
-        if (!(context.getParamOrNull(LootContextParams.ATTACKING_ENTITY) instanceof Player killer)) {
-            return original;
+        if (context.getParamOrNull(LootContextParams.BLOCK_STATE) instanceof BlockState state) {
+            blockState = state;
         }
 
-        float ratio = ratioFor(killer);
-        ServerLevel level = context.getLevel();
+        if (context.getParamOrNull(LootContextParams.THIS_ENTITY) instanceof LivingEntity entity) {
+            thisEntity = entity;
+        }
+        if (context.getParamOrNull(LootContextParams.ATTACKING_ENTITY) instanceof LivingEntity entity) {
+            killer = entity;
+        }
 
+        if (blockState != null) {
+            ratio += Harvest.getRatio(context, blockState);
+        }
+        if (thisEntity != null && killer != null) {
+            ratio += UltimateSlayer.getRatio(thisEntity,killer);
+        }
+
+
+
+        addExtraRolls(table, original, context, ratio);
+        return original;
+    }
+
+
+    /**
+     * 按 {@code ratio} 往 {@code original} 里追加若干份额外摇取。
+     * <p>
+     * 结算口径见 {@link #ratioFor}：整数部分整份全取，小数部分再摇一份、
+     * 拆成单件后按比例抽样。实体与方块两条来源共用这一套口径，两边因此不会
+     * 出现「同样写着 25%，一边多一边少」的偏差。
+     * <p>
+     * {@code ratio} 必须已经被钳到 {@link #MAX_RATIO} 以内 —— 整数部分是这个方法里
+     * 那个循环的上界，拿到 {@code Infinity} 就是死循环。
+     */
+    private static void addExtraRolls(
+            LootTable table,
+            ObjectArrayList<ItemStack> original,
+            LootContext context,
+            float ratio
+    ) {
         // ── 整数部分：整份摇取并全部收取 ──────────────────────────────────────
         // ratio = 1.5 时摇 1 次，2.3 时摇 2 次。
         // 每次都用独立的 context，但共享同一个 RandomSource，随机序列连续推进，
@@ -190,10 +228,8 @@ public final class BonusLoot {
                 }
             }
 
-            sampleInto(singles, remainder, level.getRandom(), original::add);
+            sampleInto(singles, remainder, context.getLevel().getRandom(), original::add);
         }
-
-        return original;
     }
 
     /**
@@ -266,13 +302,5 @@ public final class BonusLoot {
         LootContext fresh = new LootContext.Builder(context).create(Optional.empty());
         fresh.pushVisitedElement(SECOND_PASS);
         return fresh;
-    }
-
-
-    public static boolean canApply(LivingEntity entity) {
-        boolean isBoss = entity.getType().is(Tags.EntityTypes.BOSSES)
-                || entity.getPersistentData().getBoolean(APOTH_BOSS_KEY);
-
-        return isBoss;
     }
 }

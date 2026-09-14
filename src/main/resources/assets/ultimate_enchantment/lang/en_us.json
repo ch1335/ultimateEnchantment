@@ -14,6 +14,8 @@
   "enchantment.ultimate_enchantment.ethereal_arrow.specialDesc": "Arrows deal %s extra damage for every block flown, up to a maximum of %s",
   "enchantment.ultimate_enchantment.hardened_mana": "Hardened Mana",
   "enchantment.ultimate_enchantment.hardened_mana.specialDesc": "Converts %s%% of mana spent on spells into armor for 10 seconds, up to %s armor",
+  "enchantment.ultimate_enchantment.harvest": "Harvest",
+  "enchantment.ultimate_enchantment.harvest.specialDesc": "Grants %s%% extra drops when harvesting mature crops",
   "enchantment.ultimate_enchantment.hurt_deepens": "Hurt Deepens",
   "enchantment.ultimate_enchantment.hurt_deepens.specialDesc": "Deals %s%% extra damage for every 1%% the target's current health percentage is below yours, up to %s%%",
   "enchantment.ultimate_enchantment.kinetic_energy": "Kinetic Energy",

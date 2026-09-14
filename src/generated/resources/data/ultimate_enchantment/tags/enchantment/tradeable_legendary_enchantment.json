@@ -29,6 +29,10 @@
             "required": false
         },
         {
+            "id": "ultimate_enchantment:harvest",
+            "required": false
+        },
+        {
             "id": "ultimate_enchantment:scabbing",
             "required": false
         },
