@@ -1,0 +1,38 @@
+package com.chen1335.ultimate_enchantment.tags;
+
+import com.chen1335.ultimate_enchantment.UltimateEnchantment;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.enchantment.Enchantment;
+
+public interface UEEnchantmentTags {
+
+    TagKey<Enchantment> ENCHANTMENTS = create("enchantments");
+
+    TagKey<Enchantment> COMMON_ENCHANTMENT = create("common_enchantment");
+
+    TagKey<Enchantment> ULTIMATE_ENCHANTMENT = create("ultimate_enchantment");
+
+    TagKey<Enchantment> ULTIMATE_ENCHANTMENT_EXCLUSIVE = create("ultimate_enchantment_exclusive");
+
+    TagKey<Enchantment> LEGENDARY_ENCHANTMENT = create("legendary_enchantment");
+
+    TagKey<Enchantment> TRADEABLE_LEGENDARY_ENCHANTMENT = create("tradeable_legendary_enchantment");
+
+    TagKey<Enchantment> UN_TRADEABLE_LEGENDARY_ENCHANTMENT = create("un_tradeable_legendary_enchantment");
+
+    TagKey<Enchantment> USE_CUSTOM_COLOR = create("use_custom_color");
+
+    TagKey<Enchantment> LIFE_STEAL_ENCHANTMENT = create("life_steal_enchantment");
+
+    TagKey<Enchantment> UE_APOTHIC_ENCHANTING_ADDITION = create("ue_apothic_enchanting_addition");
+
+    TagKey<Enchantment> IGNORE_ULTIMATE = create("ignore_ultimate");
+
+    TagKey<Enchantment> END_CITY_LOOTABLE = create("end_city_lootable");
+
+    private static TagKey<Enchantment> create(String pName) {
+        return TagKey.create(Registries.ENCHANTMENT, Identifier.fromNamespaceAndPath(UltimateEnchantment.MODID,pName));
+    }
+}

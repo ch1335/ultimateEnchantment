@@ -1,0 +1,174 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'net.neoforged.moddev' version '2.0.147'
+    id 'idea'
+}
+
+tasks.named('wrapper', Wrapper).configure {
+    distributionType = Wrapper.DistributionType.BIN
+}
+
+version = mod_version
+group = mod_group_id
+
+sourceSets.main.resources {
+    srcDir('src/generated/resources')
+
+    exclude("**/*.bbmodel")
+    exclude("src/generated/**/.cache")
+}
+
+repositories {
+    // Shadowsoffire (Apotheosis 全家桶) 官方 Maven。
+    // 该全家桶发布在此，无需 CurseForge API key，CI 环境可直接访问。
+    maven {
+        name = 'Shadowsoffire'
+        url = 'https://maven.shadowsoffire.dev/releases'
+    }
+    // Curios 从 CurseForge（CurseMaven）取。
+    // 注：Curios 官方 Maven（maven.theillusivec4.top）上不存在 top/theillusivec4/curios 路径（实测 404），
+    // 故按项目既有惯例走 CurseMaven；坐标为 curse.maven:<slug>-<projectId>:<fileId>。
+    maven {
+        name = 'CurseMaven'
+        url = 'https://cursemaven.com'
+        content {
+            includeGroup 'curse.maven'
+        }
+    }
+    // Patchouli 的官方 Maven（BlameJared）。
+    maven {
+        name = 'BlameJared'
+        url = 'https://maven.blamejared.com'
+    }
+    // Advanced Loot Info (ALI) 从 Modrinth Maven 取（坐标为 maven.modrinth:<slug>:<versionId>）。
+    maven {
+        name = 'Modrinth'
+        url = 'https://api.modrinth.com/maven'
+        content {
+            includeGroup 'maven.modrinth'
+        }
+    }
+
+    // 注意：Mixin / MixinExtras 无需在此声明任何仓库 —— NeoForge 26.1.2.109
+    // 的 POM 已直接依赖 net.fabricmc:sponge-mixin:0.17.3+mixin.0.8.7 与
+    // io.github.llamalad7:mixinextras-neoforge:0.5.4，均由 NeoForged Maven 提供。
+}
+
+base {
+    archivesName = mod_id
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+
+neoForge {
+    version = project.neo_version
+
+    runs {
+        client {
+            client()
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+
+        server {
+            server()
+            programArgument '--nogui'
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+
+        gameTestServer {
+            type = "gameTestServer"
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+
+        data {
+            // MDG 2.x 的 datagen run type 名称为 serverData()（不再是 data()）：
+            // 可用类型实测为 [client, clientData, serverData, gameTestServer, server, junit]。
+            // 必须用服务端数据生成，因为本模组的 UERegistries.gatherData 监听
+            // GatherDataEvent.Server（产物全是服务端数据：标签、配方、战利品表等）。
+            // 用 clientData() 会导致生成器报告「0 个 provider、0 个文件」且不报任何错误。
+            serverData()
+            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        }
+
+        configureEach {
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
+
+            logLevel = org.slf4j.event.Level.DEBUG
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
+        }
+    }
+}
+
+configurations {
+    runtimeClasspath.extendsFrom localRuntime
+}
+
+dependencies {
+    def noCurios = {
+        exclude group: 'top.theillusivec4.curios', module: 'curios-neoforge'
+    }
+    implementation("dev.shadowsoffire:Placebo:${placebo_version}")
+    implementation("dev.shadowsoffire:ApothicAttributes:${apothic_attributes_version}", noCurios)
+    implementation("dev.shadowsoffire:ApothicEnchanting:${apothic_enchanting_version}", noCurios)
+    implementation("dev.shadowsoffire:ApothicSpawners:${apothic_spawners_version}")
+    implementation("dev.shadowsoffire:Apotheosis:${apotheosis_version}", noCurios)
+
+    implementation "curse.maven:jei-238222:8815815"
+    implementation "curse.maven:curios-309927:8463519"
+    implementation "vazkii.patchouli:patchouli-neoforge:26.1-94"
+
+    implementation "maven.modrinth:advanced-loot-info:8wZGjo24"
+    implementation "maven.modrinth:advanced-core-info:rHsmwQ4B"
+
+    jarJar(implementation("org.openjdk.nashorn:nashorn-core:${nashorn_version}"))
+}
+
+var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
+    var replaceProperties = [
+            minecraft_version      : minecraft_version,
+            minecraft_version_range: minecraft_version_range,
+            neo_version            : neo_version,
+            mod_id                 : mod_id,
+            mod_name               : mod_name,
+            mod_license            : mod_license,
+            mod_version            : mod_version,
+            mod_authors            : mod_authors,
+            mod_description        : mod_description,
+    ]
+    inputs.properties replaceProperties
+    expand replaceProperties
+    from "src/main/templates"
+    into "build/generated/sources/modMetadata"
+}
+sourceSets.main.resources.srcDir generateModMetadata
+neoForge.ideSyncTask generateModMetadata
+
+publishing {
+    publications {
+        register('mavenJava', MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            url "file://${project.projectDir}/repo"
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8' 
+}
+
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}

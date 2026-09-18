@@ -1,0 +1,49 @@
+modLoader = "javafml" #mandatory
+loaderVersion = "[4,)" #mandatory
+license = "${mod_license}"
+[[mods]]
+modId = "${mod_id}"
+version = "${mod_version}"
+displayName = "${mod_name}"
+authors = "${mod_authors}"
+description = '''${mod_description}'''
+
+[[mixins]]
+config="${mod_id}.mixins.json"
+
+[[accessTransformers]]
+file="META-INF/accesstransformer.cfg"
+
+[[dependencies.${ mod_id }]]
+modId = "neoforge"
+type = "required"
+versionRange = "[${neo_version},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${ mod_id }]]
+modId = "minecraft"
+type = "required"
+versionRange = "${minecraft_version_range}"
+ordering = "NONE"
+side = "BOTH"
+
+
+[[dependencies.${ mod_id }]]
+modId = "apothic_enchanting"
+type = "optional"
+# 26.1 线：该模组在自身元数据里自报的版本是 "2.0.0"（不带 MC 版本前缀，与 Maven 坐标
+# 26.1.2-2.0.0 不同）。此处必须按它自报的版本号写，否则 FML 会判定不满足而拒绝启动。
+versionRange = "[2.0.0,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${ mod_id }]]
+modId = "enchdesc"
+type = "optional"
+# 原版源码为 [21.1.7,)（1.21.1 线）。26.1.2 线自报版本与 Maven 版本号一致
+# （如 26.1.2.1 / 26.1.2.6），故此处写 [26.1.2,)。实测该模组不影响本模组任何代码路径，
+# 且是 client_only_server_optional，缺失时不会影响服务端启动。
+versionRange = "[26.1.2,)"
+ordering = "NONE"
+side = "BOTH"

@@ -1,0 +1,11 @@
+{
+  "values": [
+    "#minecraft:enchantable/bow",
+    "#minecraft:enchantable/crossbow",
+    "#minecraft:enchantable/melee_weapon",
+    "#minecraft:axes",
+    "#minecraft:enchantable/sharp_weapon",
+    "#c:tools/ranged_weapon",
+    "#c:tools/melee_weapon"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "values": [
+    {
+      "id": "ultimate_enchantment:scabbing",
+      "required": false
+    },
+    {
+      "id": "ultimate_enchantment:quick_shooting",
+      "required": false
+    },
+    {
+      "id": "ultimate_enchantment:pierce_through",
+      "required": false
+    }
+  ]
+}

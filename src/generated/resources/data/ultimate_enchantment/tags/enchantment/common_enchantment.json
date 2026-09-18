@@ -1,0 +1,16 @@
+{
+  "values": [
+    {
+      "id": "ultimate_enchantment:life_steal",
+      "required": false
+    },
+    {
+      "id": "ultimate_enchantment:smelting",
+      "required": false
+    },
+    {
+      "id": "ultimate_enchantment:quick_latch",
+      "required": false
+    }
+  ]
+}
