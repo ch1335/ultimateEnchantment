@@ -113,11 +113,11 @@ dependencies {
     def noCurios = {
         exclude group: 'top.theillusivec4.curios', module: 'curios-neoforge'
     }
-    implementation("dev.shadowsoffire:Placebo:${placebo_version}")
-    implementation("dev.shadowsoffire:ApothicAttributes:${apothic_attributes_version}", noCurios)
-    implementation("dev.shadowsoffire:ApothicEnchanting:${apothic_enchanting_version}", noCurios)
-    implementation("dev.shadowsoffire:ApothicSpawners:${apothic_spawners_version}")
-    implementation("dev.shadowsoffire:Apotheosis:${apotheosis_version}", noCurios)
+    compileOnly("dev.shadowsoffire:Placebo:${placebo_version}")
+    compileOnly("dev.shadowsoffire:ApothicAttributes:${apothic_attributes_version}", noCurios)
+    compileOnly("dev.shadowsoffire:ApothicEnchanting:${apothic_enchanting_version}", noCurios)
+    compileOnly("dev.shadowsoffire:ApothicSpawners:${apothic_spawners_version}")
+    compileOnly("dev.shadowsoffire:Apotheosis:${apotheosis_version}", noCurios)
 
     implementation "curse.maven:jei-238222:8815815"
     implementation "curse.maven:curios-309927:8463519"

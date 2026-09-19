@@ -6,6 +6,7 @@ import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import org.jspecify.annotations.NonNull;
 
 /**
  * 「苦力怕已充能」战利品条件。
@@ -19,7 +20,7 @@ public class CreeperIsPoweredCondition implements LootItemCondition {
     public static final MapCodec<CreeperIsPoweredCondition> MAP_CODEC = MapCodec.unit(INSTANCE);
 
     @Override
-    public MapCodec<CreeperIsPoweredCondition> codec() {
+    public @NonNull MapCodec<CreeperIsPoweredCondition> codec() {
         return MAP_CODEC;
     }
 
