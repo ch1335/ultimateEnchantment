@@ -35,6 +35,7 @@ import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforgespi.Environment;
+import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import org.slf4j.Logger;
 
 import javax.script.ScriptEngine;
@@ -46,7 +47,7 @@ public class UltimateEnchantment {
     public static final String MODID = "ultimate_enchantment";
     public static final Logger LOGGER = LogUtils.getLogger();
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
-    public static final ScriptEngine SCRIPT_ENGINE = new ScriptEngineManager().getEngineByName("nashorn");
+    public static final ScriptEngine SCRIPT_ENGINE = new NashornScriptEngineFactory().getScriptEngine("--global-per-engine");;
     private static boolean IRONS_SPELL_BOOKS_LOADED = false;
 
     private static boolean TWILIGHT_FOREST_LOADED = false;
