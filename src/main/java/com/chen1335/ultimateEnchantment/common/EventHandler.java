@@ -203,7 +203,7 @@ public class EventHandler {
                     int lvl = UEEnchantments.MANA_STEAL.getEnchantmentLevel(itemStack, event.getEntity().level());
                     if (lvl > 0 && UltimateEnchantment.isIronsSpellBooksLoaded() && attacker instanceof ServerPlayer player) {
                         SimpleBindings bindings = LifeSteal.buildBindings(lvl);
-                        float manaRegainAmount = (float) Math.min(ManaSteal.MANA_PERCENT.calculate(bindings), player.getAttributeValue(AttributeRegistry.MAX_MANA) * ManaSteal.MAX_PERCENT.calculate(bindings));
+                        float manaRegainAmount = (float) Math.min(actualDamage * ManaSteal.MANA_PERCENT.calculate(bindings), player.getAttributeValue(AttributeRegistry.MAX_MANA) * ManaSteal.MAX_PERCENT.calculate(bindings));
                         MagicData.getPlayerMagicData(player).addMana(manaRegainAmount);
                         PacketDistributor.sendToPlayer(player, new SyncManaPacket(MagicData.getPlayerMagicData(player)));
                     }
