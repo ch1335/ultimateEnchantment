@@ -1,1 +1,0 @@
-帮我按照写进物品来实现吧，组件放在src/main/java/com/chen1335/ultimateEnchantment/dataComponentType/dataComponentTypes里，其他代码放在com/chen1335/ultimateEnchantment/enchantment/enchantments/TheFortress.java的Handler内，但是通过组件获取属性时，服务端正常获取
