@@ -8,6 +8,7 @@ import com.chen1335.ultimateEnchantment.attachmentDatas.CommonEntityData;
 import com.chen1335.ultimateEnchantment.attachmentDatas.PlayerData;
 import com.chen1335.ultimateEnchantment.attachmentDatas.UEProjectileData;
 import com.chen1335.ultimateEnchantment.config.CommonConfig;
+import com.chen1335.ultimateEnchantment.config.ServerConfig;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentBasic;
 import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.*;
@@ -218,9 +219,13 @@ public class EventHandler {
 
         @SubscribeEvent(priority = EventPriority.LOWEST)
         public static void GetEnchantmentLevelEvent(GetEnchantmentLevelEvent event) {
-            for (Object2IntMap.Entry<Holder<Enchantment>> entry : event.getStack().getTagEnchantments().entrySet()) {
-                if (entry.getKey().is(UEEnchantmentTags.ULTIMATE_ENCHANTMENT)) {
-                    event.getEnchantments().set(entry.getKey(), entry.getIntValue());
+            // 把终极附魔的等级摁回物品 NBT 上记录的那一档，等于无视其他模组（如神化的影激宝石）
+            // 通过本事件给出的加成。关掉这个开关就是允许它们被正常提升等级。
+            if (ServerConfig.ultimateEnchantmentCantBeUpgradedCache) {
+                for (Object2IntMap.Entry<Holder<Enchantment>> entry : event.getStack().getTagEnchantments().entrySet()) {
+                    if (entry.getKey().is(UEEnchantmentTags.ULTIMATE_ENCHANTMENT)) {
+                        event.getEnchantments().set(entry.getKey(), entry.getIntValue());
+                    }
                 }
             }
 
