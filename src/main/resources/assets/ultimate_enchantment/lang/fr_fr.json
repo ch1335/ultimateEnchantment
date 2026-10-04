@@ -1,4 +1,12 @@
 {
+  "ultimate_enchantment.configuration.Common": "Paramètres Généraux",
+  "ultimate_enchantment.configuration.Common.button": "Modifier",
+  "ultimate_enchantment.configuration.LegendEnchantmentBlackList": "Liste Noire de l'Enchantement Légende",
+  "ultimate_enchantment.configuration.LegendEnchantmentBlackList.tooltip": "Les attributs que l'enchantement Légende n'améliorera pas. Chaque entrée est un identifiant d'attribut.",
+  "ultimate_enchantment.configuration.isUltimateEnchantmentExclusiveEachOther": "Enchantements Ultimes Mutuellement Exclusifs",
+  "ultimate_enchantment.configuration.isUltimateEnchantmentExclusiveEachOther.tooltip": "Définit si les enchantements ultimes s'excluent mutuellement.",
+  "ultimate_enchantment.configuration.willEndCityTreasureLootUltimateEnchant": "Enchantements Ultimes Dans le Trésor de la Cité de l'End",
+  "ultimate_enchantment.configuration.willEndCityTreasureLootUltimateEnchant.tooltip": "Définit si les enchantements ultimes peuvent apparaître dans le trésor de la cité de l'End.",
   "apothic_enchanting.enchantment.addition": "§eAjout d'Enchantement Apothique",
   "death.attack.tear": "%1$s a été mis en pièces par %2$s",
   "death.attack.tear.item": "%1$s a été mis en pièces par %2$s avec %3$s",
@@ -15,7 +23,7 @@
   "enchantment.ultimate_enchantment.harvest": "Récolte",
   "enchantment.ultimate_enchantment.harvest.specialDesc": "Accorde %s%% de butin supplémentaire en récoltant des cultures mûres",
   "enchantment.ultimate_enchantment.hurt_deepens": "Blessure S'Aggrave",
-  "enchantment.ultimate_enchantment.hurt_deepens.specialDesc": "Inflige %s%% de dégâts supplémentaires pour chaque 1%% d'écart de vie en moins que la cible, jusqu'à %s%%",
+  "enchantment.ultimate_enchantment.hurt_deepens.specialDesc": "Inflige %s%% de dégâts supplémentaires pour chaque 1%% dont les points de vie actuels de la cible sont inférieurs aux vôtres, jusqu'à %s%%",
   "enchantment.ultimate_enchantment.kinetic_energy": "Énergie Cinétique",
   "enchantment.ultimate_enchantment.kinetic_energy.specialDesc": "Miner un bloc augmente votre vitesse de minage de %s%%, jusqu'à %s%% maximum, pendant %s secondes",
   "enchantment.ultimate_enchantment.last_stand": "Dernier Rempart",
@@ -58,6 +66,8 @@
   "enchantment.ultimate_enchantment.vanquisher.specialDesc": "§dToutes les %s secondes, les attaques accordent une pile de Conquérant, jusqu'à %s piles. Chaque pile accorde %s%% de §edégâts d'attaque totaux§r§d et %s%% de vitesse d'attaque. Au maximum de piles, %s%% des dégâts infligés sont convertis en soins",
   "item.modifiers.hand": "En main :",
   "itemGroup.ultimate_enchantment": "Enchantement Ultime",
+  "ultimate_enchantment.configuration.ultimateEnchantmentCantBeUpgraded": "Verrouiller le Niveau des Enchantements Ultimes",
+  "ultimate_enchantment.configuration.ultimateEnchantmentCantBeUpgraded.tooltip": "Verrouille les enchantements ultimes au niveau enregistré sur l'objet, afin qu'ils ne puissent pas être augmentés par des moyens externes tels que l'Endersurge d'Apotheosis. Désactivez cette option pour permettre aux autres mods et effets d'augmenter leur niveau.",
   "ultimate_enchantment.enchantment": "§eEnchantement Ultime",
   "ultimate_enchantment.type.condition.creeper_is_powered": "Est un Creeper Chargé"
 }

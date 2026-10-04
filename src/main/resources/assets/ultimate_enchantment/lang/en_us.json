@@ -1,4 +1,12 @@
 {
+  "ultimate_enchantment.configuration.Common": "Common Settings",
+  "ultimate_enchantment.configuration.Common.button": "Edit",
+  "ultimate_enchantment.configuration.LegendEnchantmentBlackList": "Legend Enchantment Blacklist",
+  "ultimate_enchantment.configuration.LegendEnchantmentBlackList.tooltip": "Attributes the Legend enchantment will not boost. Entries are attribute IDs.",
+  "ultimate_enchantment.configuration.isUltimateEnchantmentExclusiveEachOther": "Ultimate Enchantments Are Mutually Exclusive",
+  "ultimate_enchantment.configuration.isUltimateEnchantmentExclusiveEachOther.tooltip": "Whether ultimate enchantments are exclusive with each other.",
+  "ultimate_enchantment.configuration.willEndCityTreasureLootUltimateEnchant": "Ultimate Enchantments In End City Treasure",
+  "ultimate_enchantment.configuration.willEndCityTreasureLootUltimateEnchant.tooltip": "Whether ultimate enchantments will appear in end city treasure.",
   "apothic_enchanting.enchantment.addition": "§eApothic Enchanting Addition",
   "death.attack.tear": "%1$s was torn to shreds by %2$s",
   "death.attack.tear.item": "%1$s was torn to shreds by %2$s using %3$s",
@@ -58,6 +66,8 @@
   "enchantment.ultimate_enchantment.vanquisher.specialDesc": "§dEvery %s seconds, attacks grant a Vanquisher stack, up to %s stacks. Each stack grants %s%% §etotal attack damage§r§d and %s%% attack speed. At max stacks, %s%% of damage dealt is converted into healing",
   "item.modifiers.hand": "When in Hand:",
   "itemGroup.ultimate_enchantment": "Ultimate Enchantment",
+  "ultimate_enchantment.configuration.ultimateEnchantmentCantBeUpgraded": "Lock Ultimate Enchantment Levels",
+  "ultimate_enchantment.configuration.ultimateEnchantmentCantBeUpgraded.tooltip": "Locks ultimate enchantments to the level stored on the item, so that they cannot be raised by outside means such as Endersurge from Apotheosis. Disable to allow other mods and effects to raise their levels.",
   "ultimate_enchantment.enchantment": "§eUltimate Enchantment",
   "ultimate_enchantment.type.condition.creeper_is_powered": "Is Charged Creeper"
 }

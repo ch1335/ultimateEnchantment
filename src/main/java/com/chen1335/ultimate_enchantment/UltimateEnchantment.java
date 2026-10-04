@@ -6,15 +6,13 @@ import com.chen1335.ultimate_enchantment.API.objects.LootItemConditions;
 import com.chen1335.ultimate_enchantment.API.objects.UESounds;
 import com.chen1335.ultimate_enchantment.apotheosis.attachmentDatas.ApothBossAttachmentTypes;
 import com.chen1335.ultimate_enchantment.common.EnchantmentLookup;
-import com.chen1335.ultimate_enchantment.common.EventHandler;
 import com.chen1335.ultimate_enchantment.common.Formula;
 import com.chen1335.ultimate_enchantment.config.CommonConfig;
 import com.chen1335.ultimate_enchantment.config.ServerConfig;
-import com.chen1335.ultimate_enchantment.data.registries.UERegistries;
 import com.chen1335.ultimate_enchantment.dataComponentType.UEDataComponentTypes;
 import com.chen1335.ultimate_enchantment.enchantment.UEEnchantments;
-import com.chen1335.ultimate_enchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
 import com.chen1335.ultimate_enchantment.enchantment.effectComponents.FormulaComponent;
+import com.chen1335.ultimate_enchantment.enchantment.effectComponents.UEEnchantmentEffectComponents;
 import com.chen1335.ultimate_enchantment.mobEffect.MobEffects;
 import com.chen1335.ultimate_enchantment.tags.UEEnchantmentTags;
 import com.mojang.logging.LogUtils;
@@ -22,7 +20,10 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
@@ -36,6 +37,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import org.slf4j.Logger;
 
 import javax.script.ScriptEngine;
@@ -62,7 +64,7 @@ public class UltimateEnchantment {
     public static final ScriptEngine SCRIPT_ENGINE = createScriptEngine();
 
     private static ScriptEngine createScriptEngine() {
-        ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
+        ScriptEngine engine = new NashornScriptEngineFactory().getScriptEngine("--global-per-engine");
         if (engine == null) {
             throw new IllegalStateException(
                     "Nashorn script engine unavailable. The bundled org.openjdk.nashorn:nashorn-core "
@@ -72,6 +74,7 @@ public class UltimateEnchantment {
         LOGGER.info("Enchantment formula engine: {} {}", engine.getFactory().getEngineName(), engine.getFactory().getEngineVersion());
         return engine;
     }
+
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> ENCHANTMENT_TAB = CREATIVE_MODE_TABS.register("ultimate_enchantment", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.ultimate_enchantment"))
             .withTabsBefore(CreativeModeTabs.COMBAT)
@@ -123,8 +126,8 @@ public class UltimateEnchantment {
         //  而该监听器是 GatherDataEvent.Server —— 已改为 serverData()。）
         NeoForge.EVENT_BUS.addListener(this::ServerStartedEvent);
         UESounds.register(modEventBus);
-        modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.CONFIG_SPEC,"ultimate_enchantment/server.toml");
-        modContainer.registerConfig(ModConfig.Type.COMMON, CommonConfig.CONFIG_SPEC,"ultimate_enchantment/common.toml");
+        modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.CONFIG_SPEC, "ultimate_enchantment/server.toml");
+        modContainer.registerConfig(ModConfig.Type.COMMON, CommonConfig.CONFIG_SPEC, "ultimate_enchantment/common.toml");
 
         // Iron's Spells 'n Spellbooks：官方仅支持到 1.21.1，无 26.1.2 版本，
         // 其联动功能（hardened_mana / mana_steal 附魔、施法事件）已按移植决策整体删除。
