@@ -41,6 +41,10 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+
+    flatDir {
+        dir 'libs'
+    }
 }
 
 base {
@@ -145,7 +149,6 @@ dependencies {
     implementation "curse.maven:patchouli-306770:6842247"
     implementation "curse.maven:curios-309927:6529130"
     implementation "curse.maven:the-twilight-forest-227639:7398100"
-    implementation "curse.maven:advanced-loot-info-1205426:7600918"
     implementation "curse.maven:jei-238222:7420587"
 
     implementation "curse.maven:geckolib-388172:7023453"
@@ -167,6 +170,11 @@ dependencies {
     implementation "curse.maven:observable-509575:6697124"
     implementation "curse.maven:kotlin-for-forge-351264:8335665"
     implementation "curse.maven:spark-361579:6225208"
+
+    implementation "blank:arcanumlib:1.21.1-0.2.0"
+
+    implementation "curse.maven:advanced-loot-info-1205426:9083071"
+    implementation "curse.maven:advanced-core-info-1661923:9083066"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

@@ -1,6 +1,11 @@
 package com.chen1335.ultimateEnchantment.common;
 
 
+import com.chen1335.arcanumlib.modules.attribute.ArcanumAttributes;
+import com.chen1335.arcanumlib.modules.attribute.AttributeAdjustment.contexts.DamageContext;
+import com.chen1335.arcanumlib.modules.attribute.events.LivingGetAttributeAdjustmentEvent;
+import com.chen1335.arcanumlib.modules.loot.bonusLoot.event.BonusLootCheckEvent;
+import com.chen1335.arcanumlib.modules.loot.bonusLoot.event.ModifyBonusLootEvent;
 import com.chen1335.ultimateEnchantment.API.AttachmentTypes;
 import com.chen1335.ultimateEnchantment.API.UEDamageTypeTags;
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
@@ -12,7 +17,6 @@ import com.chen1335.ultimateEnchantment.config.ServerConfig;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentBasic;
 import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.*;
-import com.chen1335.ultimateEnchantment.loot.BonusLoot;
 import com.chen1335.ultimateEnchantment.loot.predicates.CreeperIsPoweredCondition;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IItemStackMixin;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IUEEntityExtension;
@@ -46,13 +50,17 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.EmptyLootItem;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
 import net.minecraft.world.level.storage.loot.functions.EnchantedCountIncreaseFunction;
 import net.minecraft.world.level.storage.loot.functions.SetEnchantmentsFunction;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.neoforged.bus.api.EventPriority;
@@ -77,371 +85,392 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
+@EventBusSubscriber(modid = UltimateEnchantment.MODID)
 public class EventHandler {
-    @EventBusSubscriber()
-    public static class Game {
-        @SubscribeEvent
-        public static void PlayerPreTick(PlayerTickEvent.Pre event) {
-            if (!event.getEntity().level().isClientSide) {
-                event.getEntity().getData(AttachmentTypes.PLAYER_DATA).tick(event.getEntity());
-            }
+    @SubscribeEvent
+    public static void PlayerPreTick(PlayerTickEvent.Pre event) {
+        if (!event.getEntity().level().isClientSide) {
+            event.getEntity().getData(AttachmentTypes.PLAYER_DATA).tick(event.getEntity());
         }
+    }
 
-        @SubscribeEvent
-        public static void EntityTickEvent(EntityTickEvent.Post event) {
-            if (!event.getEntity().level().isClientSide) {
-                event.getEntity().getExistingData(AttachmentTypes.COMMON_ENTITY).ifPresent(CommonEntityData::tick);
-            }
+    @SubscribeEvent
+    public static void EntityTickEvent(EntityTickEvent.Post event) {
+        if (!event.getEntity().level().isClientSide) {
+            event.getEntity().getExistingData(AttachmentTypes.COMMON_ENTITY).ifPresent(CommonEntityData::tick);
         }
+    }
 
-        @SubscribeEvent
-        public static void QuickLatch(LivingEntityUseItemEvent.Tick event) {
-            if (event.getEntity() instanceof Player player) {
-                ItemStack itemStack = player.getUseItem();
-                if (itemStack.getItem() instanceof ProjectileWeaponItem item) {
-                    if (UEEnchantments.QUICK_LATCH.getEnchantmentLevel(itemStack, player.level()) > 0) {
-                        if (BowItem.getPowerForTime(item.getUseDuration(itemStack, player) - player.getUseItemRemainingTicks()) >= 1) {
-                            player.releaseUsingItem();
-                        }
+    @SubscribeEvent
+    public static void QuickLatch(LivingEntityUseItemEvent.Tick event) {
+        if (event.getEntity() instanceof Player player) {
+            ItemStack itemStack = player.getUseItem();
+            if (itemStack.getItem() instanceof ProjectileWeaponItem item) {
+                if (UEEnchantments.QUICK_LATCH.getEnchantmentLevel(itemStack, player.level()) > 0) {
+                    if (BowItem.getPowerForTime(item.getUseDuration(itemStack, player) - player.getUseItemRemainingTicks()) >= 1) {
+                        player.releaseUsingItem();
                     }
                 }
             }
         }
+    }
 
-        @SubscribeEvent
-        public static void ItemAttributeModifierEvent(ItemAttributeModifierEvent event) {
-            ItemStack itemStack = event.getItemStack();
-            EquipmentSlot equipmentSlot;
-            if (itemStack.getItem() instanceof Equipable equipable) {
-                equipmentSlot = equipable.getEquipmentSlot();
-            } else {
-                equipmentSlot = itemStack.getEquipmentSlot();
-            }
-
-            HolderLookup.RegistryLookup<Enchantment> lookup = EnchantmentLookup.get();
-
-            for (Object2IntMap.Entry<Holder<Enchantment>> holderEntry : itemStack.getAllEnchantments(lookup).entrySet()) {
-                EnchantmentBasic enchantmentBasic = UEEnchantments.MAP.get(holderEntry.getKey().getKey());
-                if (enchantmentBasic != null && holderEntry.getIntValue() > 0) {
-                    enchantmentBasic.addModifier(event, holderEntry.getIntValue(), equipmentSlot);
-                }
-            }
+    @SubscribeEvent
+    public static void ItemAttributeModifierEvent(ItemAttributeModifierEvent event) {
+        ItemStack itemStack = event.getItemStack();
+        EquipmentSlot equipmentSlot;
+        if (itemStack.getItem() instanceof Equipable equipable) {
+            equipmentSlot = equipable.getEquipmentSlot();
+        } else {
+            equipmentSlot = itemStack.getEquipmentSlot();
         }
 
+        HolderLookup.RegistryLookup<Enchantment> lookup = EnchantmentLookup.get();
 
-        @SubscribeEvent(priority = EventPriority.LOW)
-        public static void cutDown(LivingIncomingDamageEvent event) {
-            if (event.getSource().getDirectEntity() instanceof LivingEntity attacker && event.getSource().is(UEDamageTypeTags.IS_ATTACK)) {
-                int lvl = UEEnchantments.CUT_DOWN.getEnchantmentLevel(attacker.getWeaponItem(), attacker.level());
-                if (lvl > 0) {
-                    SimpleBindings simpleBindings = CutDown.buildBindings(lvl);
-                    float attackerMaxHealth = attacker.getMaxHealth();
-                    float percentage = ((event.getEntity().getHealth() - attackerMaxHealth) / attackerMaxHealth) * 100;
-                    float damageMultiplier = Math.clamp(percentage * CutDown.DAMAGE_MUL.calculate(simpleBindings), 0, CutDown.MAX_DAMAGE_MUL.calculate(simpleBindings));
-                    if (Float.isNaN(damageMultiplier)) {
-                        return;
-                    }
-                    event.setAmount(event.getAmount() * (damageMultiplier + 1));
-                }
-            }
-        }
-
-        @SubscribeEvent(priority = EventPriority.LOW)
-        public static void ultimateSlayer(LivingIncomingDamageEvent event) {
-            if (!(event.getSource().getEntity() instanceof Player attacker)
-                    || !event.getSource().is(UEDamageTypeTags.IS_ATTACK)) {
-                return;
-            }
-            // Boss 判定比遍历装备槽便宜，而绝大多数挨打的目标都不是 Boss，先判。
-            if (!UltimateSlayer.canApply(event.getEntity())) {
-                return;
-            }
-
-            float bonus = UltimateSlayer.sumPerSlot(attacker, UltimateSlayer.DAMAGE_BONUS);
-            if (bonus > 0.0F) {
-                event.setAmount(event.getAmount() * (1 + bonus));
-            }
-        }
-
-        @SubscribeEvent(priority = EventPriority.LOWEST)
-        public static void playerBreakSpeed(PlayerEvent.BreakSpeed event) {
-            float breakSpeedMultiplier = event.getEntity().getData(AttachmentTypes.PLAYER_DATA).breakSpeedMultiplier;
-            event.setNewSpeed((1 + breakSpeedMultiplier) * event.getNewSpeed());
-        }
-
-        @SubscribeEvent(priority = EventPriority.LOWEST)
-        public static void playerBreakBlock(BlockEvent.BreakEvent event) {
-            if (!event.isCanceled()) {
-                int lvl = UEEnchantments.KINETIC_ENERGY.getEnchantmentLevel(event.getPlayer().getMainHandItem(), event.getPlayer().level());
-                if (lvl > 0) {
-                    SimpleBindings bindings = LifeSteal.buildBindings(lvl);
-
-                    PlayerData data = event.getPlayer().getData(AttachmentTypes.PLAYER_DATA);
-                    data.breakSpeedMultiplier = Math.min(data.breakSpeedMultiplier + KineticEnergy.INCREMENT.calculate(bindings), KineticEnergy.MAX_SPEED.calculate(bindings));
-                    if (!event.getPlayer().level().isClientSide()) {
-                        PacketDistributor.sendToPlayer((ServerPlayer) event.getPlayer(), new BreakSpeedMultiplierPack(data.breakSpeedMultiplier));
-                    }
-                    data.breakSpeedMultiplierRemainingTime = KineticEnergy.KEEP_TIME.calculate(bindings);
-                }
-            }
-        }
-
-        @SubscribeEvent
-        public static void lifeStealAndManaSteal(LivingDamageEvent.Post event) {
-            if (event.getSource().getEntity() instanceof LivingEntity attacker && event.getSource().is(UEDamageTypeTags.IS_ATTACK)) {
-                ItemStack itemStack = attacker.getWeaponItem();
-                float actualDamage = event.getNewDamage();
-                {
-                    int lvl = UEEnchantments.LIFE_STEAL.getEnchantmentLevel(itemStack, event.getEntity().level());
-                    if (lvl > 0) {
-                        SimpleBindings bindings = LifeSteal.buildBindings(lvl);
-                        float healAmount = Math.min(actualDamage * LifeSteal.HEAL_PERCENT.calculate(bindings), attacker.getMaxHealth() * LifeSteal.MAX_PERCENT.calculate(bindings));
-                        attacker.heal(healAmount);
-                    }
-                }
-                {
-                    int lvl = UEEnchantments.MANA_STEAL.getEnchantmentLevel(itemStack, event.getEntity().level());
-                    if (lvl > 0 && UltimateEnchantment.isIronsSpellBooksLoaded() && attacker instanceof ServerPlayer player) {
-                        SimpleBindings bindings = LifeSteal.buildBindings(lvl);
-                        float manaRegainAmount = (float) Math.min(actualDamage * ManaSteal.MANA_PERCENT.calculate(bindings), player.getAttributeValue(AttributeRegistry.MAX_MANA) * ManaSteal.MAX_PERCENT.calculate(bindings));
-                        MagicData.getPlayerMagicData(player).addMana(manaRegainAmount);
-                        PacketDistributor.sendToPlayer(player, new SyncManaPacket(MagicData.getPlayerMagicData(player)));
-                    }
-                }
-                {
-                    if (attacker.hasEffect(MobEffects.ACTIVE_VANQUISHER)) {
-                        attacker.heal(actualDamage * Vanquisher.LIFE_STEAL.calculate(new SimpleBindings()));
-                    }
-                }
-            }
-        }
-
-        @SubscribeEvent(priority = EventPriority.LOWEST)
-        public static void GetEnchantmentLevelEvent(GetEnchantmentLevelEvent event) {
-            // 把终极附魔的等级摁回物品 NBT 上记录的那一档，等于无视其他模组（如神化的影激宝石）
-            // 通过本事件给出的加成。关掉这个开关就是允许它们被正常提升等级。
-            if (ServerConfig.ultimateEnchantmentCantBeUpgradedCache) {
-                for (Object2IntMap.Entry<Holder<Enchantment>> entry : event.getStack().getTagEnchantments().entrySet()) {
-                    if (entry.getKey().is(UEEnchantmentTags.ULTIMATE_ENCHANTMENT)) {
-                        event.getEnchantments().set(entry.getKey(), entry.getIntValue());
-                    }
-                }
-            }
-
-            if (event.getTargetEnchant() != null && event.getTargetEnchant().is(UEEnchantments.ULTIMATE.getKey())) {
-                return;
-            }
-            int lvl = UEEnchantments.ULTIMATE.getEnchantmentLevel(event.getStack(), event.getLookup());
-            if (lvl > 0) {
-                int addLevel = Math.round(Ultimate.LEVEL_ADD.calculate(Ultimate.buildBindings(lvl)));
-                for (Holder<Enchantment> holder : event.getEnchantments().keySet()) {
-                    if (event.getEnchantments().getLevel(holder) > 0) {
-                        if (!holder.is(UEEnchantmentTags.IGNORE_ULTIMATE) && !holder.is(UEEnchantments.ULTIMATE.getKey()) && holder.value().getMaxLevel() > 1) {
-                            int newLevel = event.getEnchantments().getLevel(holder) + addLevel;
-                            if (holder.is(Enchantments.QUICK_CHARGE)) {
-                                newLevel = Math.min(newLevel, 5);
-                            }
-                            event.getEnchantments().set(holder, newLevel);
-                        }
-                    }
-                }
-            }
-        }
-
-        @SubscribeEvent
-        public static void LivingEquipmentChangeEvent(LivingEquipmentChangeEvent event) {
-            LivingEntity livingEntity = event.getEntity();
-            EquipmentSlot slot = event.getSlot();
-            ItemStack form = event.getFrom();
-            ItemStack to = event.getTo();
-            if (UEEnchantments.LEGEND.getEnchantmentLevel(form, livingEntity.level()) > 0) {
-                livingEntity.getAttributes().supplier.instances.keySet().forEach((attributeHolder) -> {
-                    Objects.requireNonNull(livingEntity.getAttributes().getInstance(attributeHolder)).removeModifier(Legend.idForSlot(slot));
-                });
-            }
-
-            int lvl = UEEnchantments.LEGEND.getEnchantmentLevel(to, livingEntity.level());
-            if ((slot.isArmor() || event.getSlot().equals(livingEntity.getEquipmentSlotForItem(to))) && lvl > 0) {
-                SimpleBindings bindings = Legend.buildBindings(lvl);
-                livingEntity.getAttributes().supplier.instances.keySet().forEach((attributeHolder) -> {
-                    Attribute.Sentiment sentiment = attributeHolder.value().sentiment;
-                    Objects.requireNonNull(livingEntity.getAttributes().getInstance(attributeHolder)).removeModifier(Legend.idForSlot(slot));
-                    if (sentiment == Attribute.Sentiment.POSITIVE && !CommonConfig.loadedLegendBlackList.contains(attributeHolder.value())) {
-                        Objects.requireNonNull(livingEntity.getAttributes().getInstance(attributeHolder)).addTransientModifier(new AttributeModifier(Legend.idForSlot(slot), Legend.ATTRIBUTE_BONUS.calculate(bindings), AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
-                    }
-                });
-            }
-        }
-
-        private static final RecipeManager.CachedCheck<SingleRecipeInput, SmeltingRecipe> SMELTING_RECIPE_CACHED_CHECK = RecipeManager.createCheck(RecipeType.SMELTING);
-
-
-        @SubscribeEvent(priority = EventPriority.LOWEST)
-        public static void BlockDropsEvent(BlockDropsEvent event) {
-            if (event.getBreaker() instanceof LivingEntity) {
-
-                if (UEEnchantments.SMELTING.getEnchantmentLevel(event.getTool(), event.getLevel()) > 0) {
-                    for (ItemEntity drop : event.getDrops()) {
-                        int count = drop.getItem().getCount();
-                        RecipeHolder<SmeltingRecipe> recipeholder = SMELTING_RECIPE_CACHED_CHECK.getRecipeFor(new SingleRecipeInput(drop.getItem()), event.getLevel()).orElse(null);
-                        if (recipeholder != null) {
-                            ItemStack outputItemStack = recipeholder.value().assemble(new SingleRecipeInput(drop.getItem()), event.getLevel().registryAccess());
-                            float exp = recipeholder.value().getExperience() * count;
-                            int i = Mth.floor(exp);
-                            float f = Mth.frac(exp);
-                            if (f != 0.0F && Math.random() < (double) f) {
-                                i++;
-                            }
-                            event.setDroppedExperience(event.getDroppedExperience() + i);
-                            drop.setItem(outputItemStack.copyWithCount(outputItemStack.getCount() * count));
-                        }
-                    }
-                }
-            }
-        }
-
-
-        @SubscribeEvent
-        public static void VanquisherEffect(LivingIncomingDamageEvent event) {
-            if (event.getSource().getEntity() instanceof Player player && event.getSource().is(UEDamageTypeTags.IS_ATTACK)) {
-                if (player.getData(AttachmentTypes.PLAYER_DATA).vanquisherCooldown > 0) {
-                    return;
-                }
-
-                int lvl = UEEnchantments.VANQUISHER.getEnchantmentLevel(player.getWeaponItem(), player.level());
-                if (lvl > 0) {
-                    SimpleBindings bindings = Vanquisher.buildBindings(lvl);
-                    player.getData(AttachmentTypes.PLAYER_DATA).vanquisherCooldown = Math.round(Vanquisher.COOL_DOWN.calculate(bindings));
-                    int buffDuration = Math.round(Vanquisher.BUFF_DURATION.calculate(bindings));
-                    if (player.getEffect(MobEffects.ACTIVE_VANQUISHER) != null) {
-                        event.getEntity().invulnerableTime = 0;
-                        player.addEffect(new MobEffectInstance(MobEffects.ACTIVE_VANQUISHER, buffDuration, 0, false, false, true));
-                        return;
-                    }
-
-                    MobEffectInstance instance = player.getEffect(MobEffects.UN_ACTIVE_VANQUISHER);
-                    int amplifier = 0;
-                    if (instance != null) {
-                        amplifier = instance.getAmplifier() + 1;
-                    }
-
-
-                    player.addEffect(new MobEffectInstance(MobEffects.UN_ACTIVE_VANQUISHER, buffDuration, amplifier, false, false, true));
-                }
-            }
-        }
-
-        @SubscribeEvent
-        public static void LivingGetProjectileEvent(LivingGetProjectileEvent event) {
-            if (IItemStackMixin.class.cast(event.getProjectileWeaponItemStack()).ue$isLethalTempoShoot()) {
-                event.setProjectileItemStack(event.getProjectileItemStack().copy());
-            }
-        }
-
-        public static class IronsSpellBooksEvents {
-            @SubscribeEvent(priority = EventPriority.LOWEST)
-            public static void SpellOnCastEvent(SpellOnCastEvent event) {
-                for (ItemStack itemStack : event.getEntity().getArmorSlots()) {
-                    Equipable equipable = Equipable.get(itemStack);
-                    if (!itemStack.isEmpty() && equipable != null) {
-                        PlayerData playerData = event.getEntity().getData(AttachmentTypes.PLAYER_DATA);
-
-                        int lvl = UEEnchantments.HARDENED_MANA.getEnchantmentLevel(itemStack, event.getEntity().level());
-                        if (lvl > 0) {
-                            SimpleBindings bindings = LifeSteal.buildBindings(lvl);
-                            playerData.hardenedManaEffect.addArmor(event.getEntity(), equipable.getEquipmentSlot(), HardenedMana.MANA_PERCENT.calculate(bindings) * event.getManaCost(), HardenedMana.MAX_ARMOR.calculate(bindings));
-                        }
-                    }
-                }
-            }
-        }
-
-        @SubscribeEvent
-        public static void LootTableLoadEvent(LootTableLoadEvent event) {
-            ResourceLocation lootTableId = event.getName();
-            HolderLookup.Provider registries = event.getRegistries();
-            List<LootPool> pools = event.getTable().pools;
-            if (lootTableId.equals(BuiltInLootTables.END_CITY_TREASURE.location()) && CommonConfig.willEndCityTreasureLootUltimateEnchant.getAsBoolean()) {
-                List<Holder<Enchantment>> holders = new ArrayList<>();
-                UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.LETHAL_TEMPO.getKey()).ifPresent(holders::add);
-                UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.VANQUISHER.getKey()).ifPresent(holders::add);
-                UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.TEAR.getKey()).ifPresent(holders::add);
-                UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.ULTIMATE_SLAYER.getKey()).ifPresent(holders::add);
-                UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.THE_FORTRESS.getKey()).ifPresent(holders::add);
-                LootPool.Builder builder = LootPool.lootPool();
-                for (Holder<Enchantment> holder : holders) {
-                    LootPoolSingletonContainer.Builder<?> item = LootItem.lootTableItem(Items.ENCHANTED_BOOK);
-
-                    if (holder.is(UEEnchantments.VANQUISHER.getKey())) {
-                        item.apply(new SetEnchantmentsFunction.Builder().withEnchantment(holder, ConstantValue.exactly(1))).setWeight(3);
-                    } else {
-                        item.apply(new SetEnchantmentsFunction.Builder().withEnchantment(holder, UniformGenerator.between(2, 3))).setWeight(10);
-                    }
-
-                    builder.add(item).build();
-                }
-                if (!holders.isEmpty()) {
-                    builder.add(EmptyLootItem.emptyItem().setWeight(30));
-                    pools.add(builder.build());
-                }
-            } else if (lootTableId.equals(EntityType.ENDER_DRAGON.getDefaultLootTable().location())) {
-                UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.ULTIMATE.getKey()).ifPresent(holder -> {
-                    LootPool.Builder builder = LootPool.lootPool();
-                    LootPoolSingletonContainer.Builder<?> item = LootItem.lootTableItem(Items.ENCHANTED_BOOK);
-                    item.apply(new SetEnchantmentsFunction.Builder().withEnchantment(holder, ConstantValue.exactly(2))).apply(EnchantedCountIncreaseFunction.lootingMultiplier(registries, UniformGenerator.between(0, 0.2F)));
-                    builder.add(item).build();
-                    pools.add(builder.build());
-                });
-            } else if (lootTableId.equals(EntityType.WITHER.getDefaultLootTable().location())) {
-                UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.LEGEND.getKey()).ifPresent(holder -> {
-                    LootPool.Builder builder = LootPool.lootPool();
-                    LootPoolSingletonContainer.Builder<?> item = LootItem.lootTableItem(Items.ENCHANTED_BOOK);
-                    item.apply(new SetEnchantmentsFunction.Builder().withEnchantment(holder, ConstantValue.exactly(1))).apply(EnchantedCountIncreaseFunction.lootingMultiplier(registries, UniformGenerator.between(0, 0.2F)));
-                    builder.add(item).build();
-                    pools.add(builder.build());
-                });
-            } else if (lootTableId.equals(EntityType.WARDEN.getDefaultLootTable().location())) {
-                UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.LAST_STAND.getKey()).ifPresent(holder -> {
-                    LootPool.Builder builder = LootPool.lootPool();
-                    LootPoolSingletonContainer.Builder<?> item = LootItem.lootTableItem(Items.ENCHANTED_BOOK);
-                    item.apply(new SetEnchantmentsFunction.Builder().withEnchantment(holder, ConstantValue.exactly(1))).apply(EnchantedCountIncreaseFunction.lootingMultiplier(registries, UniformGenerator.between(0, 0.2F)));
-                    builder.add(item).build();
-                    pools.add(builder.build());
-                });
-            } else if (lootTableId.equals(EntityType.CREEPER.getDefaultLootTable().location())) {
-                UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.THUNDER_BOLT.getKey()).ifPresent(holder -> {
-                    LootPool.Builder builder = LootPool.lootPool();
-                    LootPoolSingletonContainer.Builder<?> item = LootItem.lootTableItem(Items.ENCHANTED_BOOK);
-                    item.apply(new SetEnchantmentsFunction.Builder().withEnchantment(holder, ConstantValue.exactly(1))).when(CreeperIsPoweredCondition.creeperIsPowered());
-                    builder.add(item).build();
-                    pools.add(builder.build());
-                });
-            }
-        }
-
-        @SubscribeEvent
-        public static void EntityJoinLevelEvent(EntityJoinLevelEvent event) {
-            Entity entity = event.getEntity();
-            if (entity instanceof Projectile projectile && projectile.getOwner() != null && ((IUEEntityExtension) projectile.getOwner()).ue$isLethalTempoShooting()) {
-                if (projectile instanceof AbstractArrow arrow) {
-                    arrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
-                }
-                UEProjectileData data = projectile.getData(AttachmentTypes.PROJECTILE_DATA);
-                data.isLethalTempoAdditionArrow = true;
+        for (Object2IntMap.Entry<Holder<Enchantment>> holderEntry : itemStack.getAllEnchantments(lookup).entrySet()) {
+            EnchantmentBasic enchantmentBasic = UEEnchantments.MAP.get(holderEntry.getKey().getKey());
+            if (enchantmentBasic != null && holderEntry.getIntValue() > 0) {
+                enchantmentBasic.addModifier(event, holderEntry.getIntValue(), equipmentSlot);
             }
         }
     }
 
 
-    @EventBusSubscriber()
-    public static class Mod {
-        @SubscribeEvent
-        public static void RegisterPayloadHandlersEvent(RegisterPayloadHandlersEvent event) {
-            final PayloadRegistrar registrar = event.registrar("1");
-            registrar.playToClient(BreakSpeedMultiplierPack.TYPE, BreakSpeedMultiplierPack.STREAM_CODEC, BreakSpeedMultiplierPack::handler);
-            registrar.playToClient(TearParticlesPack.TYPE, TearParticlesPack.STREAM_CODEC, TearParticlesPack::handler);
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public static void cutDown(LivingIncomingDamageEvent event) {
+        if (event.getSource().getDirectEntity() instanceof LivingEntity attacker && event.getSource().is(UEDamageTypeTags.IS_ATTACK)) {
+            int lvl = UEEnchantments.CUT_DOWN.getEnchantmentLevel(attacker.getWeaponItem(), attacker.level());
+            if (lvl > 0) {
+                SimpleBindings simpleBindings = CutDown.buildBindings(lvl);
+                float attackerMaxHealth = attacker.getMaxHealth();
+                float percentage = ((event.getEntity().getHealth() - attackerMaxHealth) / attackerMaxHealth) * 100;
+                float damageMultiplier = Math.clamp(percentage * CutDown.DAMAGE_MUL.calculate(simpleBindings), 0, CutDown.MAX_DAMAGE_MUL.calculate(simpleBindings));
+                if (Float.isNaN(damageMultiplier)) {
+                    return;
+                }
+                event.setAmount(event.getAmount() * (damageMultiplier + 1));
+            }
+        }
+    }
 
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void playerBreakSpeed(PlayerEvent.BreakSpeed event) {
+        float breakSpeedMultiplier = event.getEntity().getData(AttachmentTypes.PLAYER_DATA).breakSpeedMultiplier;
+        event.setNewSpeed((1 + breakSpeedMultiplier) * event.getNewSpeed());
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void playerBreakBlock(BlockEvent.BreakEvent event) {
+        if (!event.isCanceled()) {
+            int lvl = UEEnchantments.KINETIC_ENERGY.getEnchantmentLevel(event.getPlayer().getMainHandItem(), event.getPlayer().level());
+            if (lvl > 0) {
+                SimpleBindings bindings = LifeSteal.buildBindings(lvl);
+
+                PlayerData data = event.getPlayer().getData(AttachmentTypes.PLAYER_DATA);
+                data.breakSpeedMultiplier = Math.min(data.breakSpeedMultiplier + KineticEnergy.INCREMENT.calculate(bindings), KineticEnergy.MAX_SPEED.calculate(bindings));
+                if (!event.getPlayer().level().isClientSide()) {
+                    PacketDistributor.sendToPlayer((ServerPlayer) event.getPlayer(), new BreakSpeedMultiplierPack(data.breakSpeedMultiplier));
+                }
+                data.breakSpeedMultiplierRemainingTime = KineticEnergy.KEEP_TIME.calculate(bindings);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void lifeStealAndManaSteal(LivingDamageEvent.Post event) {
+        if (event.getSource().getEntity() instanceof LivingEntity attacker && event.getSource().is(UEDamageTypeTags.IS_ATTACK)) {
+            ItemStack itemStack = attacker.getWeaponItem();
+            float actualDamage = event.getNewDamage();
+            {
+                int lvl = UEEnchantments.LIFE_STEAL.getEnchantmentLevel(itemStack, event.getEntity().level());
+                if (lvl > 0) {
+                    SimpleBindings bindings = LifeSteal.buildBindings(lvl);
+                    float healAmount = Math.min(actualDamage * LifeSteal.HEAL_PERCENT.calculate(bindings), attacker.getMaxHealth() * LifeSteal.MAX_PERCENT.calculate(bindings));
+                    attacker.heal(healAmount);
+                }
+            }
+            {
+                int lvl = UEEnchantments.MANA_STEAL.getEnchantmentLevel(itemStack, event.getEntity().level());
+                if (lvl > 0 && UltimateEnchantment.isIronsSpellBooksLoaded() && attacker instanceof ServerPlayer player) {
+                    SimpleBindings bindings = LifeSteal.buildBindings(lvl);
+                    float manaRegainAmount = (float) Math.min(actualDamage * ManaSteal.MANA_PERCENT.calculate(bindings), player.getAttributeValue(AttributeRegistry.MAX_MANA) * ManaSteal.MAX_PERCENT.calculate(bindings));
+                    MagicData.getPlayerMagicData(player).addMana(manaRegainAmount);
+                    PacketDistributor.sendToPlayer(player, new SyncManaPacket(MagicData.getPlayerMagicData(player)));
+                }
+            }
+            {
+                if (attacker.hasEffect(MobEffects.ACTIVE_VANQUISHER)) {
+                    attacker.heal(actualDamage * Vanquisher.LIFE_STEAL.calculate(new SimpleBindings()));
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void GetEnchantmentLevelEvent(GetEnchantmentLevelEvent event) {
+        // 把终极附魔的等级摁回物品 NBT 上记录的那一档，等于无视其他模组（如神化的影激宝石）
+        // 通过本事件给出的加成。关掉这个开关就是允许它们被正常提升等级。
+        if (ServerConfig.ultimateEnchantmentCantBeUpgradedCache) {
+            for (Object2IntMap.Entry<Holder<Enchantment>> entry : event.getStack().getTagEnchantments().entrySet()) {
+                if (entry.getKey().is(UEEnchantmentTags.ULTIMATE_ENCHANTMENT)) {
+                    event.getEnchantments().set(entry.getKey(), entry.getIntValue());
+                }
+            }
+        }
+
+        if (event.getTargetEnchant() != null && event.getTargetEnchant().is(UEEnchantments.ULTIMATE.getKey())) {
+            return;
+        }
+        int lvl = UEEnchantments.ULTIMATE.getEnchantmentLevel(event.getStack(), event.getLookup());
+        if (lvl > 0) {
+            int addLevel = Math.round(Ultimate.LEVEL_ADD.calculate(Ultimate.buildBindings(lvl)));
+            for (Holder<Enchantment> holder : event.getEnchantments().keySet()) {
+                if (event.getEnchantments().getLevel(holder) > 0) {
+                    if (!holder.is(UEEnchantmentTags.IGNORE_ULTIMATE) && !holder.is(UEEnchantments.ULTIMATE.getKey()) && holder.value().getMaxLevel() > 1) {
+                        int newLevel = event.getEnchantments().getLevel(holder) + addLevel;
+                        if (holder.is(Enchantments.QUICK_CHARGE)) {
+                            newLevel = Math.min(newLevel, 5);
+                        }
+                        event.getEnchantments().set(holder, newLevel);
+                    }
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void LivingEquipmentChangeEvent(LivingEquipmentChangeEvent event) {
+        LivingEntity livingEntity = event.getEntity();
+        EquipmentSlot slot = event.getSlot();
+        ItemStack form = event.getFrom();
+        ItemStack to = event.getTo();
+        if (UEEnchantments.LEGEND.getEnchantmentLevel(form, livingEntity.level()) > 0) {
+            livingEntity.getAttributes().supplier.instances.keySet().forEach((attributeHolder) -> {
+                Objects.requireNonNull(livingEntity.getAttributes().getInstance(attributeHolder)).removeModifier(Legend.idForSlot(slot));
+            });
+        }
+
+        int lvl = UEEnchantments.LEGEND.getEnchantmentLevel(to, livingEntity.level());
+        if ((slot.isArmor() || event.getSlot().equals(livingEntity.getEquipmentSlotForItem(to))) && lvl > 0) {
+            SimpleBindings bindings = Legend.buildBindings(lvl);
+            livingEntity.getAttributes().supplier.instances.keySet().forEach((attributeHolder) -> {
+                Attribute.Sentiment sentiment = attributeHolder.value().sentiment;
+                Objects.requireNonNull(livingEntity.getAttributes().getInstance(attributeHolder)).removeModifier(Legend.idForSlot(slot));
+                if (sentiment == Attribute.Sentiment.POSITIVE && !CommonConfig.loadedLegendBlackList.contains(attributeHolder.value())) {
+                    Objects.requireNonNull(livingEntity.getAttributes().getInstance(attributeHolder)).addTransientModifier(new AttributeModifier(Legend.idForSlot(slot), Legend.ATTRIBUTE_BONUS.calculate(bindings), AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
+                }
+            });
+        }
+    }
+
+    private static final RecipeManager.CachedCheck<SingleRecipeInput, SmeltingRecipe> SMELTING_RECIPE_CACHED_CHECK = RecipeManager.createCheck(RecipeType.SMELTING);
+
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void BlockDropsEvent(BlockDropsEvent event) {
+        if (event.getBreaker() instanceof LivingEntity) {
+
+            if (UEEnchantments.SMELTING.getEnchantmentLevel(event.getTool(), event.getLevel()) > 0) {
+                for (ItemEntity drop : event.getDrops()) {
+                    int count = drop.getItem().getCount();
+                    RecipeHolder<SmeltingRecipe> recipeholder = SMELTING_RECIPE_CACHED_CHECK.getRecipeFor(new SingleRecipeInput(drop.getItem()), event.getLevel()).orElse(null);
+                    if (recipeholder != null) {
+                        ItemStack outputItemStack = recipeholder.value().assemble(new SingleRecipeInput(drop.getItem()), event.getLevel().registryAccess());
+                        float exp = recipeholder.value().getExperience() * count;
+                        int i = Mth.floor(exp);
+                        float f = Mth.frac(exp);
+                        if (f != 0.0F && Math.random() < (double) f) {
+                            i++;
+                        }
+                        event.setDroppedExperience(event.getDroppedExperience() + i);
+                        drop.setItem(outputItemStack.copyWithCount(outputItemStack.getCount() * count));
+                    }
+                }
+            }
+        }
+    }
+
+
+    @SubscribeEvent
+    public static void VanquisherEffect(LivingIncomingDamageEvent event) {
+        if (event.getSource().getEntity() instanceof Player player && event.getSource().is(UEDamageTypeTags.IS_ATTACK)) {
+            if (player.getData(AttachmentTypes.PLAYER_DATA).vanquisherCooldown > 0) {
+                return;
+            }
+
+            int lvl = UEEnchantments.VANQUISHER.getEnchantmentLevel(player.getWeaponItem(), player.level());
+            if (lvl > 0) {
+                SimpleBindings bindings = Vanquisher.buildBindings(lvl);
+                player.getData(AttachmentTypes.PLAYER_DATA).vanquisherCooldown = Math.round(Vanquisher.COOL_DOWN.calculate(bindings));
+                int buffDuration = Math.round(Vanquisher.BUFF_DURATION.calculate(bindings));
+                if (player.getEffect(MobEffects.ACTIVE_VANQUISHER) != null) {
+                    event.getEntity().invulnerableTime = 0;
+                    player.addEffect(new MobEffectInstance(MobEffects.ACTIVE_VANQUISHER, buffDuration, 0, false, false, true));
+                    return;
+                }
+
+                MobEffectInstance instance = player.getEffect(MobEffects.UN_ACTIVE_VANQUISHER);
+                int amplifier = 0;
+                if (instance != null) {
+                    amplifier = instance.getAmplifier() + 1;
+                }
+
+
+                player.addEffect(new MobEffectInstance(MobEffects.UN_ACTIVE_VANQUISHER, buffDuration, amplifier, false, false, true));
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void LivingGetProjectileEvent(LivingGetProjectileEvent event) {
+        if (IItemStackMixin.class.cast(event.getProjectileWeaponItemStack()).ue$isLethalTempoShoot()) {
+            event.setProjectileItemStack(event.getProjectileItemStack().copy());
+        }
+    }
+
+    @SubscribeEvent
+    public static void LootTableLoadEvent(LootTableLoadEvent event) {
+        ResourceLocation lootTableId = event.getName();
+        HolderLookup.Provider registries = event.getRegistries();
+        List<LootPool> pools = event.getTable().pools;
+        if (lootTableId.equals(BuiltInLootTables.END_CITY_TREASURE.location()) && CommonConfig.willEndCityTreasureLootUltimateEnchant.getAsBoolean()) {
+            List<Holder<Enchantment>> holders = new ArrayList<>();
+            UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.LETHAL_TEMPO.getKey()).ifPresent(holders::add);
+            UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.VANQUISHER.getKey()).ifPresent(holders::add);
+            UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.TEAR.getKey()).ifPresent(holders::add);
+            UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.ULTIMATE_SLAYER.getKey()).ifPresent(holders::add);
+            UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.THE_FORTRESS.getKey()).ifPresent(holders::add);
+            LootPool.Builder builder = LootPool.lootPool();
+            for (Holder<Enchantment> holder : holders) {
+                LootPoolSingletonContainer.Builder<?> item = LootItem.lootTableItem(Items.ENCHANTED_BOOK);
+
+                if (holder.is(UEEnchantments.VANQUISHER.getKey())) {
+                    item.apply(new SetEnchantmentsFunction.Builder().withEnchantment(holder, ConstantValue.exactly(1))).setWeight(3);
+                } else {
+                    item.apply(new SetEnchantmentsFunction.Builder().withEnchantment(holder, UniformGenerator.between(2, 3))).setWeight(10);
+                }
+
+                builder.add(item).build();
+            }
+            if (!holders.isEmpty()) {
+                builder.add(EmptyLootItem.emptyItem().setWeight(30));
+                pools.add(builder.build());
+            }
+        } else if (lootTableId.equals(EntityType.ENDER_DRAGON.getDefaultLootTable().location())) {
+            UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.ULTIMATE.getKey()).ifPresent(holder -> {
+                LootPool.Builder builder = LootPool.lootPool();
+                LootPoolSingletonContainer.Builder<?> item = LootItem.lootTableItem(Items.ENCHANTED_BOOK);
+                item.apply(new SetEnchantmentsFunction.Builder().withEnchantment(holder, ConstantValue.exactly(2))).apply(EnchantedCountIncreaseFunction.lootingMultiplier(registries, UniformGenerator.between(0, 0.2F)));
+                builder.add(item).build();
+                pools.add(builder.build());
+            });
+        } else if (lootTableId.equals(EntityType.WITHER.getDefaultLootTable().location())) {
+            UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.LEGEND.getKey()).ifPresent(holder -> {
+                LootPool.Builder builder = LootPool.lootPool();
+                LootPoolSingletonContainer.Builder<?> item = LootItem.lootTableItem(Items.ENCHANTED_BOOK);
+                item.apply(new SetEnchantmentsFunction.Builder().withEnchantment(holder, ConstantValue.exactly(1))).apply(EnchantedCountIncreaseFunction.lootingMultiplier(registries, UniformGenerator.between(0, 0.2F)));
+                builder.add(item).build();
+                pools.add(builder.build());
+            });
+        } else if (lootTableId.equals(EntityType.WARDEN.getDefaultLootTable().location())) {
+            UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.LAST_STAND.getKey()).ifPresent(holder -> {
+                LootPool.Builder builder = LootPool.lootPool();
+                LootPoolSingletonContainer.Builder<?> item = LootItem.lootTableItem(Items.ENCHANTED_BOOK);
+                item.apply(new SetEnchantmentsFunction.Builder().withEnchantment(holder, ConstantValue.exactly(1))).apply(EnchantedCountIncreaseFunction.lootingMultiplier(registries, UniformGenerator.between(0, 0.2F)));
+                builder.add(item).build();
+                pools.add(builder.build());
+            });
+        } else if (lootTableId.equals(EntityType.CREEPER.getDefaultLootTable().location())) {
+            UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.THUNDER_BOLT.getKey()).ifPresent(holder -> {
+                LootPool.Builder builder = LootPool.lootPool();
+                LootPoolSingletonContainer.Builder<?> item = LootItem.lootTableItem(Items.ENCHANTED_BOOK);
+                item.apply(new SetEnchantmentsFunction.Builder().withEnchantment(holder, ConstantValue.exactly(1))).when(CreeperIsPoweredCondition.creeperIsPowered());
+                builder.add(item).build();
+                pools.add(builder.build());
+            });
+        }
+    }
+
+    @SubscribeEvent
+    public static void EntityJoinLevelEvent(EntityJoinLevelEvent event) {
+        Entity entity = event.getEntity();
+        if (entity instanceof Projectile projectile && projectile.getOwner() != null && ((IUEEntityExtension) projectile.getOwner()).ue$isLethalTempoShooting()) {
+            if (projectile instanceof AbstractArrow arrow) {
+                arrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+            }
+            UEProjectileData data = projectile.getData(AttachmentTypes.PROJECTILE_DATA);
+            data.isLethalTempoAdditionArrow = true;
+        }
+    }
+
+    @SubscribeEvent
+    public static void LivingGetAttributeAdjustmentEvent(LivingGetAttributeAdjustmentEvent event) {
+        Holder<Attribute> attribute = event.getAttribute();
+        LivingEntity owner = event.getOwner();
+        if (event.getContext() instanceof DamageContext damageContext) {
+            if (attribute == ArcanumAttributes.DAMAGE_MULTIPLIER) {
+                if (UltimateSlayer.canApply(damageContext.target())) {
+                    float bonus = UltimateSlayer.sumPerSlot(owner, UltimateSlayer.DAMAGE_BONUS);
+                    if (bonus > 0.0F) {
+                        event.getAdjustment().add(AttributeModifier.Operation.ADD_VALUE, bonus);
+                    }
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void ModifyBonusLootEvent(ModifyBonusLootEvent event) {
+        LootContext lootContext = event.getLootContext();
+        Entity thisEntityOrNull = lootContext.getParamOrNull(LootContextParams.THIS_ENTITY);
+        Entity attackerOrNull = lootContext.getParamOrNull(LootContextParams.ATTACKING_ENTITY);
+        BlockState blockState = event.getLootContext().getParamOrNull(LootContextParams.BLOCK_STATE);
+        LivingEntity thisEntity = thisEntityOrNull instanceof LivingEntity ? (LivingEntity) thisEntityOrNull : null;
+        LivingEntity attacker = attackerOrNull instanceof LivingEntity ? (LivingEntity) attackerOrNull : null;
+
+        if (thisEntity != null && attacker != null) {
+            if (UltimateSlayer.canApply(thisEntity)) {
+                event.setRatio(event.getRatio() + UltimateSlayer.getRatio(thisEntity, attacker));
+            }
+        }
+        if (blockState != null) {
+            event.setRatio(event.getRatio() + Harvest.getRatio(lootContext, blockState));
+        }
+
+    }
+
+    @SubscribeEvent
+    public static void BonusLootCheckEvent(BonusLootCheckEvent event) {
+        BlockState blockState = event.getLootContext().getParamOrNull(LootContextParams.BLOCK_STATE);
+        if (blockState != null && blockState.getBlock() instanceof CropBlock cropBlock && cropBlock.isMaxAge(blockState)) {
+            event.setResult(true);
+        }
+    }
+
+
+    @SubscribeEvent
+    public static void RegisterPayloadHandlersEvent(RegisterPayloadHandlersEvent event) {
+        final PayloadRegistrar registrar = event.registrar("1");
+        registrar.playToClient(BreakSpeedMultiplierPack.TYPE, BreakSpeedMultiplierPack.STREAM_CODEC, BreakSpeedMultiplierPack::handler);
+        registrar.playToClient(TearParticlesPack.TYPE, TearParticlesPack.STREAM_CODEC, TearParticlesPack::handler);
+    }
+
+    public static class IronsSpellBooksEvents {
+        @SubscribeEvent(priority = EventPriority.LOWEST)
+        public static void SpellOnCastEvent(SpellOnCastEvent event) {
+            for (ItemStack itemStack : event.getEntity().getArmorSlots()) {
+                Equipable equipable = Equipable.get(itemStack);
+                if (!itemStack.isEmpty() && equipable != null) {
+                    PlayerData playerData = event.getEntity().getData(AttachmentTypes.PLAYER_DATA);
+
+                    int lvl = UEEnchantments.HARDENED_MANA.getEnchantmentLevel(itemStack, event.getEntity().level());
+                    if (lvl > 0) {
+                        SimpleBindings bindings = LifeSteal.buildBindings(lvl);
+                        playerData.hardenedManaEffect.addArmor(event.getEntity(), equipable.getEquipmentSlot(), HardenedMana.MANA_PERCENT.calculate(bindings) * event.getManaCost(), HardenedMana.MAX_ARMOR.calculate(bindings));
+                    }
+                }
+            }
         }
     }
 }

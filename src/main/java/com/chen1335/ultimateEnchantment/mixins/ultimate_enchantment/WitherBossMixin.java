@@ -1,7 +1,7 @@
 package com.chen1335.ultimateEnchantment.mixins.ultimate_enchantment;
 
+import com.chen1335.arcanumlib.modules.loot.bonusLoot.BonusLoot;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.UltimateSlayer;
-import com.chen1335.ultimateEnchantment.loot.BonusLoot;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -18,8 +18,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * 凋零的下界之星额外掉落。
  * <p>
  * 凋零之星是硬编码在 {@code WitherBoss#dropCustomDeathLoot} 里掉的，不走战利品表，
- * 所以挂在 {@code LootTable#getRandomItems} 上的 {@link BonusLoot#append} 完全看不到它。
- * 这里补上同一口径的额外掉落。
+ * 所以 arcanumlib 那个挂在 {@code LootTable#getRandomItems} 上、内部调用其
+ * <b>BonusLoot.append</b> 的注入点完全看不到它。这里补上同一口径的额外掉落。
  * <p>
  * <b>为什么注入 TAIL</b>：原版那颗星得先掉出来，我们才好在它之外追加。TAIL 的位置也仍在
  * {@code LivingEntity#dropAllDeathLoot} 的 {@code captureDrops} 窗口内，额外掉出来的星会正常
@@ -28,9 +28,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * {@code mobLoot} 游戏规则与 {@code shouldDropLoot()} 不必自己查：{@code dropAllDeathLoot}
  * 是这两项都通过才会调到 {@code dropCustomDeathLoot} 的，本注入点天然继承那层判断。
  * <p>
- * 本 mixin 只管下界之星。凋零的装备槽掉落走的是 {@code Mob#dropCustomDeathLoot}，那条路径上
- * 只有神化 Boss 会被 {@code ApothBossEquipmentLoot} 接管（它认的是 {@code apoth.boss} 标记），
- * 凋零不在其中 —— 也就是说凋零身上的装备目前不参与额外掉落。
+ * 本 mixin 只管下界之星。凋零的装备槽掉落走的是 {@code Mob#dropCustomDeathLoot}，
+ * 本模组不再接管任何 Boss 的装备掉落，所以凋零身上的装备不参与额外掉落。
  */
 @Mixin(WitherBoss.class)
 public abstract class WitherBossMixin {
