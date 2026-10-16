@@ -2,7 +2,6 @@ package com.chen1335.ultimateEnchantment.common;
 
 
 import com.chen1335.arcanumlib.modules.attribute.ArcanumAttributes;
-import com.chen1335.arcanumlib.modules.attribute.AttributeAdjustment.AdjustmentHelper;
 import com.chen1335.arcanumlib.modules.attribute.AttributeAdjustment.contexts.DamageContext;
 import com.chen1335.arcanumlib.modules.attribute.events.LivingGetAttributeAdjustmentEvent;
 import com.chen1335.arcanumlib.modules.loot.bonusLoot.event.BonusLootCheckEvent;
@@ -18,7 +17,6 @@ import com.chen1335.ultimateEnchantment.config.ServerConfig;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentBasic;
 import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.*;
-import com.chen1335.ultimateEnchantment.enchantment.specialEnchantEffects.TearEffect;
 import com.chen1335.ultimateEnchantment.enchantment.specialEnchantEffects.ThunderBoltEffect;
 import com.chen1335.ultimateEnchantment.loot.predicates.CreeperIsPoweredCondition;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IItemStackMixin;
@@ -57,10 +55,8 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootPool;
-import net.minecraft.world.level.storage.loot.entries.EmptyLootItem;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
 import net.minecraft.world.level.storage.loot.functions.EnchantedCountIncreaseFunction;
@@ -86,7 +82,6 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 import javax.script.SimpleBindings;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -321,30 +316,7 @@ public class EventHandler {
         ResourceLocation lootTableId = event.getName();
         HolderLookup.Provider registries = event.getRegistries();
         List<LootPool> pools = event.getTable().pools;
-        if (lootTableId.equals(BuiltInLootTables.END_CITY_TREASURE.location()) && CommonConfig.willEndCityTreasureLootUltimateEnchant.getAsBoolean()) {
-            List<Holder<Enchantment>> holders = new ArrayList<>();
-            UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.LETHAL_TEMPO.getKey()).ifPresent(holders::add);
-            UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.VANQUISHER.getKey()).ifPresent(holders::add);
-            UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.TEAR.getKey()).ifPresent(holders::add);
-            UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.ULTIMATE_SLAYER.getKey()).ifPresent(holders::add);
-            UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.THE_FORTRESS.getKey()).ifPresent(holders::add);
-            LootPool.Builder builder = LootPool.lootPool();
-            for (Holder<Enchantment> holder : holders) {
-                LootPoolSingletonContainer.Builder<?> item = LootItem.lootTableItem(Items.ENCHANTED_BOOK);
-
-                if (holder.is(UEEnchantments.VANQUISHER.getKey())) {
-                    item.apply(new SetEnchantmentsFunction.Builder().withEnchantment(holder, ConstantValue.exactly(1))).setWeight(3);
-                } else {
-                    item.apply(new SetEnchantmentsFunction.Builder().withEnchantment(holder, UniformGenerator.between(2, 3))).setWeight(10);
-                }
-
-                builder.add(item).build();
-            }
-            if (!holders.isEmpty()) {
-                builder.add(EmptyLootItem.emptyItem().setWeight(30));
-                pools.add(builder.build());
-            }
-        } else if (lootTableId.equals(EntityType.ENDER_DRAGON.getDefaultLootTable().location())) {
+        if (lootTableId.equals(EntityType.ENDER_DRAGON.getDefaultLootTable().location())) {
             UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.ULTIMATE.getKey()).ifPresent(holder -> {
                 LootPool.Builder builder = LootPool.lootPool();
                 LootPoolSingletonContainer.Builder<?> item = LootItem.lootTableItem(Items.ENCHANTED_BOOK);
