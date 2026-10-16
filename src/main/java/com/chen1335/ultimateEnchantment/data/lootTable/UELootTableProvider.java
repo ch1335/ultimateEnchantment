@@ -20,37 +20,7 @@ import java.util.function.BiConsumer;
 public class UELootTableProvider extends LootTableProvider {
     public UELootTableProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pRegistries) {
         super(pOutput, Set.of(), List.of(
-                new LootTableProvider.SubProviderEntry(LootTableModifier::new, LootContextParamSets.CHEST)
         ), pRegistries);
-    }
-
-    public static class LootTableModifier implements LootTableSubProvider {
-        private final HolderLookup.Provider provider;
-
-        public static final ResourceKey<LootTable> END_CITY_TREASURE_MODIFIER = register("modifier/end_city_treasure_modifier");
-
-        public LootTableModifier(HolderLookup.Provider provider) {
-            this.provider = provider;
-        }
-
-        @Override
-        public void generate(@NotNull BiConsumer<ResourceKey<LootTable>, LootTable.Builder> output) {
-//            output.accept(END_CITY_TREASURE_MODIFIER,
-//                    LootTable.lootTable().withPool(
-//                            LootPool.lootPool().setRolls(new ConstantValue(1))
-//                                    .add(EmptyLootItem.emptyItem().setWeight(30))
-//                                    .add(LootItem.lootTableItem(Items.BOOK).setWeight(10).apply(new SetEnchantmentsFunction.Builder().withEnchantment(provider.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(UEEnchantmentsDataGen.LETHAL_TEMPO), UniformGenerator.between(1, 2))))
-//                                    .add(LootItem.lootTableItem(Items.BOOK).setWeight(10).apply(new SetEnchantmentsFunction.Builder().withEnchantment(provider.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(UEEnchantmentsDataGen.VANQUISHER), UniformGenerator.between(1, 2))))
-//                                    .add(LootItem.lootTableItem(Items.BOOK).setWeight(10).apply(new SetEnchantmentsFunction.Builder().withEnchantment(provider.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(UEEnchantmentsDataGen.TEAR), UniformGenerator.between(1, 2))))
-//                    )
-//            );
-
-
-        }
-
-        private static ResourceKey<LootTable> registerModifier(ResourceLocation resourceLocation) {
-            return ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(UltimateEnchantment.MODID, resourceLocation.getPath() + "_modifier"));
-        }
     }
 
     private static ResourceKey<LootTable> register(String name) {

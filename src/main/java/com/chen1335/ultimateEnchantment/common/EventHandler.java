@@ -2,6 +2,7 @@ package com.chen1335.ultimateEnchantment.common;
 
 
 import com.chen1335.arcanumlib.modules.attribute.ArcanumAttributes;
+import com.chen1335.arcanumlib.modules.attribute.AttributeAdjustment.AttributeAdjustment;
 import com.chen1335.arcanumlib.modules.attribute.AttributeAdjustment.contexts.DamageContext;
 import com.chen1335.arcanumlib.modules.attribute.events.LivingGetAttributeAdjustmentEvent;
 import com.chen1335.arcanumlib.modules.loot.bonusLoot.event.BonusLootCheckEvent;
@@ -339,14 +340,14 @@ public class EventHandler {
     public static void LivingGetAttributeAdjustmentEvent(LivingGetAttributeAdjustmentEvent event) {
         Holder<Attribute> attribute = event.getAttribute();
         LivingEntity owner = event.getOwner();
-        if (event.getContext() instanceof DamageContext(LivingEntity target, DamageSource source)) {
+        if (event.getContext() instanceof DamageContext(LivingEntity target, DamageSource source,float damage)) {
             //owner = attacker
             if (source.getEntity() == owner) {
                 if (attribute == ArcanumAttributes.DAMAGE_MULTIPLIER) {
                     if (UltimateSlayer.canApply(target)) {
                         float bonus = UltimateSlayer.sumPerSlot(owner, UltimateSlayer.DAMAGE_BONUS);
                         if (bonus > 0.0F) {
-                            event.getAdjustment().add(AttributeModifier.Operation.ADD_VALUE, bonus);
+                            event.getAdjustment().add(AttributeAdjustment.Operation.ADD_VALUE, bonus);
                         }
                     }
 
@@ -358,7 +359,7 @@ public class EventHandler {
                                 float attackerMaxHealth = owner.getHealth();
                                 float percentage = ((target.getHealth() - attackerMaxHealth) / attackerMaxHealth) * 100;
                                 float damageMultiplier = Math.clamp(percentage * CutDown.DAMAGE_MUL.calculate(simpleBindings), 0, CutDown.MAX_DAMAGE_MUL.calculate(simpleBindings));
-                                event.getAdjustment().add(AttributeModifier.Operation.ADD_VALUE, damageMultiplier);
+                                event.getAdjustment().add(AttributeAdjustment.Operation.ADD_VALUE, damageMultiplier);
                             }
                         }
                     }
