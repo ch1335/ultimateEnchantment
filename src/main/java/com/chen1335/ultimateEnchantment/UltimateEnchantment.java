@@ -49,7 +49,6 @@ public class UltimateEnchantment {
     public static final ScriptEngine SCRIPT_ENGINE = new NashornScriptEngineFactory().getScriptEngine("--global-per-engine");;
     private static boolean IRONS_SPELL_BOOKS_LOADED = false;
 
-    private static boolean TWILIGHT_FOREST_LOADED = false;
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> ENCHANTMENT_TAB = CREATIVE_MODE_TABS.register("ultimate_enchantment", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.ultimate_enchantment"))
             .withTabsBefore(CreativeModeTabs.COMBAT)
@@ -96,9 +95,6 @@ public class UltimateEnchantment {
             IRONS_SPELL_BOOKS_LOADED = true;
             NeoForge.EVENT_BUS.register(EventHandler.IronsSpellBooksEvents.class);
         }
-        if (ModList.get().isLoaded("twilightforest")) {
-            TWILIGHT_FOREST_LOADED = true;
-        }
 
 
         if (ModList.get().isLoaded("cloth_config")) {
@@ -141,7 +137,4 @@ public class UltimateEnchantment {
         return IRONS_SPELL_BOOKS_LOADED;
     }
 
-    public static boolean isTwilightForestLoaded() {
-        return TWILIGHT_FOREST_LOADED;
-    }
 }

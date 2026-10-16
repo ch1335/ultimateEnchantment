@@ -18,7 +18,6 @@ import com.chen1335.ultimateEnchantment.enchantment.EnchantmentBasic;
 import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.*;
 import com.chen1335.ultimateEnchantment.enchantment.specialEnchantEffects.ThunderBoltEffect;
-import com.chen1335.ultimateEnchantment.loot.predicates.CreeperIsPoweredCondition;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IItemStackMixin;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IUEEntityExtension;
 import com.chen1335.ultimateEnchantment.mobEffect.MobEffects;
@@ -56,19 +55,11 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.LootPool;
-import net.minecraft.world.level.storage.loot.entries.LootItem;
-import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
-import net.minecraft.world.level.storage.loot.functions.EnchantedCountIncreaseFunction;
-import net.minecraft.world.level.storage.loot.functions.SetEnchantmentsFunction;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
-import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
-import net.neoforged.neoforge.event.LootTableLoadEvent;
 import net.neoforged.neoforge.event.enchanting.GetEnchantmentLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.*;
@@ -308,46 +299,6 @@ public class EventHandler {
     public static void LivingGetProjectileEvent(LivingGetProjectileEvent event) {
         if (IItemStackMixin.class.cast(event.getProjectileWeaponItemStack()).ue$isLethalTempoShoot()) {
             event.setProjectileItemStack(event.getProjectileItemStack().copy());
-        }
-    }
-
-    @SubscribeEvent
-    public static void LootTableLoadEvent(LootTableLoadEvent event) {
-        ResourceLocation lootTableId = event.getName();
-        HolderLookup.Provider registries = event.getRegistries();
-        List<LootPool> pools = event.getTable().pools;
-        if (lootTableId.equals(EntityType.ENDER_DRAGON.getDefaultLootTable().location())) {
-            UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.ULTIMATE.getKey()).ifPresent(holder -> {
-                LootPool.Builder builder = LootPool.lootPool();
-                LootPoolSingletonContainer.Builder<?> item = LootItem.lootTableItem(Items.ENCHANTED_BOOK);
-                item.apply(new SetEnchantmentsFunction.Builder().withEnchantment(holder, ConstantValue.exactly(2))).apply(EnchantedCountIncreaseFunction.lootingMultiplier(registries, UniformGenerator.between(0, 0.2F)));
-                builder.add(item).build();
-                pools.add(builder.build());
-            });
-        } else if (lootTableId.equals(EntityType.WITHER.getDefaultLootTable().location())) {
-            UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.LEGEND.getKey()).ifPresent(holder -> {
-                LootPool.Builder builder = LootPool.lootPool();
-                LootPoolSingletonContainer.Builder<?> item = LootItem.lootTableItem(Items.ENCHANTED_BOOK);
-                item.apply(new SetEnchantmentsFunction.Builder().withEnchantment(holder, ConstantValue.exactly(1))).apply(EnchantedCountIncreaseFunction.lootingMultiplier(registries, UniformGenerator.between(0, 0.2F)));
-                builder.add(item).build();
-                pools.add(builder.build());
-            });
-        } else if (lootTableId.equals(EntityType.WARDEN.getDefaultLootTable().location())) {
-            UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.LAST_STAND.getKey()).ifPresent(holder -> {
-                LootPool.Builder builder = LootPool.lootPool();
-                LootPoolSingletonContainer.Builder<?> item = LootItem.lootTableItem(Items.ENCHANTED_BOOK);
-                item.apply(new SetEnchantmentsFunction.Builder().withEnchantment(holder, ConstantValue.exactly(1))).apply(EnchantedCountIncreaseFunction.lootingMultiplier(registries, UniformGenerator.between(0, 0.2F)));
-                builder.add(item).build();
-                pools.add(builder.build());
-            });
-        } else if (lootTableId.equals(EntityType.CREEPER.getDefaultLootTable().location())) {
-            UEEnchantmentHelper.getEnchantment(registries, UEEnchantments.THUNDER_BOLT.getKey()).ifPresent(holder -> {
-                LootPool.Builder builder = LootPool.lootPool();
-                LootPoolSingletonContainer.Builder<?> item = LootItem.lootTableItem(Items.ENCHANTED_BOOK);
-                item.apply(new SetEnchantmentsFunction.Builder().withEnchantment(holder, ConstantValue.exactly(1))).when(CreeperIsPoweredCondition.creeperIsPowered());
-                builder.add(item).build();
-                pools.add(builder.build());
-            });
         }
     }
 

@@ -2,7 +2,6 @@ package com.chen1335.ultimateEnchantment.data.registries;
 
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.data.lootTable.UELootTableProvider;
-import com.chen1335.ultimateEnchantment.data.lootTableModifier.EntityLootModifierProvider;
 import com.chen1335.ultimateEnchantment.data.recipe.UERecipesProvider;
 import com.chen1335.ultimateEnchantment.data.tags.DamageTypeTagProvider;
 import com.chen1335.ultimateEnchantment.data.tags.UEEnchantmentTagsProvider;
@@ -72,11 +71,6 @@ public class UERegistries {
                 event.getExistingFileHelper()
         ));
 
-        generator.addProvider(event.includeServer(), new EntityLootModifierProvider(
-                generator.getPackOutput(),
-                ueLookupProvider.getRegistryProvider(),
-                UltimateEnchantment.MODID
-        ));
 
         generator.addProvider(event.includeServer(), new UERecipesProvider(
                 generator.getPackOutput(),
