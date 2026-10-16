@@ -11,6 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.neoforged.neoforge.common.Tags;
 
@@ -47,7 +48,7 @@ public class Legend extends EnchantmentBasic {
     }
 
     @Override
-    public List<MutableComponent> getDesc(int level) {
+    public List<MutableComponent> getDesc(int level, TooltipFlag tooltipFlag) {
         return List.of(Component.translatable(getDescId(), ATTRIBUTE_BONUS.toComponent(buildBindings(level), 100)).withStyle(ChatFormatting.LIGHT_PURPLE));
     }
 }

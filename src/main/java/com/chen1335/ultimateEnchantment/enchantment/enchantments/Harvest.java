@@ -10,6 +10,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -67,7 +68,7 @@ public class Harvest extends EnchantmentBasic {
     }
 
     @Override
-    public List<MutableComponent> getDesc(int level) {
+    public List<MutableComponent> getDesc(int level, TooltipFlag tooltipFlag) {
         return List.of(Component.translatable(getDescId(), DROP_BONUS.toComponent(buildBindings(level), 100, 0)).withStyle(ChatFormatting.GOLD));
     }
 }

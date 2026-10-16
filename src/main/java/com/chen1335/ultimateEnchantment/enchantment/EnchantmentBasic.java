@@ -25,6 +25,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.level.Level;
@@ -165,7 +166,7 @@ public class EnchantmentBasic {
      * 默认实现只有一行，即 {@link #getDescId()} 对应的 lang 条目。子类要加行就往返回的
      * 列表里多塞几个组件，顺序即显示顺序。
      */
-    public List<MutableComponent> getDesc(int level) {
+    public List<MutableComponent> getDesc(int level, TooltipFlag tooltipFlag) {
         return List.of(Component.translatable(getDescId()));
     }
 

@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
 
 import javax.script.SimpleBindings;
@@ -34,7 +35,7 @@ public class CutDown extends EnchantmentBasic {
     }
 
     @Override
-    public List<MutableComponent> getDesc(int level) {
+    public List<MutableComponent> getDesc(int level, TooltipFlag tooltipFlag) {
         SimpleBindings simpleBindings = buildBindings(level);
         return List.of(Component.translatable(getDescId(),
                 DAMAGE_MUL.toComponent(simpleBindings, 100, 2),

@@ -145,6 +145,7 @@ dependencies {
     implementation "curse.maven:apothic-attributes-898963:6751650"
     implementation "curse.maven:apothic-enchanting-1063926:6926290"
     implementation "curse.maven:apothic-spawners-986583:6751589"
+    implementation "curse.maven:apothic-attributes-extension-1327218:9204533"
     implementation "curse.maven:placebo-283644:6926281"
     implementation "curse.maven:patchouli-306770:6842247"
     implementation "curse.maven:curios-309927:6529130"

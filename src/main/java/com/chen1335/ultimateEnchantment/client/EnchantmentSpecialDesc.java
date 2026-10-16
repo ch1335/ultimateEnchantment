@@ -8,6 +8,7 @@ import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +27,7 @@ public class EnchantmentSpecialDesc {
      * <p>
      * 调用方逐行 accept 即可，不要试图把多行拼成一个组件 —— 那是这个 API 存在的意义。
      */
-    public static List<MutableComponent> getNewDescription(Holder<Enchantment> holder, int level) {
+    public static List<MutableComponent> getNewDescription(Holder<Enchantment> holder, int level, TooltipFlag tooltipFlag) {
         @Nullable ResourceKey<Enchantment> resourceKey = holder.getKey();
         if (resourceKey == null) {
             return List.of();
@@ -36,7 +37,7 @@ public class EnchantmentSpecialDesc {
             if (entry.getKey().equals(resourceKey)) {
                 // 收成新列表而不是就地改：mergeStyles 内部走的是 setStyle，两种写法结果一样，
                 // 但不依赖那个实现细节更稳，而且 getDesc 返回的列表不保证可变。
-                return entry.getValue().getDesc(level).stream()
+                return entry.getValue().getDesc(level,tooltipFlag).stream()
                         .map(line -> ComponentUtils.mergeStyles(line, DESC_STYLE))
                         .toList();
             }

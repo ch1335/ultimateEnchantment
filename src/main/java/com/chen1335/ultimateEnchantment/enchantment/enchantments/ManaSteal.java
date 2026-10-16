@@ -6,6 +6,7 @@ import com.chen1335.ultimateEnchantment.tags.UEEnchantmentTags;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
 
 import java.util.List;
@@ -33,7 +34,7 @@ public class ManaSteal extends EnchantmentBasic {
     }
 
     @Override
-    public List<MutableComponent> getDesc(int level) {
+    public List<MutableComponent> getDesc(int level, TooltipFlag tooltipFlag) {
         return List.of(Component.translatable(getDescId(), MANA_PERCENT.toComponent(buildBindings(level), 100),MAX_PERCENT.toComponent(buildBindings(level), 100)));
     }
 }

@@ -16,9 +16,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -53,7 +53,7 @@ public class Tear extends EnchantmentBasic {
     }
 
     @Override
-    public List<MutableComponent> getDesc(int level) {
+    public List<MutableComponent> getDesc(int level, TooltipFlag tooltipFlag) {
         return List.of(Component.translatable(getDescId(), level + 1,
                 DAMAGE_ADD.toComponent(buildBindings(level), 100),
                 HEALTH_DAMAGE.toComponent(buildBindings(level), 100),

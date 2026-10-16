@@ -1,5 +1,7 @@
 package com.chen1335.ultimateEnchantment.enchantment.enchantments;
 
+import com.chen1335.arcanumlib.modules.attribute.ArcanumAttributes;
+import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.common.EnchantmentLookup;
 import com.chen1335.ultimateEnchantment.common.Formula;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentBasic;
@@ -13,6 +15,8 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.Tags;
@@ -98,12 +102,14 @@ public class UltimateSlayer extends EnchantmentBasic {
     }
 
     @Override
-    public List<MutableComponent> getDesc(int level) {
+    public List<MutableComponent> getDesc(int level, TooltipFlag tooltipFlag) {
         SimpleBindings bindings = buildBindings(level);
         List<MutableComponent> desc = new ArrayList<>(4);
         desc.add(Component.translatable(getDescId()).withStyle(ChatFormatting.LIGHT_PURPLE));
-        desc.add(Component.translatable(getDescId() + ".damage", DAMAGE_BONUS.toComponent(bindings, 100)).withStyle(ChatFormatting.LIGHT_PURPLE));
-        desc.add(Component.translatable(getDescId() + ".loot", LOOT_BONUS.toComponent(bindings, 100)).withStyle(ChatFormatting.LIGHT_PURPLE));
+
+        desc.add(ArcanumAttributes.DAMAGE_MULTIPLIER.value().toComponent(new AttributeModifier(UltimateEnchantment.id("fake"), DAMAGE_BONUS.calculate(bindings), AttributeModifier.Operation.ADD_VALUE), tooltipFlag));
+        desc.add(ArcanumAttributes.BONUS_LOOT.value().toComponent(new AttributeModifier(UltimateEnchantment.id("fake"), LOOT_BONUS.calculate(bindings), AttributeModifier.Operation.ADD_VALUE), tooltipFlag));
+
         if (ModList.get().isLoaded("apotheosis")) {
             // 神化的 Boss 用的是它自己那套标签，不带原版 boss 标签，本附魔认不出来，
             // 所以没装神化时这行不显示 —— 说了反而是误导。

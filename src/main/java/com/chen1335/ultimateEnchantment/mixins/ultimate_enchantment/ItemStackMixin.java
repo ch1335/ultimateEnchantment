@@ -67,7 +67,7 @@ public abstract class ItemStackMixin implements IItemStackExtension, MutableData
             ItemEnchantments itemEnchantments = this.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY);
             if (itemEnchantments.size() == 1) {
                 for (Object2IntMap.Entry<Holder<Enchantment>> holderEntry : itemEnchantments.entrySet()) {
-                    List<MutableComponent> newDescription = EnchantmentSpecialDesc.getNewDescription(holderEntry.getKey(), holderEntry.getIntValue());
+                    List<MutableComponent> newDescription = EnchantmentSpecialDesc.getNewDescription(holderEntry.getKey(), holderEntry.getIntValue(),tooltipFlag);
                     // 逐行加：说明书里一行一个组件，拼起来就分不出行了。
                     newDescription.forEach(tooltipAdder);
                 }
