@@ -35,6 +35,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -131,24 +132,6 @@ public class EventHandler {
             EnchantmentBasic enchantmentBasic = UEEnchantments.MAP.get(holderEntry.getKey().getKey());
             if (enchantmentBasic != null && holderEntry.getIntValue() > 0) {
                 enchantmentBasic.addModifier(event, holderEntry.getIntValue(), equipmentSlot);
-            }
-        }
-    }
-
-
-    @SubscribeEvent(priority = EventPriority.LOW)
-    public static void cutDown(LivingIncomingDamageEvent event) {
-        if (event.getSource().getDirectEntity() instanceof LivingEntity attacker && event.getSource().is(UEDamageTypeTags.IS_ATTACK)) {
-            int lvl = UEEnchantments.CUT_DOWN.getEnchantmentLevel(attacker.getWeaponItem(), attacker.level());
-            if (lvl > 0) {
-                SimpleBindings simpleBindings = CutDown.buildBindings(lvl);
-                float attackerMaxHealth = attacker.getMaxHealth();
-                float percentage = ((event.getEntity().getHealth() - attackerMaxHealth) / attackerMaxHealth) * 100;
-                float damageMultiplier = Math.clamp(percentage * CutDown.DAMAGE_MUL.calculate(simpleBindings), 0, CutDown.MAX_DAMAGE_MUL.calculate(simpleBindings));
-                if (Float.isNaN(damageMultiplier)) {
-                    return;
-                }
-                event.setAmount(event.getAmount() * (damageMultiplier + 1));
             }
         }
     }
@@ -404,16 +387,37 @@ public class EventHandler {
         }
     }
 
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public static void cutDown(LivingIncomingDamageEvent event) {
+
+    }
+
     @SubscribeEvent
     public static void LivingGetAttributeAdjustmentEvent(LivingGetAttributeAdjustmentEvent event) {
         Holder<Attribute> attribute = event.getAttribute();
         LivingEntity owner = event.getOwner();
-        if (event.getContext() instanceof DamageContext damageContext) {
-            if (attribute == ArcanumAttributes.DAMAGE_MULTIPLIER) {
-                if (UltimateSlayer.canApply(damageContext.target())) {
-                    float bonus = UltimateSlayer.sumPerSlot(owner, UltimateSlayer.DAMAGE_BONUS);
-                    if (bonus > 0.0F) {
-                        event.getAdjustment().add(AttributeModifier.Operation.ADD_VALUE, bonus);
+        if (event.getContext() instanceof DamageContext(LivingEntity target, DamageSource source)) {
+            //owner = attacker
+            if (source.getEntity() == owner) {
+                if (attribute == ArcanumAttributes.DAMAGE_MULTIPLIER) {
+                    if (UltimateSlayer.canApply(target)) {
+                        float bonus = UltimateSlayer.sumPerSlot(owner, UltimateSlayer.DAMAGE_BONUS);
+                        if (bonus > 0.0F) {
+                            event.getAdjustment().add(AttributeModifier.Operation.ADD_VALUE, bonus);
+                        }
+                    }
+
+                    if (source.is(UEDamageTypeTags.IS_ATTACK)) {
+                        {
+                            int lvl = UEEnchantments.CUT_DOWN.getEnchantmentLevel(owner.getWeaponItem(), owner.level());
+                            if (lvl > 0) {
+                                SimpleBindings simpleBindings = CutDown.buildBindings(lvl);
+                                float attackerMaxHealth = owner.getHealth();
+                                float percentage = ((target.getHealth() - attackerMaxHealth) / attackerMaxHealth) * 100;
+                                float damageMultiplier = Math.clamp(percentage * CutDown.DAMAGE_MUL.calculate(simpleBindings), 0, CutDown.MAX_DAMAGE_MUL.calculate(simpleBindings));
+                                event.getAdjustment().add(AttributeModifier.Operation.ADD_VALUE, damageMultiplier);
+                            }
+                        }
                     }
                 }
             }

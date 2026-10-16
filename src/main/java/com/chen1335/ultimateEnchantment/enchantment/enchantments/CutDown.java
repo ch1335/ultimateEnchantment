@@ -1,5 +1,7 @@
 package com.chen1335.ultimateEnchantment.enchantment.enchantments;
 
+import com.chen1335.arcanumlib.modules.attribute.ArcanumAttributes;
+import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.common.Formula;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentBasic;
 import net.minecraft.ChatFormatting;
@@ -7,6 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
 
@@ -15,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 public class CutDown extends EnchantmentBasic {
-    public static final Formula DAMAGE_MUL = new Formula("0.0002 * lvl");
+    public static final Formula DAMAGE_MUL = new Formula("0.0001 * lvl");
     public static final Formula MAX_DAMAGE_MUL = new Formula("0.1 * lvl");
 
     public CutDown() {
@@ -37,8 +40,14 @@ public class CutDown extends EnchantmentBasic {
     @Override
     public List<MutableComponent> getDesc(int level, TooltipFlag tooltipFlag) {
         SimpleBindings simpleBindings = buildBindings(level);
+        // 第一个 %s 展示的是伤害修正属性的实际加成（与 UltimateSlayer#getDesc 同一口径），
+        // 而不是裸的倍率数字：这样玩家在 tooltip 里看到的就是该属性本身的写法。
+        AttributeModifier damageModifier = new AttributeModifier(
+                UltimateEnchantment.id("cut_down"),
+                DAMAGE_MUL.calculate(simpleBindings),
+                AttributeModifier.Operation.ADD_VALUE);
         return List.of(Component.translatable(getDescId(),
-                DAMAGE_MUL.toComponent(simpleBindings, 100, 2),
+                ArcanumAttributes.DAMAGE_MULTIPLIER.value().toComponent(damageModifier, tooltipFlag),
                 MAX_DAMAGE_MUL.toComponent(simpleBindings, 100)).withStyle(ChatFormatting.GOLD));
     }
 }

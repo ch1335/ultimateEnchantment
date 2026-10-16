@@ -13,7 +13,7 @@
   "effect.ultimate_enchantment.active_vanquisher": "Conquérant",
   "effect.ultimate_enchantment.un_active_vanquisher": "Conquérant",
   "enchantment.ultimate_enchantment.cut_down": "Abattre",
-  "enchantment.ultimate_enchantment.cut_down.specialDesc": "Lors de dégâts au corps à corps, si les points de vie actuels de la cible dépassent vos points de vie maximum de 1%%, inflige %s%% de dégâts finaux supplémentaires, jusqu'à %s%% maximum",
+  "enchantment.ultimate_enchantment.cut_down.specialDesc": "Lors de dégâts au corps à corps, pour chaque 1%% dont les points de vie actuels de la cible dépassent les vôtres, cette attaque gagne %s, jusqu'à %s%% maximum",
   "enchantment.ultimate_enchantment.double_hook": "Double Hameçon",
   "enchantment.ultimate_enchantment.double_hook.specialDesc": "Vous avez %s%% de chances de pêcher double butin",
   "enchantment.ultimate_enchantment.eternal": "Éternel",

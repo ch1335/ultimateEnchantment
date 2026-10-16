@@ -13,7 +13,7 @@
   "effect.ultimate_enchantment.active_vanquisher": "Vanquisher",
   "effect.ultimate_enchantment.un_active_vanquisher": "Vanquisher",
   "enchantment.ultimate_enchantment.cut_down": "Cut Down",
-  "enchantment.ultimate_enchantment.cut_down.specialDesc": "When dealing melee damage, deal an additional %s%% final damage for every 1%% the target's current health exceeds your maximum health, up to %s%%",
+  "enchantment.ultimate_enchantment.cut_down.specialDesc": "When dealing melee damage, for every 1%% the target's current health is above yours, this attack gains %s, up to %s%%",
   "enchantment.ultimate_enchantment.double_hook": "Double Hook",
   "enchantment.ultimate_enchantment.double_hook.specialDesc": "You have a %s%% chance to catch double the loot while fishing",
   "enchantment.ultimate_enchantment.eternal": "Eternal",

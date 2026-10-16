@@ -13,7 +13,7 @@
   "effect.ultimate_enchantment.active_vanquisher": "征服者",
   "effect.ultimate_enchantment.un_active_vanquisher": "征服者",
   "enchantment.ultimate_enchantment.cut_down": "砍倒",
-  "enchantment.ultimate_enchantment.cut_down.specialDesc": "造成近战伤害时，目标的当前生命值每比你1%%,就会造成额外%s%%的最终伤害,最高%s%%",
+  "enchantment.ultimate_enchantment.cut_down.specialDesc": "造成近战伤害时，目标的当前生命值每比你高1%%,此次攻击就会获得%s,最高%s%%",
   "enchantment.ultimate_enchantment.double_hook": "双钩",
   "enchantment.ultimate_enchantment.double_hook.specialDesc": "钓鱼时你有%s%%的概率获得双倍物品",
   "enchantment.ultimate_enchantment.eternal": "永恒",
