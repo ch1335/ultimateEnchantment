@@ -6,7 +6,7 @@ import com.chen1335.ultimateEnchantment.common.Formula;
 import com.chen1335.ultimateEnchantment.data.registries.UEDamageType;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentBasic;
 import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
-import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.ILivingEntityMixin;
+import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.ILivingEntityExtension;
 import com.chen1335.ultimateEnchantment.netWork.TearParticlesPack;
 import com.chen1335.ultimateEnchantment.tags.UEEnchantmentTags;
 import net.minecraft.ChatFormatting;
@@ -90,7 +90,7 @@ public class Tear extends EnchantmentBasic {
             target.playSound(UESounds.TEAR.value(), 1.5F, 1.1F);
             target.playSound(SoundEvents.ZOMBIE_BREAK_WOODEN_DOOR, 0.3F, 1.7F);
 
-            ((ILivingEntityMixin) target).ue$setDisableHurtSound(true);
+            ((ILivingEntityExtension) target).ue$setDisableHurtSound(true);
             float lastHurt = target.lastHurt;
             int invulnerableTime = target.invulnerableTime;
 
@@ -98,13 +98,11 @@ public class Tear extends EnchantmentBasic {
 
             target.lastHurt = lastHurt;
             target.invulnerableTime = invulnerableTime;
-            ((ILivingEntityMixin) target).ue$setDisableHurtSound(false);
+            ((ILivingEntityExtension) target).ue$setDisableHurtSound(false);
 
             spawnTearParticles(target);
         }
 
-        // 只把"目标刚裂了一道"广播给附近客户端，特效怎么画由客户端现算。
-        // 位置必须放在状态还原之后：hurt() 到还原之间是临界区，不能插广播。
         private static void spawnTearParticles(LivingEntity target) {
             if (!(target.level() instanceof ServerLevel level)) {
                 return;

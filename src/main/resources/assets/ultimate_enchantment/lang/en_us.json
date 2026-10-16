@@ -10,6 +10,8 @@
   "apothic_enchanting.enchantment.addition": "§eApothic Enchanting Addition",
   "death.attack.tear": "%1$s was torn to shreds by %2$s",
   "death.attack.tear.item": "%1$s was torn to shreds by %2$s using %3$s",
+  "death.attack.thunder_bolt": "%1$s was struck down by %2$s",
+  "death.attack.thunder_bolt.item": "%1$s was struck down by %2$s using %3$s",
   "effect.ultimate_enchantment.active_vanquisher": "Vanquisher",
   "effect.ultimate_enchantment.un_active_vanquisher": "Vanquisher",
   "enchantment.ultimate_enchantment.cut_down": "Cut Down",

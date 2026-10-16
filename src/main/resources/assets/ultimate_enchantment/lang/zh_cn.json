@@ -10,6 +10,8 @@
   "apothic_enchanting.enchantment.addition": "§e神化附魔附加",
   "death.attack.tear": "%1$s被%2$s撕成了碎片",
   "death.attack.tear.item": "%1$s被%2$s用%3$s撕成了碎片",
+  "death.attack.thunder_bolt": "%1$s被%2$s劈死了",
+  "death.attack.thunder_bolt.item": "%1$s被%2$s用%3$s劈死了",
   "effect.ultimate_enchantment.active_vanquisher": "征服者",
   "effect.ultimate_enchantment.un_active_vanquisher": "征服者",
   "enchantment.ultimate_enchantment.cut_down": "砍倒",

@@ -10,6 +10,8 @@
   "apothic_enchanting.enchantment.addition": "§eAjout d'Enchantement Apothique",
   "death.attack.tear": "%1$s a été mis en pièces par %2$s",
   "death.attack.tear.item": "%1$s a été mis en pièces par %2$s avec %3$s",
+  "death.attack.thunder_bolt": "%1$s a été foudroyé par %2$s",
+  "death.attack.thunder_bolt.item": "%1$s a été foudroyé par %2$s avec %3$s",
   "effect.ultimate_enchantment.active_vanquisher": "Conquérant",
   "effect.ultimate_enchantment.un_active_vanquisher": "Conquérant",
   "enchantment.ultimate_enchantment.cut_down": "Abattre",

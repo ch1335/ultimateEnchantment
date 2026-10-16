@@ -1,6 +1,8 @@
-// 1.21.1	2025-12-03T15:29:59.2015198	Tags for minecraft:damage_type mod id ultimate_enchantment
-485713002e6c36768b7d1560ec0524b70da0a750 data/minecraft/tags/damage_type/bypasses_cooldown.json
-485713002e6c36768b7d1560ec0524b70da0a750 data/minecraft/tags/damage_type/no_knockback.json
-485713002e6c36768b7d1560ec0524b70da0a750 data/minecraft/tags/damage_type/panic_causes.json
-485713002e6c36768b7d1560ec0524b70da0a750 data/neoforge/tags/damage_type/is_physical.json
+// 1.21.1	2026-10-16T17:57:17.4418271	Tags for minecraft:damage_type mod id ultimate_enchantment
+a15b6e94a3591dc5443495966bba8687c984cee7 data/arcanumlib/tags/damage_type/ignore_damage_multiplier.json
+a15b6e94a3591dc5443495966bba8687c984cee7 data/minecraft/tags/damage_type/bypasses_cooldown.json
+5028ce8ebf5efd5cffb3d58e36968d00eb4fd6a3 data/minecraft/tags/damage_type/is_lightning.json
+a15b6e94a3591dc5443495966bba8687c984cee7 data/minecraft/tags/damage_type/no_knockback.json
+a15b6e94a3591dc5443495966bba8687c984cee7 data/minecraft/tags/damage_type/panic_causes.json
+a15b6e94a3591dc5443495966bba8687c984cee7 data/neoforge/tags/damage_type/is_physical.json
 9bf23a6795cc679818666edc857a35f24df11447 data/ultimate_enchantment/tags/damage_type/is_attack.json

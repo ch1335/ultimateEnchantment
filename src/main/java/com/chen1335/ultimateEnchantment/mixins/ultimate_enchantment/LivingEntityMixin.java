@@ -1,13 +1,10 @@
 package com.chen1335.ultimateEnchantment.mixins.ultimate_enchantment;
 
-import com.chen1335.ultimateEnchantment.API.UEDamageTypeTags;
 import com.chen1335.ultimateEnchantment.dataComponentType.UEDataComponentTypes;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.Vanquisher;
 import com.chen1335.ultimateEnchantment.enchantment.specialEnchantEffects.TearEffect;
-import com.chen1335.ultimateEnchantment.enchantment.specialEnchantEffects.ThunderBoltEffect;
-import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.ILivingEntityMixin;
+import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.ILivingEntityExtension;
 import com.chen1335.ultimateEnchantment.mobEffect.MobEffects;
-import com.chen1335.ultimateEnchantment.utils.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
@@ -29,7 +26,7 @@ import javax.script.SimpleBindings;
 import java.util.Stack;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin implements ILivingEntityMixin {
+public abstract class LivingEntityMixin implements ILivingEntityExtension {
     @Unique
     private boolean ue$disableHurtSound = false;
 
@@ -50,6 +47,9 @@ public abstract class LivingEntityMixin implements ILivingEntityMixin {
     @Nullable
     protected Stack<DamageContainer> damageContainers;
 
+    @Shadow
+    protected abstract void actuallyHurt(DamageSource damageSource, float damageAmount);
+
     @Inject(method = "playHurtSound", at = @At("HEAD"), cancellable = true)
     private void playHurtSound(DamageSource source, CallbackInfo ci) {
         if (ue$disableHurtSound) {
@@ -60,12 +60,7 @@ public abstract class LivingEntityMixin implements ILivingEntityMixin {
     @Inject(method = "actuallyHurt", at = @At("HEAD"))
     private void actuallyHurt(DamageSource damageSource, float damageAmount, CallbackInfo ci) {
         LivingEntity living = (LivingEntity) (Object) this;
-        if (damageSource.getEntity() instanceof LivingEntity attacker && damageSource.is(UEDamageTypeTags.IS_ATTACK)) {
-            Util.addAttackedCount(attacker);
-        }
         TearEffect.onAttack(damageSource, this.damageContainers, living);
-        ThunderBoltEffect.onAttack(damageSource, this.damageContainers, living);
-
     }
 
     @Inject(method = "tick", at = @At("HEAD"))

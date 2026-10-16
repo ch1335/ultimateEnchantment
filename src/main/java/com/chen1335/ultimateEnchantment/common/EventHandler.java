@@ -2,6 +2,7 @@ package com.chen1335.ultimateEnchantment.common;
 
 
 import com.chen1335.arcanumlib.modules.attribute.ArcanumAttributes;
+import com.chen1335.arcanumlib.modules.attribute.AttributeAdjustment.AdjustmentHelper;
 import com.chen1335.arcanumlib.modules.attribute.AttributeAdjustment.contexts.DamageContext;
 import com.chen1335.arcanumlib.modules.attribute.events.LivingGetAttributeAdjustmentEvent;
 import com.chen1335.arcanumlib.modules.loot.bonusLoot.event.BonusLootCheckEvent;
@@ -17,6 +18,8 @@ import com.chen1335.ultimateEnchantment.config.ServerConfig;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentBasic;
 import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.*;
+import com.chen1335.ultimateEnchantment.enchantment.specialEnchantEffects.TearEffect;
+import com.chen1335.ultimateEnchantment.enchantment.specialEnchantEffects.ThunderBoltEffect;
 import com.chen1335.ultimateEnchantment.loot.predicates.CreeperIsPoweredCondition;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IItemStackMixin;
 import com.chen1335.ultimateEnchantment.mixinsAPI.minecraft.IUEEntityExtension;
@@ -25,6 +28,7 @@ import com.chen1335.ultimateEnchantment.netWork.BreakSpeedMultiplierPack;
 import com.chen1335.ultimateEnchantment.netWork.TearParticlesPack;
 import com.chen1335.ultimateEnchantment.tags.UEEnchantmentTags;
 import com.chen1335.ultimateEnchantment.utils.UEEnchantmentHelper;
+import com.chen1335.ultimateEnchantment.utils.Util;
 import io.redspace.ironsspellbooks.api.events.SpellOnCastEvent;
 import io.redspace.ironsspellbooks.api.magic.MagicData;
 import io.redspace.ironsspellbooks.api.registry.AttributeRegistry;
@@ -387,10 +391,26 @@ public class EventHandler {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.LOW)
-    public static void cutDown(LivingIncomingDamageEvent event) {
-
+    @SubscribeEvent(priority = EventPriority.NORMAL)
+    public static void LivingIncomingDamageEvent$Normal(LivingIncomingDamageEvent event) {
+        DamageSource source = event.getSource();
+        Entity entity = source.getEntity();
+        if (entity instanceof LivingEntity attacker && source.is(UEDamageTypeTags.IS_ATTACK)) {
+            Util.addAttackedCount(attacker);
+        }
     }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void LivingIncomingDamageEvent$Lowest(LivingIncomingDamageEvent event) {
+        LivingEntity entity = event.getEntity();
+        DamageSource source = event.getSource();
+        if (source.getEntity() instanceof LivingEntity attacker && source.is(UEDamageTypeTags.IS_ATTACK)) {
+            if (Util.getAttackedCount(attacker) % 3 == 0) {
+                ThunderBoltEffect.onAttack(attacker, event.getAmount(), entity);
+            }
+        }
+    }
+
 
     @SubscribeEvent
     public static void LivingGetAttributeAdjustmentEvent(LivingGetAttributeAdjustmentEvent event) {

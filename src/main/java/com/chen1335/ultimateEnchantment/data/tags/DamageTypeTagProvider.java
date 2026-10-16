@@ -1,5 +1,6 @@
 package com.chen1335.ultimateEnchantment.data.tags;
 
+import com.chen1335.arcanumlib.registry.ArcanumTags;
 import com.chen1335.ultimateEnchantment.API.UEDamageTypeTags;
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.data.registries.UEDamageType;
@@ -28,17 +29,28 @@ public class DamageTypeTagProvider extends DamageTypeTagsProvider {
                 .addTag(DamageTypeTags.IS_PLAYER_ATTACK);
 
         tag(DamageTypeTags.NO_KNOCKBACK)
-                .add(UEDamageType.TEAR_DAMAGE);
+                .add(UEDamageType.TEAR_DAMAGE)
+                .add(UEDamageType.THUNDER_BOLT_DAMAGE);
 
         tag(Tags.DamageTypes.IS_PHYSICAL)
-                .add(UEDamageType.TEAR_DAMAGE);
+                .add(UEDamageType.TEAR_DAMAGE)
+                .add(UEDamageType.THUNDER_BOLT_DAMAGE);
 
 
         tag(DamageTypeTags.PANIC_CAUSES)
-                .add(UEDamageType.TEAR_DAMAGE);
+                .add(UEDamageType.TEAR_DAMAGE)
+                .add(UEDamageType.THUNDER_BOLT_DAMAGE);
 
         tag(DamageTypeTags.BYPASSES_COOLDOWN)
-                .add(UEDamageType.TEAR_DAMAGE);
+                .add(UEDamageType.TEAR_DAMAGE)
+                .add(UEDamageType.THUNDER_BOLT_DAMAGE);
 
+        tag(ArcanumTags.Damage.IGNORE_DAMAGE_MULTIPLIER)
+                .add(UEDamageType.TEAR_DAMAGE)
+                .add(UEDamageType.THUNDER_BOLT_DAMAGE);
+
+        tag(DamageTypeTags.IS_LIGHTNING)
+                .add(UEDamageType.THUNDER_BOLT_DAMAGE);
     }
+
 }
