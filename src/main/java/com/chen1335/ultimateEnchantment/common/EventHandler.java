@@ -3,7 +3,7 @@ package com.chen1335.ultimateEnchantment.common;
 
 import com.chen1335.arcanumlib.modules.attribute.ArcanumAttributes;
 import com.chen1335.arcanumlib.modules.attribute.AttributeAdjustment.AttributeAdjustment;
-import com.chen1335.arcanumlib.modules.attribute.AttributeAdjustment.contexts.DamageContext;
+import com.chen1335.arcanumlib.modules.attribute.AttributeAdjustment.contexts.LivingHurtContext;
 import com.chen1335.arcanumlib.modules.attribute.events.LivingGetAttributeAdjustmentEvent;
 import com.chen1335.arcanumlib.modules.loot.bonusLoot.event.BonusLootCheckEvent;
 import com.chen1335.arcanumlib.modules.loot.bonusLoot.event.ModifyBonusLootEvent;
@@ -25,7 +25,6 @@ import com.chen1335.ultimateEnchantment.mobEffect.MobEffects;
 import com.chen1335.ultimateEnchantment.netWork.BreakSpeedMultiplierPack;
 import com.chen1335.ultimateEnchantment.netWork.TearParticlesPack;
 import com.chen1335.ultimateEnchantment.tags.UEEnchantmentTags;
-import com.chen1335.ultimateEnchantment.utils.UEEnchantmentHelper;
 import com.chen1335.ultimateEnchantment.utils.Util;
 import io.redspace.ironsspellbooks.api.events.SpellOnCastEvent;
 import io.redspace.ironsspellbooks.api.magic.MagicData;
@@ -34,13 +33,11 @@ import io.redspace.ironsspellbooks.network.SyncManaPacket;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -49,7 +46,10 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.BowItem;
+import net.minecraft.world.item.Equipable;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -74,7 +74,6 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 import javax.script.SimpleBindings;
-import java.util.List;
 import java.util.Objects;
 
 @EventBusSubscriber(modid = UltimateEnchantment.MODID)
@@ -338,29 +337,24 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void LivingGetAttributeAdjustmentEvent(LivingGetAttributeAdjustmentEvent event) {
-        Holder<Attribute> attribute = event.getAttribute();
-        LivingEntity owner = event.getOwner();
-        if (event.getContext() instanceof DamageContext(LivingEntity target, DamageSource source,float damage)) {
-            //owner = attacker
-            if (source.getEntity() == owner) {
-                if (attribute == ArcanumAttributes.DAMAGE_MULTIPLIER) {
-                    if (UltimateSlayer.canApply(target)) {
-                        float bonus = UltimateSlayer.sumPerSlot(owner, UltimateSlayer.DAMAGE_BONUS);
-                        if (bonus > 0.0F) {
-                            event.getAdjustment().add(AttributeAdjustment.Operation.ADD_VALUE, bonus);
-                        }
+        if (event.getContext() instanceof LivingHurtContext(LivingEntity target, DamageSource source, float damage)) {
+            if (source.getEntity() instanceof LivingEntity attacker) {
+                if (UltimateSlayer.canApply(target)) {
+                    float bonus = UltimateSlayer.sumPerSlot(attacker, UltimateSlayer.DAMAGE_BONUS);
+                    if (bonus > 0.0F) {
+                        event.getAdjustment(attacker, ArcanumAttributes.DAMAGE_MULTIPLIER).add(AttributeAdjustment.Operation.ADD_VALUE, bonus);
                     }
+                }
 
-                    if (source.is(UEDamageTypeTags.IS_ATTACK)) {
-                        {
-                            int lvl = UEEnchantments.CUT_DOWN.getEnchantmentLevel(owner.getWeaponItem(), owner.level());
-                            if (lvl > 0) {
-                                SimpleBindings simpleBindings = CutDown.buildBindings(lvl);
-                                float attackerMaxHealth = owner.getHealth();
-                                float percentage = ((target.getHealth() - attackerMaxHealth) / attackerMaxHealth) * 100;
-                                float damageMultiplier = Math.clamp(percentage * CutDown.DAMAGE_MUL.calculate(simpleBindings), 0, CutDown.MAX_DAMAGE_MUL.calculate(simpleBindings));
-                                event.getAdjustment().add(AttributeAdjustment.Operation.ADD_VALUE, damageMultiplier);
-                            }
+                if (source.is(UEDamageTypeTags.IS_ATTACK)) {
+                    {
+                        int lvl = UEEnchantments.CUT_DOWN.getEnchantmentLevel(attacker.getWeaponItem(), attacker.level());
+                        if (lvl > 0) {
+                            SimpleBindings simpleBindings = CutDown.buildBindings(lvl);
+                            float attackerMaxHealth = attacker.getHealth();
+                            float percentage = ((target.getHealth() - attackerMaxHealth) / attackerMaxHealth) * 100;
+                            float damageMultiplier = Math.clamp(percentage * CutDown.DAMAGE_MUL.calculate(simpleBindings), 0, CutDown.MAX_DAMAGE_MUL.calculate(simpleBindings));
+                            event.getAdjustment(attacker, ArcanumAttributes.DAMAGE_MULTIPLIER).add(AttributeAdjustment.Operation.ADD_VALUE, damageMultiplier);
                         }
                     }
                 }
