@@ -45,6 +45,10 @@ public class Scabbing extends EnchantmentBasic {
 
     @Override
     public List<MutableComponent> getDesc(int level, TooltipFlag tooltipFlag) {
-        return List.of(Component.translatable(getDescId(), ARMOR_SHRED.toComponent(buildBindings(level), 100,1)).withStyle(ChatFormatting.GOLD));
+        // 与 addModifier 用同一个 modifier 值与 operation，交给属性自己渲染成
+        // 「+18.46% 护甲撕裂」这种完整写法，不再手拼百分比。
+        AttributeModifier modifier = new AttributeModifier(MODIFIER_ID, ARMOR_SHRED.calculate(buildBindings(level)), AttributeModifier.Operation.ADD_VALUE);
+        return List.of(Component.translatable(getDescId(),
+                ALObjects.Attributes.ARMOR_SHRED.value().toComponent(modifier, tooltipFlag).withStyle(ChatFormatting.GOLD)).withStyle(ChatFormatting.GOLD));
     }
 }

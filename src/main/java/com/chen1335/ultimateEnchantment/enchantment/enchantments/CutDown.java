@@ -47,7 +47,7 @@ public class CutDown extends EnchantmentBasic {
                 DAMAGE_MUL.calculate(simpleBindings),
                 AttributeModifier.Operation.ADD_VALUE);
         return List.of(Component.translatable(getDescId(),
-                ArcanumAttributes.DAMAGE_MULTIPLIER.value().toComponent(damageModifier, tooltipFlag),
+                ArcanumAttributes.DAMAGE_MULTIPLIER.value().toComponent(damageModifier, tooltipFlag).withStyle(ChatFormatting.GOLD),
                 MAX_DAMAGE_MUL.toComponent(simpleBindings, 100)).withStyle(ChatFormatting.GOLD));
     }
 }

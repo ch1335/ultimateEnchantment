@@ -42,11 +42,15 @@ public class QuickShooting extends EnchantmentBasic {
     @Override
     public void addModifier(ItemAttributeModifierEvent event, int lvl, EquipmentSlot equipmentSlot) {
         SimpleBindings simpleBindings = buildBindings(lvl);
-        event.addModifier(ALObjects.Attributes.DRAW_SPEED, new AttributeModifier(MODIFIER_ID, DRAW_SPEED.calculate(simpleBindings), AttributeModifier.Operation.ADD_MULTIPLIED_BASE), EquipmentSlotGroup.MAINHAND);
+        event.addModifier(ALObjects.Attributes.DRAW_SPEED, new AttributeModifier(MODIFIER_ID, DRAW_SPEED.calculate(simpleBindings), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
     }
 
     @Override
     public List<MutableComponent> getDesc(int level, TooltipFlag tooltipFlag) {
-        return List.of(Component.translatable(getDescId(), DRAW_SPEED.toComponent(buildBindings(level), 100)).withStyle(ChatFormatting.GOLD));
+        // 与 addModifier 用同一个 modifier 值与 operation，交给属性自己渲染成
+        // 「+25% 拉弓速度」这种完整写法，不再手拼百分比。
+        AttributeModifier modifier = new AttributeModifier(MODIFIER_ID, DRAW_SPEED.calculate(buildBindings(level)), AttributeModifier.Operation.ADD_VALUE);
+        return List.of(Component.translatable(getDescId(),
+                ALObjects.Attributes.DRAW_SPEED.value().toComponent(modifier, tooltipFlag).withStyle(ChatFormatting.GOLD)).withStyle(ChatFormatting.GOLD));
     }
 }

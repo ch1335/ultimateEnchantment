@@ -46,7 +46,17 @@ public class LastStand extends EnchantmentBasic {
 
     @Override
     public List<MutableComponent> getDesc(int level, TooltipFlag tooltipFlag) {
-        return List.of(Component.translatable(getDescId(),HEALTH_THRESHOLD.toComponent(buildBindings(level), 100),ARMOR_BONUS.toComponent(buildBindings(level), 100)).withStyle(ChatFormatting.LIGHT_PURPLE));
+        SimpleBindings bindings = buildBindings(level);
+        AttributeModifier armor = new AttributeModifier(AttributeModifierId.LAST_STAND_ARMOR,
+                ARMOR_BONUS.calculate(bindings), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+        AttributeModifier toughness = new AttributeModifier(AttributeModifierId.LAST_STAND_ARMOR_TOUGHNESS,
+                ARMOR_BONUS.calculate(bindings), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+        return List.of(Component.translatable(getDescId(),
+                                HEALTH_THRESHOLD.toComponent(bindings, 100),
+                                Attributes.ARMOR.value().toComponent(armor, tooltipFlag).withStyle(ChatFormatting.LIGHT_PURPLE),
+                                Attributes.ARMOR_TOUGHNESS.value().toComponent(toughness, tooltipFlag).withStyle(ChatFormatting.LIGHT_PURPLE)
+                        ).withStyle(ChatFormatting.LIGHT_PURPLE)
+        );
     }
 
     @Override

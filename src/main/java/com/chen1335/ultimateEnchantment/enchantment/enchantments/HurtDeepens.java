@@ -1,5 +1,7 @@
 package com.chen1335.ultimateEnchantment.enchantment.enchantments;
 
+import com.chen1335.arcanumlib.modules.attribute.ArcanumAttributes;
+import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.common.Formula;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentBasic;
 import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
@@ -9,19 +11,16 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 
 import javax.script.SimpleBindings;
 import java.util.List;
 import java.util.Map;
 
-@EventBusSubscriber()
 public class HurtDeepens extends EnchantmentBasic {
     public static final Formula DAMAGE_PER_PERCENT = new Formula("0.01");
 
@@ -47,41 +46,27 @@ public class HurtDeepens extends EnchantmentBasic {
     @Override
     public List<MutableComponent> getDesc(int level, TooltipFlag tooltipFlag) {
         SimpleBindings bindings = buildBindings(level);
+        // 第一个 %s 换成伤害修正属性的描述（与 CutDown 同一口径），而不是裸百分比：
+        // 每低 1 个百分点获得的那一份加成本身就是一条 DAMAGE_MULTIPLIER 修正。
+        AttributeModifier modifier = new AttributeModifier(
+                UltimateEnchantment.id("hurt_deepens"),
+                DAMAGE_PER_PERCENT.calculate(bindings),
+                AttributeModifier.Operation.ADD_VALUE);
         return List.of(Component.translatable(getDescId(),
-                DAMAGE_PER_PERCENT.toComponent(bindings, 100, 1),
+                ArcanumAttributes.DAMAGE_MULTIPLIER.value().toComponent(modifier, tooltipFlag).withStyle(ChatFormatting.GOLD),
                 MAX_BONUS.toComponent(bindings, 100, 1)
         ).withStyle(ChatFormatting.GOLD));
     }
 
-    /**
-     * 箭命中时按双方「当前生命值百分比」的差距加伤：目标每比射手低 1 个百分点，就多打
-     * {@link #DAMAGE_PER_PERCENT} 比例的伤害，封顶 {@link #MAX_BONUS}。
-     * <p>
-     * 比的是百分比而不是绝对血量，所以满血射手打残血目标，和残血射手打残血目标不是一回事。
-     * 目标血量百分比更高时差值为负，此时不加伤 —— 这个附魔只在对方更惨的时候生效。
-     * <p>
-     * 弓从箭身上取（{@link AbstractArrow#getWeaponItem()}），而不是回头读射手主手：
-     * 那是发射那一刻弓的副本，射手放完箭再换手也不影响判定。
-     * <p>
-     * 只认 {@link AbstractArrow}：附魔挂在弓上，射出的一定是箭。
-     */
-    @SubscribeEvent
-    public static void onArrowHit(LivingIncomingDamageEvent event) {
-        if (!(event.getSource().getDirectEntity() instanceof AbstractArrow arrow)) {
-            return;
-        }
-        if (!(arrow.getOwner() instanceof LivingEntity attacker)) {
-            return;
-        }
+    public static float getDamageBonus(LivingEntity attacker, LivingEntity target, AbstractArrow arrow) {
         ItemStack bow = arrow.getWeaponItem();
         if (bow == null || bow.isEmpty()) {
-            return;
+            return 0.0F;
         }
         int lvl = UEEnchantments.HURT_DEEPENS.getEnchantmentLevel(bow, arrow.level());
         if (lvl <= 0) {
-            return;
+            return 0.0F;
         }
-        LivingEntity target = event.getEntity();
         float attackerPercent = attacker.getHealth() / attacker.getMaxHealth();
         float targetPercent = target.getHealth() / target.getMaxHealth();
         // 差值是 0~1 的比例，乘 100 换成「个百分点」再乘每点的加成比例
@@ -91,8 +76,6 @@ public class HurtDeepens extends EnchantmentBasic {
                 diffPoints * DAMAGE_PER_PERCENT.calculate(bindings),
                 MAX_BONUS.calculate(bindings)
         );
-        if (bonus > 0.0F) {
-            event.setAmount(event.getAmount() * (1.0F + bonus));
-        }
+        return Math.max(bonus, 0.0F);
     }
 }

@@ -4,16 +4,15 @@ package com.chen1335.ultimateEnchantment.common;
 import com.chen1335.arcanumlib.modules.attribute.ArcanumAttributes;
 import com.chen1335.arcanumlib.modules.attribute.AttributeAdjustment.AttributeAdjustment;
 import com.chen1335.arcanumlib.modules.attribute.AttributeAdjustment.contexts.LivingHurtContext;
+import com.chen1335.arcanumlib.modules.attribute.AttributeAdjustment.contexts.LootInfoContext;
 import com.chen1335.arcanumlib.modules.attribute.events.LivingGetAttributeAdjustmentEvent;
 import com.chen1335.arcanumlib.modules.loot.bonusLoot.event.BonusLootCheckEvent;
-import com.chen1335.arcanumlib.modules.loot.bonusLoot.event.ModifyBonusLootEvent;
 import com.chen1335.ultimateEnchantment.API.AttachmentTypes;
 import com.chen1335.ultimateEnchantment.API.UEDamageTypeTags;
 import com.chen1335.ultimateEnchantment.UltimateEnchantment;
 import com.chen1335.ultimateEnchantment.attachmentDatas.CommonEntityData;
 import com.chen1335.ultimateEnchantment.attachmentDatas.PlayerData;
 import com.chen1335.ultimateEnchantment.attachmentDatas.UEProjectileData;
-import com.chen1335.ultimateEnchantment.config.CommonConfig;
 import com.chen1335.ultimateEnchantment.config.ServerConfig;
 import com.chen1335.ultimateEnchantment.enchantment.EnchantmentBasic;
 import com.chen1335.ultimateEnchantment.enchantment.UEEnchantments;
@@ -40,8 +39,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -56,6 +53,8 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -63,7 +62,10 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 import net.neoforged.neoforge.event.enchanting.GetEnchantmentLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
-import net.neoforged.neoforge.event.entity.living.*;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
+import net.neoforged.neoforge.event.entity.living.LivingGetProjectileEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
@@ -74,7 +76,6 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 import javax.script.SimpleBindings;
-import java.util.Objects;
 
 @EventBusSubscriber(modid = UltimateEnchantment.MODID)
 public class EventHandler {
@@ -212,31 +213,6 @@ public class EventHandler {
         }
     }
 
-    @SubscribeEvent
-    public static void LivingEquipmentChangeEvent(LivingEquipmentChangeEvent event) {
-        LivingEntity livingEntity = event.getEntity();
-        EquipmentSlot slot = event.getSlot();
-        ItemStack form = event.getFrom();
-        ItemStack to = event.getTo();
-        if (UEEnchantments.LEGEND.getEnchantmentLevel(form, livingEntity.level()) > 0) {
-            livingEntity.getAttributes().supplier.instances.keySet().forEach((attributeHolder) -> {
-                Objects.requireNonNull(livingEntity.getAttributes().getInstance(attributeHolder)).removeModifier(Legend.idForSlot(slot));
-            });
-        }
-
-        int lvl = UEEnchantments.LEGEND.getEnchantmentLevel(to, livingEntity.level());
-        if ((slot.isArmor() || event.getSlot().equals(livingEntity.getEquipmentSlotForItem(to))) && lvl > 0) {
-            SimpleBindings bindings = Legend.buildBindings(lvl);
-            livingEntity.getAttributes().supplier.instances.keySet().forEach((attributeHolder) -> {
-                Attribute.Sentiment sentiment = attributeHolder.value().sentiment;
-                Objects.requireNonNull(livingEntity.getAttributes().getInstance(attributeHolder)).removeModifier(Legend.idForSlot(slot));
-                if (sentiment == Attribute.Sentiment.POSITIVE && !CommonConfig.loadedLegendBlackList.contains(attributeHolder.value())) {
-                    Objects.requireNonNull(livingEntity.getAttributes().getInstance(attributeHolder)).addTransientModifier(new AttributeModifier(Legend.idForSlot(slot), Legend.ATTRIBUTE_BONUS.calculate(bindings), AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
-                }
-            });
-        }
-    }
-
     private static final RecipeManager.CachedCheck<SingleRecipeInput, SmeltingRecipe> SMELTING_RECIPE_CACHED_CHECK = RecipeManager.createCheck(RecipeType.SMELTING);
 
 
@@ -337,12 +313,21 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void LivingGetAttributeAdjustmentEvent(LivingGetAttributeAdjustmentEvent event) {
-        if (event.getContext() instanceof LivingHurtContext(LivingEntity target, DamageSource source, float damage)) {
+        LivingGetAttributeAdjustmentEvent.IContext context = event.getContext();
+        if (context instanceof LivingHurtContext(LivingEntity target, DamageSource source, float damage)) {
             if (source.getEntity() instanceof LivingEntity attacker) {
                 if (UltimateSlayer.canApply(target)) {
                     float bonus = UltimateSlayer.sumPerSlot(attacker, UltimateSlayer.DAMAGE_BONUS);
                     if (bonus > 0.0F) {
                         event.getAdjustment(attacker, ArcanumAttributes.DAMAGE_MULTIPLIER).add(AttributeAdjustment.Operation.ADD_VALUE, bonus);
+                    }
+                }
+
+                if (source.getDirectEntity() instanceof AbstractArrow arrow) {
+                    float bonus = HurtDeepens.getDamageBonus(attacker, target, arrow);
+                    if (bonus > 0) {
+                        event.getAdjustment(attacker, ArcanumAttributes.DAMAGE_MULTIPLIER).add(AttributeAdjustment.Operation.ADD_VALUE, bonus);
+
                     }
                 }
 
@@ -359,27 +344,27 @@ public class EventHandler {
                     }
                 }
             }
-        }
-    }
+        } else if (context instanceof LootInfoContext(LootContext lootContext, LootContextParamSet paramSet)) {
+            Entity thisEntityOrNull = lootContext.getParamOrNull(LootContextParams.THIS_ENTITY);
+            Entity attackerOrNull = lootContext.getParamOrNull(LootContextParams.ATTACKING_ENTITY);
+            BlockState blockState = lootContext.getParamOrNull(LootContextParams.BLOCK_STATE);
+            LivingEntity thisEntity = thisEntityOrNull instanceof LivingEntity ? (LivingEntity) thisEntityOrNull : null;
+            LivingEntity attacker = attackerOrNull instanceof LivingEntity ? (LivingEntity) attackerOrNull : null;
 
-    @SubscribeEvent
-    public static void ModifyBonusLootEvent(ModifyBonusLootEvent event) {
-        LootContext lootContext = event.getLootContext();
-        Entity thisEntityOrNull = lootContext.getParamOrNull(LootContextParams.THIS_ENTITY);
-        Entity attackerOrNull = lootContext.getParamOrNull(LootContextParams.ATTACKING_ENTITY);
-        BlockState blockState = event.getLootContext().getParamOrNull(LootContextParams.BLOCK_STATE);
-        LivingEntity thisEntity = thisEntityOrNull instanceof LivingEntity ? (LivingEntity) thisEntityOrNull : null;
-        LivingEntity attacker = attackerOrNull instanceof LivingEntity ? (LivingEntity) attackerOrNull : null;
+            if (paramSet == LootContextParamSets.ENTITY && thisEntity != null && attacker != null) {
+                float ratio = UltimateSlayer.getRatio(thisEntity, attacker);
+                if (ratio > 0) {
+                    event.getAdjustment(attacker, ArcanumAttributes.BONUS_LOOT).add(AttributeAdjustment.Operation.ADD_VALUE, ratio);
+                }
+            }
+            if (paramSet == LootContextParamSets.BLOCK && blockState != null) {
 
-        if (thisEntity != null && attacker != null) {
-            if (UltimateSlayer.canApply(thisEntity)) {
-                event.setRatio(event.getRatio() + UltimateSlayer.getRatio(thisEntity, attacker));
+                float ratio = Harvest.getRatio(lootContext, blockState);
+                if (ratio > 0) {
+                    event.getAdjustment(thisEntity, ArcanumAttributes.BONUS_LOOT).add(AttributeAdjustment.Operation.ADD_VALUE, ratio);
+                }
             }
         }
-        if (blockState != null) {
-            event.setRatio(event.getRatio() + Harvest.getRatio(lootContext, blockState));
-        }
-
     }
 
     @SubscribeEvent

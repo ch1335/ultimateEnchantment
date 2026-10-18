@@ -48,7 +48,11 @@ public class OverGrow extends EnchantmentBasic {
 
     @Override
     public List<MutableComponent> getDesc(int level, TooltipFlag tooltipFlag) {
-        return List.of(Component.translatable(getDescId(), HEALTH_BONUS.toComponent(buildBindings(level), 100)).withStyle(ChatFormatting.GOLD));
+        // 与 addModifier 用同一个 modifier 值与 operation，交给属性自己渲染成
+        // 「+10% 最大生命值」这种完整写法，不再手拼百分比。
+        AttributeModifier modifier = new AttributeModifier(MODIFIER_ID, HEALTH_BONUS.calculate(buildBindings(level)), AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
+        return List.of(Component.translatable(getDescId(),
+                Attributes.MAX_HEALTH.value().toComponent(modifier, tooltipFlag).withStyle(ChatFormatting.GOLD)).withStyle(ChatFormatting.GOLD));
     }
 
     @Override
