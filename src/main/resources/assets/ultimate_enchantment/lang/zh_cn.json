@@ -59,6 +59,8 @@
   "enchantment.ultimate_enchantment.the_fortress.specialDesc.ratio": "复制%s%%的护甲属性",
   "enchantment.ultimate_enchantment.thunder_bolt": "雷霆",
   "enchantment.ultimate_enchantment.thunder_bolt.specialDesc": "每第三次攻击对目标造成额外%1$s%%的伤害，并且对%3$s格范围内的敌人造成%2$s%%的伤害",
+  "enchantment.ultimate_enchantment.trail": "循迹",
+  "enchantment.ultimate_enchantment.trail.specialDesc": "§d提供%s",
   "enchantment.ultimate_enchantment.ultimate": "终极",
   "enchantment.ultimate_enchantment.ultimate.specialDesc": "§d将这个物品上的§e其他所有附魔§d提升%s级",
   "enchantment.ultimate_enchantment.ultimate_slayer": "终极猎手",

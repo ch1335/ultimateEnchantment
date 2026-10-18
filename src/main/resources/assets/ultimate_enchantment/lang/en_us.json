@@ -59,6 +59,8 @@
   "enchantment.ultimate_enchantment.the_fortress.specialDesc.ratio": "Copy %s%% of armor attributes",
   "enchantment.ultimate_enchantment.thunder_bolt": "Thunderbolt",
   "enchantment.ultimate_enchantment.thunder_bolt.specialDesc": "Every third attack deals %1$s%% extra damage to the target and %2$s%% damage to enemies within %3$s blocks",
+  "enchantment.ultimate_enchantment.trail": "Trail",
+  "enchantment.ultimate_enchantment.trail.specialDesc": "§dGrants %s",
   "enchantment.ultimate_enchantment.ultimate": "Ultimate",
   "enchantment.ultimate_enchantment.ultimate.specialDesc": "§dIncreases the level of §eall other enchantments §don this item by %s",
   "enchantment.ultimate_enchantment.ultimate_slayer": "Ultimate Slayer",

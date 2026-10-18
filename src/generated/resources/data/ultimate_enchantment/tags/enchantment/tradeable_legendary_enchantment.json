@@ -33,6 +33,10 @@
             "required": false
         },
         {
+            "id": "ultimate_enchantment:trail",
+            "required": false
+        },
+        {
             "id": "ultimate_enchantment:scabbing",
             "required": false
         },
