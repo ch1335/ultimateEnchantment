@@ -87,6 +87,7 @@ public class UEEnchantmentTagsProvider extends EnchantmentTagsProvider {
         tag(UEEnchantmentTags.COMMON_ENCHANTMENT)
                 .addOptional(UEEnchantments.LIFE_STEAL.getKey().location())
                 .addOptional(UEEnchantments.SMELTING.getKey().location())
+                .addOptional(UEEnchantments.SPREAD.getKey().location())
                 .addOptional(UEEnchantments.QUICK_LATCH.getKey().location());
 
         tag(UEEnchantmentTags.ENCHANTMENTS)

@@ -1,4 +1,4 @@
-// 1.21.1	2026-10-18T16:39:41.6300922	Tags for minecraft:enchantment mod id ultimate_enchantment
+// 1.21.1	2026-10-18T18:54:50.0393536	Tags for minecraft:enchantment mod id ultimate_enchantment
 e31e4267552876647d61557f6e7257360258e4c7 data/minecraft/tags/enchantment/double_trade_price.json
 e31e4267552876647d61557f6e7257360258e4c7 data/minecraft/tags/enchantment/in_enchanting_table.json
 afd4803c34e7cdccf3a8dd4804407e67fce27fa3 data/minecraft/tags/enchantment/non_treasure.json
@@ -6,7 +6,7 @@ e6aa3b993d1480a4e130789ea19fe2e3f7eaf224 data/minecraft/tags/enchantment/on_rand
 c5c4a6907a16c00da4593bc437f22b9327832556 data/minecraft/tags/enchantment/tooltip_order.json
 e31e4267552876647d61557f6e7257360258e4c7 data/minecraft/tags/enchantment/tradeable.json
 5cb235ea3f070c49a25e9354dee63ac4ea4976c8 data/minecraft/tags/enchantment/treasure.json
-3162370cd5ccbe3eccd7f73698d30b314c4638b5 data/ultimate_enchantment/tags/enchantment/common_enchantment.json
+c680fe47a45881542ac0b6de8f0b9596dac7a8ac data/ultimate_enchantment/tags/enchantment/common_enchantment.json
 c5c4a6907a16c00da4593bc437f22b9327832556 data/ultimate_enchantment/tags/enchantment/enchantments.json
 6f42cf33b9dc383c1328d6eef1037ddd1e20b67e data/ultimate_enchantment/tags/enchantment/end_city_lootable.json
 364799ffdef8d9832b0c951972edcd9c99b8ce5a data/ultimate_enchantment/tags/enchantment/legendary_enchantment.json

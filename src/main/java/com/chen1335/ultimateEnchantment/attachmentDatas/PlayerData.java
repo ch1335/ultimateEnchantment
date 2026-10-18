@@ -18,6 +18,8 @@ public class PlayerData implements INBTSerializable<CompoundTag> {
 
     public int vanquisherCooldown = 0;
 
+    public boolean spreading = false;
+
     public void tick(Player player) {
         if (!player.level().isClientSide() && breakSpeedMultiplier > 0) {
             breakSpeedMultiplierRemainingTime--;

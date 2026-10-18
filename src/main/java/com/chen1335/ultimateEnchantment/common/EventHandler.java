@@ -30,8 +30,10 @@ import io.redspace.ironsspellbooks.api.magic.MagicData;
 import io.redspace.ironsspellbooks.api.registry.AttributeRegistry;
 import io.redspace.ironsspellbooks.network.SyncManaPacket;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -67,6 +69,7 @@ import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.living.LivingGetProjectileEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
@@ -76,6 +79,10 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 import javax.script.SimpleBindings;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.HashSet;
+import java.util.Set;
 
 @EventBusSubscriber(modid = UltimateEnchantment.MODID)
 public class EventHandler {
@@ -237,6 +244,61 @@ public class EventHandler {
                     }
                 }
             }
+        }
+    }
+
+
+    @SubscribeEvent
+    public static void spreadChainMining(BlockDropsEvent event) {
+        if (!(event.getBreaker() instanceof ServerPlayer player)) {
+            return;
+        }
+        PlayerData playerData = player.getData(AttachmentTypes.PLAYER_DATA);
+        if (playerData.spreading) {
+            return;
+        }
+        if (!event.getState().is(Tags.Blocks.ORES)) {
+            return;
+        }
+        ServerLevel level = event.getLevel();
+        int lvl = UEEnchantments.SPREAD.getEnchantmentLevel(event.getTool(), level);
+        if (lvl <= 0) {
+            return;
+        }
+        int limit = Math.round(Spread.CHAIN_COUNT.calculate(Spread.buildBindings(lvl)));
+        if (limit <= 0) {
+            return;
+        }
+        BlockPos origin = event.getPos();
+        playerData.spreading = true;
+        try {
+            int remaining = limit;
+            Set<BlockPos> visited = new HashSet<>();
+            Deque<BlockPos> queue = new ArrayDeque<>();
+            visited.add(origin);
+            queue.add(origin);
+            while (remaining > 0 && !queue.isEmpty()) {
+                BlockPos current = queue.poll();
+                for (BlockPos pos : BlockPos.betweenClosed(current.offset(-1, -1, -1), current.offset(1, 1, 1))) {
+                    if (remaining <= 0) {
+                        break;
+                    }
+                    BlockPos target = pos.immutable();
+                    if (!visited.add(target)) {
+                        continue;
+                    }
+                    BlockState state = level.getBlockState(target);
+                    if (!state.is(Tags.Blocks.ORES) || !player.hasCorrectToolForDrops(state,level,target)) {
+                        continue;
+                    }
+                    if (player.gameMode.destroyBlock(target)) {
+                        remaining--;
+                        queue.add(target);
+                    }
+                }
+            }
+        } finally {
+            playerData.spreading = false;
         }
     }
 

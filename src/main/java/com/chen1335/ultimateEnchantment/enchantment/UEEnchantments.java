@@ -24,6 +24,7 @@ import com.chen1335.ultimateEnchantment.enchantment.enchantments.PierceThrough;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.Scabbing;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.QuickLatch;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.Smelting;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.Spread;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.Eternal;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.UltimateSlayer;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.TheFortress;
@@ -76,6 +77,7 @@ public class UEEnchantments {
     public static final PierceThrough PIERCE_THROUGH = register(new PierceThrough());
     public static final Harvest HARVEST = register(new Harvest());
     public static final Trail TRAIL = register(new Trail());
+    public static final Spread SPREAD = register(new Spread());
 
     public static SimpleBindings buildBindings(int level) {
         return EnchantmentBasic.buildBindings(level);
