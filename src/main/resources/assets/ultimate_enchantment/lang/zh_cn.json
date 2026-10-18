@@ -36,6 +36,7 @@
   "enchantment.ultimate_enchantment.lethal_tempo.specialDesc": "箭矢命中目标时使你有概率产生额外射击，造成%s%%的伤害，每次命中会使这个概率提高%s%%，最高%s%%，持续%s秒",
   "enchantment.ultimate_enchantment.life_steal": "生命窃取",
   "enchantment.ultimate_enchantment.life_steal.specialDesc": "攻击时会回复实际伤害的%s%%，单次治疗上限为你最大生命值的%s%%",
+  "enchantment.ultimate_enchantment.lucky_mind": "幸运头脑",
   "enchantment.ultimate_enchantment.mana_steal": "魔力窃取",
   "enchantment.ultimate_enchantment.mana_steal.specialDesc": "攻击时会回复实际伤害的%s%%的魔力值，单次魔力回复上限为你最大魔力值的%s%%",
   "enchantment.ultimate_enchantment.over_grow": "过度生长",

@@ -78,7 +78,8 @@ public class UEEnchantmentTagsProvider extends EnchantmentTagsProvider {
                 .addOptional(UEEnchantments.ETHEREAL_ARROW.getKey().location())
                 .addOptional(UEEnchantments.HURT_DEEPENS.getKey().location())
                 .addOptional(UEEnchantments.HARVEST.getKey().location())
-                .addOptional(UEEnchantments.TRAIL.getKey().location());
+                .addOptional(UEEnchantments.TRAIL.getKey().location())
+                .addOptional(UEEnchantments.LUCKY_MIND.getKey().location());
 
 
         tag(UEEnchantmentTags.UN_TRADEABLE_LEGENDARY_ENCHANTMENT)

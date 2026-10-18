@@ -10,6 +10,7 @@ import com.chen1335.ultimateEnchantment.enchantment.enchantments.HurtDeepens;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.KineticEnergy;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.LethalTempo;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.LifeSteal;
+import com.chen1335.ultimateEnchantment.enchantment.enchantments.LuckyMind;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.ManaSteal;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.QuickBait;
 import com.chen1335.ultimateEnchantment.enchantment.enchantments.Tear;
@@ -78,6 +79,7 @@ public class UEEnchantments {
     public static final Harvest HARVEST = register(new Harvest());
     public static final Trail TRAIL = register(new Trail());
     public static final Spread SPREAD = register(new Spread());
+    public static final LuckyMind LUCKY_MIND = register(new LuckyMind());
 
     public static SimpleBindings buildBindings(int level) {
         return EnchantmentBasic.buildBindings(level);

@@ -36,6 +36,7 @@
   "enchantment.ultimate_enchantment.lethal_tempo.specialDesc": "Hitting an enemy with an arrow has a chance to fire an additional shot dealing %s%% damage. Each hit increases this chance by %s%%, up to %s%%, lasting %s seconds",
   "enchantment.ultimate_enchantment.life_steal": "Life Steal",
   "enchantment.ultimate_enchantment.life_steal.specialDesc": "Heals for %s%% of damage dealt, with each heal capped at %s%% of your maximum health",
+  "enchantment.ultimate_enchantment.lucky_mind": "Lucky Mind",
   "enchantment.ultimate_enchantment.mana_steal": "Mana Steal",
   "enchantment.ultimate_enchantment.mana_steal.specialDesc": "Restores %s%% of damage dealt as mana, with each restore capped at %s%% of your maximum mana",
   "enchantment.ultimate_enchantment.over_grow": "Overgrowth",

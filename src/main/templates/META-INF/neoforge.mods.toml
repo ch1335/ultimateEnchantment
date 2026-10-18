@@ -29,6 +29,13 @@ versionRange = "${minecraft_version_range}"
 ordering = "NONE"
 side = "BOTH"
 
+[[dependencies.${ mod_id }]]
+modId = "arcanumlib"
+type = "required"
+versionRange = "[1.21.1-0.2.0,)"
+ordering = "AFTER"
+side = "BOTH"
+
 
 [[dependencies.${ mod_id }]]
 modId = "apothic_enchanting"

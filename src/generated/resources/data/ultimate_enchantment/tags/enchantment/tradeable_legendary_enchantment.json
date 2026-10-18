@@ -37,6 +37,10 @@
             "required": false
         },
         {
+            "id": "ultimate_enchantment:lucky_mind",
+            "required": false
+        },
+        {
             "id": "ultimate_enchantment:scabbing",
             "required": false
         },

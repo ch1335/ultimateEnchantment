@@ -36,6 +36,7 @@
   "enchantment.ultimate_enchantment.lethal_tempo.specialDesc": "Quand une flèche touche une cible, vous avez une chance de tirer une flèche supplémentaire infligeant %s%% de dégâts. Chaque touché augmente cette chance de %s%%, jusqu'à %s%% maximum, pendant %s secondes",
   "enchantment.ultimate_enchantment.life_steal": "Vol de Vie",
   "enchantment.ultimate_enchantment.life_steal.specialDesc": "Les attaques soignent %s%% des dégâts infligés, chaque soin étant limité à %s%% de vos points de vie maximum",
+  "enchantment.ultimate_enchantment.lucky_mind": "Esprit Chanceux",
   "enchantment.ultimate_enchantment.mana_steal": "Vol de Mana",
   "enchantment.ultimate_enchantment.mana_steal.specialDesc": "Les attaques restaurent %s%% des dégâts infligés en mana, chaque restauration étant limitée à %s%% de votre mana maximum",
   "enchantment.ultimate_enchantment.over_grow": "Surcroissance",
